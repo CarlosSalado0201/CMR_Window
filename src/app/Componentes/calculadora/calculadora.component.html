@@ -1,0 +1,39 @@
+<div class="d-flex justify-content-center mb-4">
+  <div class="btn-group" role="group" aria-label="Opciones de calculadora">
+
+    <input type="radio" class="btn-check" name="opciones" id="trabajoDiario" autocomplete="off"
+      [checked]="esRutaActiva('/trabajoDiario')" (change)="seleccionarOpcion('trabajoDiario')">
+    <label class="btn btn-lg d-flex align-items-center" for="trabajoDiario"
+      [ngClass]="{
+        'btn-danger text-white': esRutaActiva('/trabajoDiario'),
+        'btn-outline-danger': !esRutaActiva('/trabajoDiario')
+      }">
+      <span class="me-2 circle-indicator" [class.selected]="esRutaActiva('/trabajoDiario')"></span>
+      Trabajos diarios
+    </label>
+
+    <input type="radio" class="btn-check" name="opciones" id="proyectoGrande" autocomplete="off"
+      [checked]="esRutaActiva('/proyectoGrande')" (change)="seleccionarOpcion('proyectoGrande')">
+    <label class="btn btn-lg d-flex align-items-center" for="proyectoGrande"
+      [ngClass]="{
+        'btn-danger text-white': esRutaActiva('/proyectoGrande'),
+        'btn-outline-danger': !esRutaActiva('/proyectoGrande')
+      }">
+      <span class="me-2 circle-indicator" [class.selected]="esRutaActiva('/proyectoGrande')"></span>
+      Big Projects
+    </label>
+
+    <input type="radio" class="btn-check" name="opciones" id="editar" autocomplete="off"
+      [checked]="esRutaActiva('/editar')" (change)="seleccionarOpcion('editar')">
+    <label class="btn btn-lg d-flex align-items-center" for="editar"
+      [ngClass]="{
+        'btn-danger text-white': esRutaActiva('/editar'),
+        'btn-outline-danger': !esRutaActiva('/editar')
+      }">
+      Editar Inventario
+    </label>
+
+  </div>
+</div>
+
+<router-outlet></router-outlet>

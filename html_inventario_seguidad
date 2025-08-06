@@ -1,0 +1,488 @@
+<div class="container mt-3">
+
+  <!-- BOTONES PARA SELECCIONAR ENTIDAD -->
+  <div class="btn-group mb-4">
+    <button
+      class="btn btn-outline-primary"
+      [class.active]="entidadActiva === 'categoria'"
+      (click)="activarEntidad('categoria')"
+    >
+      Categorías
+    </button>
+    <button
+      class="btn btn-outline-primary"
+      [class.active]="entidadActiva === 'equipo'"
+      (click)="activarEntidad('equipo')"
+    >
+      Equipos
+    </button>
+    <button
+      class="btn btn-outline-primary"
+      [class.active]="entidadActiva === 'materiales'"
+      (click)="activarEntidad('materiales')"
+    >
+      Inventario de Materiales
+    </button>
+  </div>
+
+  <!-- ******************** SECCIÓN TABLA CATEGORÍAS ******************** -->
+  <div *ngIf="entidadActiva === 'categoria'">
+    <h3>Gestión de Categorías</h3>
+
+    <!-- Barra de búsqueda para filtrar categorías -->
+    <input
+      type="text"
+      placeholder="Buscar categorías..."
+      [(ngModel)]="filtroCategorias"
+      class="form-control mb-3"
+    />
+
+    <!-- Tabla que muestra categorías filtradas -->
+    <table class="table table-bordered table-striped table-hover table-danger">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th style="width: 180px;">
+            Acciones
+            <button
+              class="btn btn-sm btn-success ms-2"
+              (click)="mostrarPanelAgregarCategoria = !mostrarPanelAgregarCategoria"
+              [attr.aria-expanded]="mostrarPanelAgregarCategoria"
+              aria-controls="panelAgregarCategoria"
+              title="Agregar Categoría"
+            >
+              + Agregar
+            </button>
+          </th>
+        </tr>
+
+        <!-- Panel Agregar Categoría -->
+        <tr *ngIf="mostrarPanelAgregarCategoria" id="panelAgregarCategoria">
+          <td></td>
+          <td>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Nueva categoría *"
+              [(ngModel)]="nuevaCategoria.nombre"
+              [class.is-invalid]="mostrarErrorNuevaCategoria && nuevaCategoria.nombre.trim() === ''"
+            />
+            <div *ngIf="mostrarErrorNuevaCategoria && nuevaCategoria.nombre.trim() === ''" class="invalid-feedback">
+              El nombre es obligatorio.
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-danger btn-sm me-2" (click)="agregarCategoria()">Guardar</button>
+            <button class="btn btn-secondary btn-sm" (click)="cancelarAgregarCategoria()">Cancelar</button>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let categoria of categoriasFiltradas; index as i">
+          <td>{{ i + 1 }}</td>
+
+          <!-- Nombre o input de edición -->
+          <td *ngIf="!isEditandoCategoria(categoria)">{{ categoria.nombre }}</td>
+          <td *ngIf="isEditandoCategoria(categoria)">
+            <input
+              type="text"
+              [(ngModel)]="editandoCategoria!.nombre"
+              class="form-control"
+              [class.is-invalid]="mostrarErrorEditarCategoria && editandoCategoria!.nombre.trim() === ''"
+            />
+            <div *ngIf="mostrarErrorEditarCategoria && editandoCategoria!.nombre.trim() === ''" class="invalid-feedback">
+              El nombre es obligatorio.
+            </div>
+          </td>
+
+          <td>
+            <button
+              *ngIf="!isEditandoCategoria(categoria)"
+              class="btn btn-warning btn-sm"
+              (click)="seleccionarParaEditarCategoria(categoria)"
+            >
+              Editar
+            </button>
+            <button
+              *ngIf="isEditandoCategoria(categoria)"
+              class="btn btn-success btn-sm"
+              (click)="editarCategoria()"
+            >
+              Guardar
+            </button>
+            <button
+              *ngIf="isEditandoCategoria(categoria)"
+              class="btn btn-secondary btn-sm"
+              (click)="cancelarEdicionCategoria()"
+            >
+              Cancelar
+            </button>
+            <button
+              *ngIf="!isEditandoCategoria(categoria)"
+              class="btn btn-danger btn-sm ms-1"
+              (click)="eliminarCategoria(categoria.id)"
+            >
+              Borrar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ******************** SECCIÓN TABLA EQUIPOS ******************** -->
+  <div *ngIf="entidadActiva === 'equipo'">
+    <h3>Gestión de Equipos</h3>
+
+    <!-- Barra de búsqueda para filtrar equipos -->
+    <input
+      type="text"
+      placeholder="Buscar equipos..."
+      [(ngModel)]="filtroEquipos"
+      class="form-control mb-3"
+    />
+
+    <!-- Tabla que muestra los equipos filtrados -->
+    <table class="table table-bordered table-striped table-hover table-danger">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Marca</th>
+          <th>Capacidad</th>
+          <th>Precio</th>
+          <th>Categoría</th>
+          <th style="width: 250px;">
+            Acciones
+            <button
+              class="btn btn-sm btn-success ms-2"
+              (click)="mostrarPanelAgregarEquipo = !mostrarPanelAgregarEquipo;cargarCategorias();"
+              [attr.aria-expanded]="mostrarPanelAgregarEquipo"
+              aria-controls="panelAgregarEquipo"
+              title="Agregar Equipo"
+            >
+              + Agregar
+            </button>
+          </th>
+        </tr>
+
+        <!-- Panel Agregar Equipo -->
+        <tr *ngIf="mostrarPanelAgregarEquipo" id="panelAgregarEquipo">
+          <td></td>
+          <td>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Nombre *"
+              [(ngModel)]="nuevoEquipo.nombre"
+              [class.is-invalid]="mostrarErrorNuevoEquipo && nuevoEquipo.nombre.trim() === ''"
+            />
+            <div *ngIf="mostrarErrorNuevoEquipo && nuevoEquipo.nombre.trim() === ''" class="invalid-feedback">
+              El nombre es obligatorio.
+            </div>
+          </td>
+          <td>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Marca"
+              [(ngModel)]="nuevoEquipo.marca"
+            />
+          </td>
+          <td>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Capacidad"
+              [(ngModel)]="nuevoEquipo.capacidad"
+            />
+          </td>
+          <td>
+            <input
+              type="number"
+              class="form-control"
+              placeholder="Precio"
+              [(ngModel)]="nuevoEquipo.precio"
+            />
+          </td>
+          <td>
+            <select
+              class="form-select"
+              [(ngModel)]="nuevoEquipo.categoria.id"
+              [class.is-invalid]="mostrarErrorNuevoEquipo && (!nuevoEquipo.categoria || nuevoEquipo.categoria.id === 0)"
+            >
+              <option [value]="0">Seleccione categoría *</option>
+              <option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nombre }}</option>
+            </select>
+            <div *ngIf="mostrarErrorNuevoEquipo && (!nuevoEquipo.categoria || nuevoEquipo.categoria.id === 0)" class="invalid-feedback">
+              La categoría es obligatoria.
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-danger btn-sm me-2" (click)="agregarEquipo()">Guardar</button>
+            <button class="btn btn-secondary btn-sm" (click)="cancelarAgregarEquipo()">Cancelar</button>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let equipo of equiposFiltrados; index as i">
+          <td>{{ i + 1 }}</td>
+
+          <td *ngIf="!isEditandoEquipo(equipo)">{{ equipo.nombre }}</td>
+          <td *ngIf="isEditandoEquipo(equipo)">
+            <input
+              type="text"
+              [(ngModel)]="editandoEquipo!.nombre"
+              class="form-control"
+              [class.is-invalid]="mostrarErrorEditarEquipo && editandoEquipo!.nombre.trim() === ''"
+            />
+            <div *ngIf="mostrarErrorEditarEquipo && editandoEquipo!.nombre.trim() === ''" class="invalid-feedback">
+              El nombre es obligatorio.
+            </div>
+          </td>
+
+          <td *ngIf="!isEditandoEquipo(equipo)">{{ equipo.marca }}</td>
+          <td *ngIf="isEditandoEquipo(equipo)">
+            <input type="text" [(ngModel)]="editandoEquipo!.marca" class="form-control" />
+          </td>
+
+          <td *ngIf="!isEditandoEquipo(equipo)">{{ equipo.capacidad }}</td>
+          <td *ngIf="isEditandoEquipo(equipo)">
+            <input type="text" [(ngModel)]="editandoEquipo!.capacidad" class="form-control" />
+          </td>
+
+          <td *ngIf="!isEditandoEquipo(equipo)">{{ equipo.precio | currency:'MXN' }}</td>
+          <td *ngIf="isEditandoEquipo(equipo)">
+            <input type="number" [(ngModel)]="editandoEquipo!.precio" class="form-control" />
+          </td>
+
+          <td *ngIf="!isEditandoEquipo(equipo)">{{ equipo.categoria?.nombre }}</td>
+          <td *ngIf="isEditandoEquipo(equipo)">
+            <select
+              class="form-select"
+              [(ngModel)]="editandoEquipo!.categoria.id"
+              [class.is-invalid]="mostrarErrorEditarEquipo && (!editandoEquipo!.categoria || editandoEquipo!.categoria.id === 0)"
+            >
+              <option [value]="0">Seleccione categoría *</option>
+              <option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nombre }}</option>
+            </select>
+            <div *ngIf="mostrarErrorEditarEquipo && (!editandoEquipo!.categoria || editandoEquipo!.categoria.id === 0)" class="invalid-feedback">
+              La categoría es obligatoria.
+            </div>
+          </td>
+
+          <td>
+            <button
+              *ngIf="!isEditandoEquipo(equipo)"
+              class="btn btn-warning btn-sm"
+              (click)="seleccionarParaEditarEquipo(equipo) ;cargarCategorias();"
+            >
+              Editar
+            </button>
+            <button
+              *ngIf="isEditandoEquipo(equipo)"
+              class="btn btn-success btn-sm"
+              (click)="editarEquipo()"
+            >
+              Guardar
+            </button>
+            <button
+              *ngIf="isEditandoEquipo(equipo)"
+              class="btn btn-secondary btn-sm"
+              (click)="cancelarEdicionEquipo()"
+            >
+              Cancelar
+            </button>
+            <button
+              *ngIf="!isEditandoEquipo(equipo)"
+              class="btn btn-danger btn-sm ms-1"
+              (click)="eliminarEquipo(equipo.id)"
+            >
+              Borrar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<div class="container mt-3">
+
+ 
+  <!-- SECCIÓN TABLA MATERIALES -->
+  <div *ngIf="entidadActiva === 'materiales'">
+    <h3>Inventario de Materiales</h3>
+
+    <!-- Barra de búsqueda para filtrar materiales -->
+    <input
+      type="text"
+      placeholder="Buscar materiales..."
+      [(ngModel)]="filtroMateriales"
+      (ngModelChange)="filtrarMateriales()"
+      class="form-control mb-3"
+    />
+
+    <!-- Tabla que muestra materiales filtrados -->
+    <table class="table table-bordered table-striped table-hover table-danger">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Unidad</th>
+          <th>Precio Unitario</th>
+          <th>Equipo</th>
+          <th style="width: 200px;">
+            Acciones
+            <button
+              class="btn btn-sm btn-success ms-2"
+              (click)="mostrarPanelAgregarMaterial = !mostrarPanelAgregarMaterial; cargarEquipos();"
+              [attr.aria-expanded]="mostrarPanelAgregarMaterial"
+              aria-controls="panelAgregarMaterial"
+              title="Agregar Material"
+            >
+              + Agregar
+            </button>
+          </th>
+        </tr>
+
+        <!-- Panel Agregar Material -->
+        <tr *ngIf="mostrarPanelAgregarMaterial" id="panelAgregarMaterial">
+          <td></td>
+          <td>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Nombre *"
+              [(ngModel)]="nuevoMaterial.nombre"
+              [class.is-invalid]="mostrarErrorNuevoMaterial && nuevoMaterial.nombre.trim() === ''"
+            />
+            <div *ngIf="mostrarErrorNuevoMaterial && nuevoMaterial.nombre.trim() === ''" class="invalid-feedback">
+              El nombre es obligatorio.
+            </div>
+          </td>
+          <td>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Unidad"
+              [(ngModel)]="nuevoMaterial.unidad"
+            />
+          </td>
+          <td>
+            <input
+              type="number"
+              class="form-control"
+              placeholder="Precio Unitario"
+              [(ngModel)]="nuevoMaterial.precioUnitario"
+            />
+          </td>
+          <td>
+            <select
+              class="form-select"
+              [(ngModel)]="nuevoMaterial.equipo.id"
+              [class.is-invalid]="mostrarErrorNuevoMaterial && (!nuevoMaterial.equipo || nuevoMaterial.equipo.id === 0)"
+            >
+              <option [value]="0">Seleccione equipo *</option>
+              <option *ngFor="let equipo of equipos" [value]="equipo.id">{{ equipo.nombre }}</option>
+            </select>
+            <div *ngIf="mostrarErrorNuevoMaterial && (!nuevoMaterial.equipo || nuevoMaterial.equipo.id === 0)" class="invalid-feedback">
+              El equipo es obligatorio.
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-danger btn-sm me-2" (click)="agregarMaterial()">Guardar</button>
+            <button class="btn btn-secondary btn-sm" (click)="cancelarAgregarMaterial()">Cancelar</button>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let material of materialesFiltrados; index as i">
+          <td>{{ i + 1 }}</td>
+
+          <!-- Mostrar o editar Nombre -->
+          <td *ngIf="!isEditandoMaterial(material)">{{ material.nombre }}</td>
+          <td *ngIf="isEditandoMaterial(material)">
+            
+            <input
+              type="text"
+              [(ngModel)]="editandoMaterial!.nombre"
+              class="form-control"
+              [class.is-invalid]="mostrarErrorEditarMaterial && editandoMaterial!.nombre.trim() === ''"
+            />
+            <div *ngIf="mostrarErrorEditarMaterial && editandoMaterial!.nombre.trim() === ''" class="invalid-feedback">
+              El nombre es obligatorio.
+            </div>
+          </td>
+
+          <!-- Unidad -->
+          <td *ngIf="!isEditandoMaterial(material)">{{ material.unidad || '-' }}</td>
+          <td *ngIf="isEditandoMaterial(material)">
+            <input type="text" [(ngModel)]="editandoMaterial!.unidad" class="form-control" />
+          </td>
+
+          <!-- Precio Unitario -->
+          <td *ngIf="!isEditandoMaterial(material)">{{ material.precioUnitario | currency:'MXN' }}</td>
+          <td *ngIf="isEditandoMaterial(material)">
+            <input type="number" [(ngModel)]="editandoMaterial!.precioUnitario" class="form-control" />
+          </td>
+
+          <!-- Equipo -->
+          <td *ngIf="!isEditandoMaterial(material)">{{ material.equipo?.nombre || '-' }}</td>
+          <td *ngIf="isEditandoMaterial(material)">
+            <select
+              class="form-select"
+              [(ngModel)]="editandoMaterial!.equipo!.id"
+              [class.is-invalid]="mostrarErrorEditarMaterial && (!editandoMaterial!.equipo || editandoMaterial!.equipo.id === 0)"
+            >
+              <option [value]="0">Seleccione equipo *</option>
+              <option *ngFor="let equipo of equipos" [value]="equipo.id">{{ equipo.nombre }}</option>
+            </select>
+            <div *ngIf="mostrarErrorEditarMaterial && (!editandoMaterial!.equipo || editandoMaterial!.equipo.id === 0)" class="invalid-feedback">
+              El equipo es obligatorio.
+            </div>
+          </td>
+
+          <!-- Acciones -->
+          <td>
+            <button
+              *ngIf="!isEditandoMaterial(material)"
+              class="btn btn-warning btn-sm"
+              (click)="seleccionarParaEditarMaterial(material);    cargarEquipos();"
+            
+            >
+              Editar 
+            </button>
+            <button
+              *ngIf="isEditandoMaterial(material)"
+              class="btn btn-success btn-sm"
+              (click)="editarMaterial()"
+              
+              
+            >
+              Guardar
+            </button>
+            <button
+              *ngIf="isEditandoMaterial(material)"
+              class="btn btn-secondary btn-sm"
+              (click)="cancelarEdicionMaterial()"
+            >
+              Cancelar
+            </button>
+            <button
+              *ngIf="!isEditandoMaterial(material)"
+              class="btn btn-danger btn-sm ms-1" 
+            (click)="material.id && eliminarMaterial(material.id)"
+
+              >Eliminar</button>
+            
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+  <!-- Aquí sección Mano de Obra cuando esté lista -->
+
+</div>
