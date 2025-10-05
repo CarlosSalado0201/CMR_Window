@@ -5,18 +5,35 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { Categoria } from '../Models/Categorias';
 import { Equipo } from '../Models/Equipos';
 import { Materiales } from '../Models/Materiales';
+import { Cliente } from '../Models/Cliente';
+import { Actividad } from '../Models/Actividad';
 
 @Injectable({
   providedIn: 'root' // Este servicio estará disponible globalmente en toda la app
 })
+
 export class ServiciosService {
 
  private URLCategoria = 'https://proyecto-cmr.onrender.com/CategoriasWebService';
 private URLEquipo = 'https://proyecto-cmr.onrender.com/EquiposWebService';
 private urlMateriales = 'https://proyecto-cmr.onrender.com/MaterialesWebService';
 private modelosURL = 'https://proyecto-cmr.onrender.com/ModelosWebService';
+private loginUrl = 'http://localhost:8080/api/login';
 
   constructor(private http: HttpClient) {}
+  // ---------------- LOGIN -----------------
+  login(username: string, password: string, rememberMe: boolean): Observable<HttpResponse<any>> {
+  const body = new URLSearchParams();
+  body.set('username', username);
+  body.set('password', password);
+  body.set('rememberMe', rememberMe.toString());
+
+  return this.http.post('http://localhost:8080/api/login', body.toString(), {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    withCredentials: true,
+    observe: 'response'
+  });
+}
 
   // ----------- CATEGORÍAS -----------
 
@@ -248,6 +265,207 @@ getMaterialesPorModelo(id: number): Observable<Materiales[]> {
     'https://proyecto-cmr.onrender.com/MaterialesWebService/buscarPorModelo',
     { modelo: { id } } // El cuerpo esperado por el backend
   );
+}
+// ---------------- REPORTES -----------------
+// ---------------- REPORTES -----------------
+// Servicio: generarReporte
+generarReporte(
+  encargado: any,
+  trabajadores: any[],
+  cliente: any,
+  descripcion: string,
+  imagenes: File[] = [],
+  firma: File | null = null,
+  actividades: number[] = [],
+  nombreSupervisor: string,
+  firmaSupervisor: File | null
+): Observable<any> {
+  const formData = new FormData();
+
+  // Datos JSON
+  formData.append('encargado', JSON.stringify(encargado));
+  formData.append('trabajadores', JSON.stringify(trabajadores));
+  formData.append('cliente', JSON.stringify(cliente));
+  formData.append('descripcion', descripcion);
+
+  // Actividades
+  if (actividades && actividades.length > 0) {
+    actividades.forEach(id => formData.append('actividades', id.toString()));
+  }
+
+  // Imágenes
+  if (imagenes && imagenes.length > 0) {
+    imagenes.forEach(img => formData.append('imagenes', img, img.name));
+  }
+
+  // Firma del encargado
+  if (firma) {
+    formData.append('firma', firma, firma.name);
+  }
+
+  // Nombre y firma del supervisor
+  formData.append('nombreSupervisor', nombreSupervisor);
+  if (firmaSupervisor) {
+    formData.append('firmaSupervisor', firmaSupervisor, firmaSupervisor.name);
+  }
+
+  // Llamada POST al backend
+  return this.http.post<{ urlPdf: string }>(
+    'http://localhost:8080/api/reportes/generar',
+    formData
+  );
+}
+
+
+// Método para obtener todos los reportes
+obtenerReportes(): Observable<any[]> {
+  return this.http.get<any[]>('http://localhost:8080/api/reportes');
+}
+
+// ---------------- CLIENTES -----------------
+private URLClientes = 'http://localhost:8080/api/clientes';
+
+// Obtener todos los clientes
+obtenerClientes(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.URLClientes}/lista`).pipe(
+    catchError(error => {
+      console.error('Error al obtener clientes:', error);
+      return of([]);
+    })
+  );
+}
+
+// Guardar un nuevo cliente
+guardarCliente(cliente: any): Observable<string | null> {
+  return this.http.post<string>(`${this.URLClientes}/guardar`, cliente, { observe: 'response' }).pipe(
+    map(response => {
+      if (response.status === 201) {
+        return response.body ?? 'guardadoConExito';
+      }
+      return null;
+    }),
+    catchError(error => {
+      if (error.status === 409) {
+        return of('nombreYaExiste');
+      }
+      console.error('Error al guardar cliente:', error);
+      return of(null);
+    })
+  );
+}
+
+// Editar cliente
+editarCliente(cliente: any): Observable<any | null> {
+  return this.http.put<any>(`${this.URLClientes}/editar`, cliente).pipe(
+    catchError(error => {
+      console.error('Error al editar cliente:', error);
+      return of(null);
+    })
+  );
+}
+
+// Eliminar cliente
+eliminarCliente(id: number): Observable<void> {
+  return this.http.delete<void>(`${this.URLClientes}/eliminar/${id}`).pipe(
+    catchError(error => {
+      console.error('Error al eliminar cliente:', error);
+      return of();
+    })
+  );
+}
+
+// Buscar cliente por nombre
+buscarClientePorNombre(nombre: string): Observable<any | null> {
+  return this.http.get<any>(`${this.URLClientes}/buscarPorNombre/${nombre}`).pipe(
+    catchError(error => {
+      console.error('Error al buscar cliente por nombre:', error);
+      return of(null);
+    })
+  );
+}
+// ---------------- USUARIOS / TRABAJADORES -----------------
+private URLUsuarios = 'http://localhost:8080/api/usuario';
+// Servicio para obtener usuario actual
+obtenerUsuarioActual(): Observable<any> {
+  return this.http.get<any>(`${this.URLUsuarios}/info`, { withCredentials: true }).pipe(
+    catchError(error => {
+      console.error('Error al obtener usuario actual:', error);
+      return of(null);
+    })
+  );
+}
+
+
+
+
+
+obtenerUsuarios(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.URLUsuarios}/lista`, { withCredentials: true }).pipe(
+    catchError(error => {
+      console.error('Error al obtener usuarios:', error);
+      return of([]);
+    })
+  );
+}
+
+
+
+// Guardar un nuevo usuario
+guardarUsuario(usuario: any): Observable<string | null> {
+  return this.http.post<string>(`${this.URLUsuarios}/guardar`, usuario, { observe: 'response' }).pipe(
+    map(response => {
+      if (response.status === 201) return response.body ?? 'guardadoConExito';
+      return null;
+    }),
+    catchError(error => {
+      if (error.status === 409) return of('nombreYaExiste');
+      console.error('Error al guardar usuario:', error);
+      return of(null);
+    })
+  );
+}
+
+// Editar usuario
+editarUsuario(usuario: any): Observable<any | null> {
+  return this.http.put<any>(`${this.URLUsuarios}/editar`, usuario).pipe(
+    catchError(error => {
+      console.error('Error al editar usuario:', error);
+      return of(null);
+    })
+  );
+}
+
+// Eliminar usuario
+eliminarUsuario(id: number): Observable<void> {
+  return this.http.delete<void>(`${this.URLUsuarios}/eliminar/${id}`).pipe(
+    catchError(error => {
+      console.error('Error al eliminar usuario:', error);
+      return of();
+    })
+  );
+}
+
+// Buscar usuario por nombre
+buscarUsuarioPorNombre(nombre: string): Observable<any | null> {
+  return this.http.get<any>(`${this.URLUsuarios}/buscarPorNombre/${nombre}`).pipe(
+    catchError(error => {
+      console.error('Error al buscar usuario por nombre:', error);
+      return of(null);
+    })
+  );
+}
+// ==========================================================
+// 🧱 TIPO DE OPERACIÓN Y ACTIVIDADES
+// ==========================================================
+private apiUrl = 'http://localhost:8080/api';
+
+
+obtenerTiposOperacion(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/tipos-operacion`);
+}
+
+obtenerActividadesPorTipo(idTipoOperacion: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/actividades/tipo/${idTipoOperacion}`);
 }
 
   }

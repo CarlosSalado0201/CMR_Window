@@ -75,38 +75,5 @@
   <img src="assets/CMR.jpg" alt="Logo CMR" style="cursor:pointer" routerLink="/inicio" />
   <button routerLink="/calculadora">Abrir calculadora</button>
   <button routerLink="/editar">Editar inventario</button>
-  <button routerLink="/login">Cerrar sesión</button>
+  <button (click)="logout()">Cerrar sesión</button>
 </div>
-
-<!-- 🔻 BOTONES DE OPCIÓN -->
-<div class="d-flex justify-content-center mb-4 content">
-  <div class="btn-group" role="group" aria-label="Opciones de calculadora">
-
-    <input type="radio" class="btn-check" name="opciones" id="trabajoDiario" autocomplete="off"
-      [checked]="esRutaActiva('/trabajoDiario')" (change)="seleccionarOpcion('trabajoDiario')">
-    <label class="btn btn-lg d-flex align-items-center" for="trabajoDiario"
-      [ngClass]="{
-        'btn-danger text-white': esRutaActiva('/trabajoDiario'),
-        'btn-outline-danger': !esRutaActiva('/trabajoDiario')
-      }">
-      <span [class.selected]="esRutaActiva('/trabajoDiario')"></span>
-      Trabajos diarios
-    </label>
-
-    <input type="radio" class="btn-check" name="opciones" id="proyectoGrande" autocomplete="off"
-      [checked]="esRutaActiva('/proyectoGrande')" (change)="seleccionarOpcion('proyectoGrande')">
-    <label class="btn btn-lg d-flex align-items-center" for="proyectoGrande"
-      [ngClass]="{
-        'btn-danger text-white': esRutaActiva('/proyectoGrande'),
-        'btn-outline-danger': !esRutaActiva('/proyectoGrande')
-      }">
-      <span  [class.selected]="esRutaActiva('/proyectoGrande')"></span>
-      Big Projects
-    </label>
-
-    
-  </div>
-</div>
-
-<!-- 🔻 AQUÍ SE CARGA EL CONTENIDO SEGÚN LA OPCIÓN -->
-<router-outlet></router-outlet>

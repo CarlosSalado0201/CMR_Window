@@ -7,16 +7,24 @@ import { CalculadoraComponent } from './Componentes/calculadora/calculadora.comp
 import { TrabajoDiarioComponent } from './Componentes/trabajo-diario/trabajo-diario.component';
 import { ProyectoGrandeComponent } from './Componentes/proyecto-grande/proyecto-grande.component';
 import { EditarInventarioComponent } from './Componentes/editar-inventario/editar-inventario.component';
+import { LoginComponent } from './login/login.component';
+import { PantallaPrincipalComponent } from './pantallaprincipal/pantallaprincipal.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { PantallaReportesComponent } from './pantalla-reportes/pantalla-reportes.component';
+import { ReportesComponent } from './reportes/reportes.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    PantallaPrincipalComponent,
+    LoginComponent,
     CalculadoraComponent,
     TrabajoDiarioComponent,
     ProyectoGrandeComponent,
-    EditarInventarioComponent
+    EditarInventarioComponent,
+    PantallaReportesComponent,
+    ReportesComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,37 @@
+<div class="login-container">
+  <div class="left">
+    <img src="assets/CMR.jpg" alt="Logo CMR" class="logo" />
+  </div>
+
+    <div class="right">
+      <h2>CMR protege tu equipo desde la reparación y supervisión</h2>
+
+      <div class="login-box">
+        <h3>Iniciar sesión</h3>
+
+        <form (ngSubmit)="login()">
+          <input
+            type="text"
+            placeholder="Usuario"
+            [(ngModel)]="username"
+            name="username"
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Contraseña"
+            [(ngModel)]="password"
+            name="password"
+            required
+          />
+
+
+
+        <button type="submit">Entrar</button>
+      </form>
+
+      <p class="error" *ngIf="errorMsg">{{ errorMsg }}</p>
+    </div>
+  </div>
+</div>

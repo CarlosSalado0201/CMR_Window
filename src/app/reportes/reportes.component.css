@@ -1,0 +1,489 @@
+/* 🔹 CLIENTES */
+.clientes-section {
+  margin-bottom: 20px;
+}
+
+.add-client-button {
+  background-color: #dc3545;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.add-client-button:hover {
+  background-color: #bb2d3b;
+}
+
+.clientes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cliente-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cliente-item select {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.remove-client-button {
+  background: #f8d7da;
+  color: #dc3545;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.remove-client-button:hover {
+  background: #dc3545;
+  color: white;
+}
+
+.clientes-seleccionados ul {
+  margin: 5px 0 0;
+  padding-left: 20px;
+}
+
+.clientes-seleccionados li {
+  color: #333;
+}
+.form-wrapper {
+  display: flex;
+  flex-direction: row-reverse; /* 👈 invierte el orden (clientes a la izquierda) */
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  margin: 100px auto; /* ya incluye el margen de la barra */
+  max-width: 1200px;
+  flex-wrap: wrap;
+}
+
+/* 🔹 FORMULARIO PRINCIPAL */
+.report-form {
+  flex: 1 1 700px;              /* Ocupa la mayor parte del espacio */
+  max-width: 800px;
+  background: #fff;
+  padding: 20px 30px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* 🔹 SECCIÓN CLIENTES A LA DERECHA */
+.clientes-section {
+  flex: 0 0 300px;              /* Tamaño fijo */
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.clientes-section h3 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.cliente-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.add-client-button,
+.remove-client-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-client-button:hover,
+.remove-client-button:hover {
+  background: #0056b3;
+}
+
+/* 🔹 PDF */
+.pdf-link-layer {
+  margin-top: 25px;
+}
+
+/* 🔹 RESPONSIVO */
+@media (max-width: 950px) {
+  .form-wrapper {
+    flex-direction: column;    /* En pantallas pequeñas se apilan */
+    align-items: center;
+  }
+
+  .clientes-section {
+    width: 100%;
+    max-width: 500px;
+  }
+}
+/* 🔹 Evita que la barra tape el contenido */
+.form-wrapper {
+  margin-top: 115px; /* ajusta según la altura real de tu barra */
+}
+.encargado-reporte {
+  background: #eef6ff;
+  border: 1px solid #bcd0ff;
+  border-radius: 8px;
+  padding: 1px;
+  margin-bottom: 1px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.trabajadores-section {
+  margin-bottom: 20px;
+}
+
+.add-worker-button {
+  background-color: #ec0b0b;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.add-worker-button:hover {
+  background-color: #7e1e1e;
+}
+
+.trabajador-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.remove-worker-button {
+  background: #f8d7da;
+  color: #dc3545;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.remove-worker-button:hover {
+  background: #dc3545;
+  color: white;
+}
+/* Aumenta altura y estilo de selects múltiples */
+.trabajadores-section select,
+.clientes-section select {
+  width: 100%;
+  min-height: 120px; /* Para que se vea la lista */
+  margin-top: 6px;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+.trabajadores-section select,
+.clientes-section select {
+  width: 100%;
+  min-height: 120px;
+  margin-top: 6px;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* Actividades: mantiene altura para ver varias opciones */
+.select-actividades {
+  width: 100%;
+  padding: 4px 5px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  background-color: #fafafa;
+  font-size: 14px;
+  margin-bottom: 8px;
+  height: 120px;          /* más alta para ver varias opciones */
+  box-sizing: border-box;
+}
+
+
+
+.add-client-button {
+  background-color: #ec0b0b;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.add-client-button:hover {
+  background-color: #ec0b0b;
+}
+/* ==============================
+   MODAL DE VERIFICACIÓN CLIENTE
+   ============================== */
+.verificacion-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.panel-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 650px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  animation: slideIn 0.3s ease-out;
+}
+
+.panel-content h2 {
+  color: #dc3545;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.panel-content h3 {
+  color: #444;
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+.panel-content ul {
+  padding-left: 20px;
+}
+
+.panel-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.panel-actions button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.panel-actions button:hover {
+  background-color: #b02a37;
+}
+
+.panel-actions .cancel {
+  background-color: #999;
+}
+
+.panel-actions .cancel:hover {
+  background-color: #777;
+}
+
+/* Botones secundarios */
+.add-worker-button,
+.add-client-button,
+.remove-worker-button,
+.remove-client-button {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 8px 14px;
+  transition: background-color 0.3s ease;
+  font-size: 14px;
+}
+
+.add-worker-button:hover,
+.add-client-button:hover {
+  background-color: #b02a37;
+}
+
+.remove-worker-button,
+.remove-client-button {
+  background-color: transparent;
+  color: #dc3545;
+  font-size: 18px;
+  padding: 0 5px;
+}
+
+.remove-worker-button:hover,
+.remove-client-button:hover {
+  color: #b02a37;
+}
+
+/* Animaciones suaves */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.verify-button {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 10px 16px;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+}
+
+.verify-button:hover {
+  background-color: #b02a37;
+}
+.report-buttons {
+  display: flex;
+  gap: 10px;              /* separación entre botones */
+  justify-content: center; /* opcional: centra los botones horizontalmente */
+  align-items: center;     /* alinea verticalmente */
+  flex-wrap: wrap;         /* si hay muchos, se acomodan en otra línea */
+}
+
+.submit-button,
+.verify-button {
+ 
+  border: none;
+  cursor: pointer;
+
+}
+
+.submit-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.verify-button {
+  background-color: #d01111;
+  color: white;
+}
+
+.submit-button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+.supervisor-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #dc3545; /* color consistente con botones/encabezados */
+}
+
+.supervisor-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.supervisor-input:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 5px rgba(220, 53, 69, 0.3);
+  outline: none;
+}
+/* Contenedor de botones del reporte y verificación (único) */
+.report-btns-container {
+  display: flex;
+  flex-direction: column;  /* vertical */
+  gap: 10px;               /* separación */
+  align-items: flex-start; /* opcional: izquierda */
+}
+
+/* Botón Generar reporte */
+.btn-generate {
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.btn-generate[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-generate:hover:not([disabled]) {
+  background-color: #0056b3;
+}
+
+/* Botón Verificación */
+.btn-verify {
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  background-color: #e31313;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.btn-verify:hover {
+  background-color: #db2505;
+}
+.desktop-layout {
+  display: flex;
+  gap: 20px;
+}
+
+.left-column, .right-column {
+  flex: 1;
+}
+

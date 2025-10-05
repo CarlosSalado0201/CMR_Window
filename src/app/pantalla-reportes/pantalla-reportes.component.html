@@ -72,14 +72,12 @@
 
 <!-- 🔻 BARRA SUPERIOR -->
 <div class="toolbar">
-  <img src="assets/CMR.jpg" alt="Logo CMR" style="cursor:pointer" routerLink="/inicio" />
-  <button routerLink="/calculadora">Abrir calculadora</button>
-  <button routerLink="/editar">Editar inventario</button>
-  <button routerLink="/login">Cerrar sesión</button>
+  <img src="assets/CMR.jpg" alt="Logo CMR" style="cursor:pointer" routerLink="/reportes" />
+    <button routerLink="/generar">Generar Reportes</button>
+  <button (click)="logout()">Cerrar sesión</button>
 </div>
-
-<!-- 🔻 CONTENEDOR PRINCIPAL -->
-<div class="mb-4 content">
-
-<p>proyecto-grande en contruccion xd es un proyeto grande!</p>
-<div>
+<div class="content">
+  <div class="gif-container">
+    <img src="assets/animacion.gif" alt="GIF animado">
+  </div>
+</div>

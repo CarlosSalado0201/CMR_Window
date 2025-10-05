@@ -1,0 +1,10 @@
+.gif-container {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center;     /* Centra verticalmente */
+  height: calc(100vh - 120px); /* Altura total menos la barra */
+}
+.gif-container img {
+  max-width: 80%; /* Ajusta tamaño */
+  height: auto;
+}
