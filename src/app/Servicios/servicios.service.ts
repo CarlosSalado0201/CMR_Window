@@ -9,463 +9,232 @@ import { Cliente } from '../Models/Cliente';
 import { Actividad } from '../Models/Actividad';
 
 @Injectable({
-  providedIn: 'root' // Este servicio estará disponible globalmente en toda la app
+  providedIn: 'root'
 })
-
 export class ServiciosService {
 
- private URLCategoria = 'https://proyecto-cmr.onrender.com/CategoriasWebService';
-private URLEquipo = 'https://proyecto-cmr.onrender.com/EquiposWebService';
-private urlMateriales = 'https://proyecto-cmr.onrender.com/MaterialesWebService';
-private modelosURL = 'https://proyecto-cmr.onrender.com/ModelosWebService';
-private loginUrl = 'http://localhost:8080/api/login';
+  private URLCategoria = 'https://proyecto-cmr.onrender.com/CategoriasWebService';
+  private URLEquipo = 'https://proyecto-cmr.onrender.com/EquiposWebService';
+  private urlMateriales = 'https://proyecto-cmr.onrender.com/MaterialesWebService';
+  private modelosURL = 'https://proyecto-cmr.onrender.com/ModelosWebService';
+  private loginUrl = 'http://localhost:8080/api/login';
+  private URLClientes = 'http://localhost:8080/api/clientes';
+  private URLUsuarios = 'http://localhost:8080/api/usuario';
+  private apiUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) {}
+
   // ---------------- LOGIN -----------------
   login(username: string, password: string, rememberMe: boolean): Observable<HttpResponse<any>> {
-  const body = new URLSearchParams();
-  body.set('username', username);
-  body.set('password', password);
-  body.set('rememberMe', rememberMe.toString());
+    const body = new URLSearchParams();
+    body.set('username', username);
+    body.set('password', password);
+    body.set('rememberMe', rememberMe.toString());
 
-  return this.http.post('http://localhost:8080/api/login', body.toString(), {
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    withCredentials: true,
-    observe: 'response'
-  });
-}
+    return this.http.post(this.loginUrl, body.toString(), {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      withCredentials: true, // ✅ Safari: necesario para guardar cookie JSESSIONID
+      observe: 'response'
+    });
+  }
 
   // ----------- CATEGORÍAS -----------
-
   obtenerCategorias(): Observable<Categoria[]> {
-    return this.http.get<Categoria[]>(`${this.URLCategoria}/mostrar`).pipe(
+    return this.http.get<Categoria[]>(`${this.URLCategoria}/mostrar`, {
+      withCredentials: true // ✅ Safari
+    }).pipe(
       catchError(error => {
         console.error('Error al obtener categorías:', error);
         return of([]);
       })
     );
   }
-// En ServiciosService:
 
-guardarCategoria(categoria: { nombre: string }): Observable<string | null> {
-  return this.http.post<string>(`${this.URLCategoria}/guardar`, categoria, { observe: 'response' }).pipe(
-    map(response => {
-      if (response.status === 201) {
-        return response.body ?? 'guardadoConExito';
-      }
-      return null;
-    }),
-    catchError(error => {
-      if (error.status === 201) {
-        return of('guardadoConExito');
-      }
-      if (error.status === 409) {
-        return of('nombreYaExiste');
-      }
-      console.error('Error al guardar categoría:', error);
-      return of(null);
-    })
-  );
-}
-
-
-  editarCategoria(categoria: Categoria): Observable<Categoria | null> {
-    return this.http.put<Categoria>(`${this.URLCategoria}/editar`, categoria).pipe(
+  guardarCategoria(categoria: { nombre: string }): Observable<string | null> {
+    return this.http.post<string>(`${this.URLCategoria}/guardar`, categoria, {
+      observe: 'response',
+      withCredentials: true // ✅ Safari
+    }).pipe(
+      map(response => {
+        if (response.status === 201) return response.body ?? 'guardadoConExito';
+        return null;
+      }),
       catchError(error => {
-        console.error('Error al editar categoría:', error);
+        if (error.status === 409) return of('nombreYaExiste');
+        console.error('Error al guardar categoría:', error);
         return of(null);
       })
+    );
+  }
+
+  editarCategoria(categoria: Categoria): Observable<Categoria | null> {
+    return this.http.put<Categoria>(`${this.URLCategoria}/editar`, categoria, {
+      withCredentials: true // ✅ Safari
+    }).pipe(
+      catchError(() => of(null))
     );
   }
 
   eliminarCategoria(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.URLCategoria}/eliminar/${id}`).pipe(
-      catchError(error => {
-        console.error('Error al eliminar categoría:', error);
-        return of();
-      })
-    );
-  }
-
-  buscarCategoriaPorNombre(nombre: string): Observable<Categoria | null> {
-    return this.http.get<Categoria>(`${this.URLCategoria}/buscarPorNombre/${nombre}`).pipe(
-      catchError(error => {
-        console.error('Error al buscar categoría por nombre:', error);
-        return of(null);
-      })
-    );
+    return this.http.delete<void>(`${this.URLCategoria}/eliminar/${id}`, {
+      withCredentials: true // ✅ Safari
+    }).pipe(catchError(() => of()));
   }
 
   // ----------- EQUIPOS -----------
-
   obtenerEquipos(): Observable<Equipo[]> {
-    return this.http.get<Equipo[]>(`${this.URLEquipo}/mostrar`).pipe(
-      catchError(error => {
-        console.error('Error al obtener equipos:', error);
-        return of([]);
-      })
+    return this.http.get<Equipo[]>(`${this.URLEquipo}/mostrar`, { withCredentials: true }).pipe(
+      catchError(() => of([]))
     );
   }
 
   obtenerEquiposPorCategoria(idCategoria: number): Observable<Equipo[]> {
-    const categoria = { id: idCategoria };
-    return this.http.post<Equipo[]>(`${this.URLEquipo}/buscarPorCategoria`, categoria).pipe(
-      catchError(error => {
-        console.error('Error al obtener equipos por categoría:', error);
-        return of([]);
-      })
-    );
+    return this.http.post<Equipo[]>(`${this.URLEquipo}/buscarPorCategoria`, { id: idCategoria }, {
+      withCredentials: true // ✅ Safari
+    }).pipe(catchError(() => of([])));
   }
-guardarEquipo(equipo: any): Observable<Equipo | string | null> {
-  return this.http.post(`${this.URLEquipo}/guardar`, equipo, { observe: 'response', responseType: 'text' }).pipe(
-    map(response => {
-      if (response.status === 201) {
-        // La respuesta es texto, puedes devolverla o un string fijo
-        return response.body ?? 'guardadoConExito';
-      }
-      return null;
-    }),
-    catchError(error => {
-      if (error.status === 409) {
-        return of('nombreYaExiste');
-      }
-      console.error('Error al guardar equipo:', error);
-      return of(null);
-    })
-  );
-}
 
-
-  editarEquipo(equipo: Equipo): Observable<Equipo | null> {
-    return this.http.put<Equipo>(`${this.URLEquipo}/editar`, equipo).pipe(
+  guardarEquipo(equipo: any): Observable<Equipo | string | null> {
+    return this.http.post(`${this.URLEquipo}/guardar`, equipo, {
+      observe: 'response',
+      responseType: 'text',
+      withCredentials: true // ✅ Safari
+    }).pipe(
+      map(response => response.status === 201 ? response.body ?? 'guardadoConExito' : null),
       catchError(error => {
-        console.error('Error al editar equipo:', error);
+        if (error.status === 409) return of('nombreYaExiste');
+        console.error('Error al guardar equipo:', error);
         return of(null);
       })
     );
   }
 
   eliminarEquipo(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.URLEquipo}/eliminar/${id}`).pipe(
-      catchError(error => {
-        console.error('Error al eliminar equipo:', error);
-        return of();
-      })
+    return this.http.delete<void>(`${this.URLEquipo}/eliminar/${id}`, { withCredentials: true }).pipe(
+      catchError(() => of())
     );
   }
 
-  buscarEquipoPorNombre(nombre: string): Observable<Equipo | null> {
-    return this.http.get<Equipo>(`${this.URLEquipo}/buscarPorNombre/${nombre}`).pipe(
+  // ----------- MATERIALES -----------
+  obtenerMateriales(): Observable<Materiales[]> {
+    return this.http.get<Materiales[]>(`${this.urlMateriales}/mostrar`, {
+      withCredentials: true // ✅ Safari
+    });
+  }
+
+  guardarMaterial(material: any): Observable<Materiales | string | null> {
+    return this.http.post<Materiales>(`${this.urlMateriales}/guardar`, material, {
+      observe: 'response',
+      withCredentials: true // ✅ Safari
+    }).pipe(
+      map(response => response.status === 201 ? response.body ?? 'guardadoConExito' : null),
       catchError(error => {
-        console.error('Error al buscar equipo por nombre:', error);
+        if (error.status === 409) return of('nombreYaExiste');
+        console.error('Error al guardar material:', error);
         return of(null);
       })
     );
   }
 
+  // ----------- REPORTES -----------
+  generarReporte(
+    encargado: any,
+    trabajadores: any[],
+    cliente: any,
+    descripcion: string,
+    imagenes: File[] = [],
+    firma: File | null = null,
+    actividades: number[] = [],
+    nombreSupervisor: string,
+    firmaSupervisor: File | null
+  ): Observable<any> {
+    const formData = new FormData();
+    formData.append('encargado', JSON.stringify(encargado));
+    formData.append('trabajadores', JSON.stringify(trabajadores));
+    formData.append('cliente', JSON.stringify(cliente));
+    formData.append('descripcion', descripcion);
+    if (actividades) actividades.forEach(id => formData.append('actividades', id.toString()));
+    if (imagenes) imagenes.forEach(img => formData.append('imagenes', img, img.name));
+    if (firma) formData.append('firma', firma, firma.name);
+    formData.append('nombreSupervisor', nombreSupervisor);
+    if (firmaSupervisor) formData.append('firmaSupervisor', firmaSupervisor, firmaSupervisor.name);
 
-obtenerMaterialesPorEquipo(material: Materiales): Observable<Materiales[]> {
-  return this.http.post<Materiales[]>(`${this.urlMateriales}/buscarPorEquipoId`, material);
-}
-// Ejemplo en servicios.service.ts
-
-obtenerMateriales() {
-  return this.http.get<Materiales[]>(`${this.urlMateriales}/mostrar`);
-}
-guardarMaterial(material: any): Observable<Materiales | string | null> {
-  return this.http.post<Materiales>(`${this.urlMateriales}/guardar`, material, { observe: 'response' }).pipe(
-    map(response => {
-      if (response.status === 201) {
-        return response.body ?? 'guardadoConExito';
-      }
-      return null;
-    }),
-    catchError(error => {
-      if (error.status === 409) {
-        return of('nombreYaExiste');
-      }
-      console.error('Error al guardar material:', error);
-      return of(null);
-    })
-  );
-}
-
-
-editarMaterial(material: any): Observable<boolean> {
-  return this.http.put<boolean>(this.urlMateriales + `/editar`, material);
-}
-
-eliminarMaterial(id: number): Observable<void> {
-  return this.http.delete<void>(this.urlMateriales + `/eliminar/${id}`);
-}
-///Modelos//////////////////
-// Ya lo tienes
-getModelos(): Observable<Modelos[]> {
-  return this.http.get<Modelos[]>(`${this.modelosURL}/mostrar`);
-}
-
-// Agrégalo:
-agregarModelo(modelo: { nombre: string; categoriaId: number }): Observable<Modelos | string | null> {
-  const modeloParaEnviar = {
-    nombre: modelo.nombre,
-    categoria: { id: modelo.categoriaId }
-  };
-
-  return this.http.post<Modelos>(`${this.modelosURL}/guardar`, modeloParaEnviar, { observe: 'response' }).pipe(
-    map(response => {
-      if (response.status === 201) {
-        return response.body ?? 'guardadoConExito';
-      }
-      return null;
-    }),
-    catchError(error => {
-      if (error.status === 409) {
-        return of('nombreYaExiste');
-      }
-      console.error('Error al guardar modelo:', error);
-      return of(null);
-    })
-  );
-}
-
-// Obtener todos los modelos
-
-eliminarModelo(id: number): Observable<void> {
-  return this.http.delete<void>(`${this.modelosURL}/eliminar/${id}`).pipe(
-    catchError(error => {
-      console.error('Error al eliminar modelo:', error);
-      return of();
-    })
-  );
-}
-editarModelo(modelo: Modelos): Observable<Modelos | null> {
-  return this.http.put<Modelos>(`${this.modelosURL}/editar`, modelo).pipe(
-    catchError(error => {
-      console.error('Error al editar modelo:', error);
-      return of(null);
-    })
-  );
-}
-
-// En el servicio Angular
-obtenerModelosPorCategoria(categoria: Categoria): Observable<Modelos[]> {
-  return this.http.post<Modelos[]>(`${this.modelosURL}/buscarPorCategoria`, categoria);
-}
-obtenerMaterialesPorModelo(idModelo: number): Observable<Materiales[]> {
-  const modelo = { id: idModelo };
-  return this.http.post<Materiales[]>(`${this.urlMateriales}/buscarPorModelo`, modelo).pipe(
-    catchError(error => {
-      console.error('Error al obtener materiales por modelo:', error);
-      return of([]);
-    })
-  );
-}
-getMaterialesPorModelo(id: number): Observable<Materiales[]> {
-  return this.http.post<Materiales[]>(
-    'https://proyecto-cmr.onrender.com/MaterialesWebService/buscarPorModelo',
-    { modelo: { id } } // El cuerpo esperado por el backend
-  );
-}
-// ---------------- REPORTES -----------------
-// ---------------- REPORTES -----------------
-// Servicio: generarReporte
-generarReporte(
-  encargado: any,
-  trabajadores: any[],
-  cliente: any,
-  descripcion: string,
-  imagenes: File[] = [],
-  firma: File | null = null,
-  actividades: number[] = [],
-  nombreSupervisor: string,
-  firmaSupervisor: File | null
-): Observable<any> {
-  const formData = new FormData();
-
-  // Datos JSON
-  formData.append('encargado', JSON.stringify(encargado));
-  formData.append('trabajadores', JSON.stringify(trabajadores));
-  formData.append('cliente', JSON.stringify(cliente));
-  formData.append('descripcion', descripcion);
-
-  // Actividades
-  if (actividades && actividades.length > 0) {
-    actividades.forEach(id => formData.append('actividades', id.toString()));
+    return this.http.post<{ urlPdf: string }>('http://localhost:8080/api/reportes/generar', formData, {
+      withCredentials: true // ✅ Safari: cookies al generar reporte
+    });
   }
 
-  // Imágenes
-  if (imagenes && imagenes.length > 0) {
-    imagenes.forEach(img => formData.append('imagenes', img, img.name));
+  obtenerReportes(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:8080/api/reportes', {
+      withCredentials: true // ✅ Safari
+    }).pipe(
+      catchError(() => of([]))
+    );
   }
 
-  // Firma del encargado
-  if (firma) {
-    formData.append('firma', firma, firma.name);
+  // ----------- CLIENTES -----------
+  obtenerClientes(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.URLClientes}/lista`, { withCredentials: true }).pipe(
+      catchError(() => of([]))
+    );
   }
 
-  // Nombre y firma del supervisor
-  formData.append('nombreSupervisor', nombreSupervisor);
-  if (firmaSupervisor) {
-    formData.append('firmaSupervisor', firmaSupervisor, firmaSupervisor.name);
+  guardarCliente(cliente: any): Observable<string | null> {
+    return this.http.post<string>(`${this.URLClientes}/guardar`, cliente, {
+      observe: 'response',
+      withCredentials: true // ✅ Safari
+    }).pipe(
+      map(response => response.status === 201 ? response.body ?? 'guardadoConExito' : null),
+      catchError(error => {
+        if (error.status === 409) return of('nombreYaExiste');
+        console.error('Error al guardar cliente:', error);
+        return of(null);
+      })
+    );
   }
 
-  // Llamada POST al backend
-  return this.http.post<{ urlPdf: string }>(
-    'http://localhost:8080/api/reportes/generar',
-    formData
-  );
-}
-
-
-// Método para obtener todos los reportes
-obtenerReportes(): Observable<any[]> {
-  return this.http.get<any[]>('http://localhost:8080/api/reportes');
-}
-
-// ---------------- CLIENTES -----------------
-private URLClientes = 'http://localhost:8080/api/clientes';
-
-// Obtener todos los clientes
-obtenerClientes(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.URLClientes}/lista`).pipe(
-    catchError(error => {
-      console.error('Error al obtener clientes:', error);
-      return of([]);
-    })
-  );
-}
-
-// Guardar un nuevo cliente
-guardarCliente(cliente: any): Observable<string | null> {
-  return this.http.post<string>(`${this.URLClientes}/guardar`, cliente, { observe: 'response' }).pipe(
-    map(response => {
-      if (response.status === 201) {
-        return response.body ?? 'guardadoConExito';
-      }
-      return null;
-    }),
-    catchError(error => {
-      if (error.status === 409) {
-        return of('nombreYaExiste');
-      }
-      console.error('Error al guardar cliente:', error);
-      return of(null);
-    })
-  );
-}
-
-// Editar cliente
-editarCliente(cliente: any): Observable<any | null> {
-  return this.http.put<any>(`${this.URLClientes}/editar`, cliente).pipe(
-    catchError(error => {
-      console.error('Error al editar cliente:', error);
-      return of(null);
-    })
-  );
-}
-
-// Eliminar cliente
-eliminarCliente(id: number): Observable<void> {
-  return this.http.delete<void>(`${this.URLClientes}/eliminar/${id}`).pipe(
-    catchError(error => {
-      console.error('Error al eliminar cliente:', error);
-      return of();
-    })
-  );
-}
-
-// Buscar cliente por nombre
-buscarClientePorNombre(nombre: string): Observable<any | null> {
-  return this.http.get<any>(`${this.URLClientes}/buscarPorNombre/${nombre}`).pipe(
-    catchError(error => {
-      console.error('Error al buscar cliente por nombre:', error);
-      return of(null);
-    })
-  );
-}
-// ---------------- USUARIOS / TRABAJADORES -----------------
-private URLUsuarios = 'http://localhost:8080/api/usuario';
-// Servicio para obtener usuario actual
-obtenerUsuarioActual(): Observable<any> {
-  return this.http.get<any>(`${this.URLUsuarios}/info`, { withCredentials: true }).pipe(
-    catchError(error => {
-      console.error('Error al obtener usuario actual:', error);
-      return of(null);
-    })
-  );
-}
-
-
-
-
-
-obtenerUsuarios(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.URLUsuarios}/lista`, { withCredentials: true }).pipe(
-    catchError(error => {
-      console.error('Error al obtener usuarios:', error);
-      return of([]);
-    })
-  );
-}
-
-
-
-// Guardar un nuevo usuario
-guardarUsuario(usuario: any): Observable<string | null> {
-  return this.http.post<string>(`${this.URLUsuarios}/guardar`, usuario, { observe: 'response' }).pipe(
-    map(response => {
-      if (response.status === 201) return response.body ?? 'guardadoConExito';
-      return null;
-    }),
-    catchError(error => {
-      if (error.status === 409) return of('nombreYaExiste');
-      console.error('Error al guardar usuario:', error);
-      return of(null);
-    })
-  );
-}
-
-// Editar usuario
-editarUsuario(usuario: any): Observable<any | null> {
-  return this.http.put<any>(`${this.URLUsuarios}/editar`, usuario).pipe(
-    catchError(error => {
-      console.error('Error al editar usuario:', error);
-      return of(null);
-    })
-  );
-}
-
-// Eliminar usuario
-eliminarUsuario(id: number): Observable<void> {
-  return this.http.delete<void>(`${this.URLUsuarios}/eliminar/${id}`).pipe(
-    catchError(error => {
-      console.error('Error al eliminar usuario:', error);
-      return of();
-    })
-  );
-}
-
-// Buscar usuario por nombre
-buscarUsuarioPorNombre(nombre: string): Observable<any | null> {
-  return this.http.get<any>(`${this.URLUsuarios}/buscarPorNombre/${nombre}`).pipe(
-    catchError(error => {
-      console.error('Error al buscar usuario por nombre:', error);
-      return of(null);
-    })
-  );
-}
-// ==========================================================
-// 🧱 TIPO DE OPERACIÓN Y ACTIVIDADES
-// ==========================================================
-private apiUrl = 'http://localhost:8080/api';
-
-
-obtenerTiposOperacion(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/tipos-operacion`);
-}
-
-obtenerActividadesPorTipo(idTipoOperacion: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/actividades/tipo/${idTipoOperacion}`);
-}
-
+  // ----------- USUARIOS -----------
+  obtenerUsuarioActual(): Observable<any> {
+    return this.http.get<any>(`${this.URLUsuarios}/info`, { withCredentials: true }).pipe(
+      catchError(() => of(null))
+    );
   }
+
+  obtenerUsuarios(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.URLUsuarios}/lista`, { withCredentials: true }).pipe(
+      catchError(() => of([]))
+    );
+  }
+
+  guardarUsuario(usuario: any): Observable<string | null> {
+    return this.http.post<string>(`${this.URLUsuarios}/guardar`, usuario, {
+      observe: 'response',
+      withCredentials: true // ✅ Safari
+    }).pipe(
+      map(response => response.status === 201 ? response.body ?? 'guardadoConExito' : null),
+      catchError(error => {
+        if (error.status === 409) return of('nombreYaExiste');
+        console.error('Error al guardar usuario:', error);
+        return of(null);
+      })
+    );
+  }
+
+  eliminarUsuario(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.URLUsuarios}/eliminar/${id}`, {
+      withCredentials: true // ✅ Safari
+    }).pipe(catchError(() => of()));
+  }
+
+  // ----------- TIPO DE OPERACIÓN / ACTIVIDADES -----------
+  obtenerTiposOperacion(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/tipos-operacion`, { withCredentials: true });
+  }
+
+  obtenerActividadesPorTipo(idTipoOperacion: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/actividades/tipo/${idTipoOperacion}`, {
+      withCredentials: true // ✅ Safari
+    });
+  }
+}
+
