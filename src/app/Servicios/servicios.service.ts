@@ -22,21 +22,22 @@
 
     constructor(private http: HttpClient) {}
     // ---------------- LOGIN -----------------
-    login(username: string, password: string, rememberMe: boolean): Observable<HttpResponse<any>> {
-    const body = new URLSearchParams();
-    body.set('username', username);
-    body.set('password', password);
-    body.set('rememberMe', rememberMe.toString());
+    login(username: string, password: string, rememberMe: boolean) {
+  const body = new URLSearchParams();
+  body.set('username', username);
+  body.set('password', password);
+  body.set('rememberMe', rememberMe.toString());
 
-    return this.http.post('https://proyecto-cmr.onrender.com/api/login', body.toString(), {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded',
-        'X-Requested-With': 'XMLHttpRequest'   // ← ESTA ES LA CLAVE
-       },
-      
-      withCredentials: true,
-      observe: 'response'
-    });
-  }
+  return this.http.post('https://proyecto-cmr.onrender.com/api/login', body.toString(), {
+    headers: { 
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    withCredentials: true,
+    observe: 'response'
+  });
+}
+
 
     // ----------- CATEGORÍAS -----------
 
@@ -327,18 +328,18 @@
     return this.http.get<any[]>('https://proyecto-cmr.onrender.com/api/reportes', { withCredentials: true });
   }
 
-  // ---------------- CLIENTES -----------------
-  private URLClientes = 'https://proyecto-cmr.onrender.com/api/clientes';
+    // ---------------- CLIENTES -----------------
+    private URLClientes = 'https://proyecto-cmr.onrender.com/api/clientes';
 
-  // Obtener todos los clientes
-  obtenerClientes(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.URLClientes}/lista`, { withCredentials: true }).pipe(
-      catchError(error => {
-        console.error('Error al obtener clientes:', error);
-        return of([]);
-      })
-    );
-  }
+    // Obtener todos los clientes
+    obtenerClientes(): Observable<any[]> {
+      return this.http.get<any[]>(`${this.URLClientes}/lista`, { withCredentials: true }).pipe(
+        catchError(error => {
+          console.error('Error al obtener clientes:', error);
+          return of([]);
+        })
+      );
+    }
 
   // Guardar un nuevo cliente
   guardarCliente(cliente: any): Observable<string | null> {
