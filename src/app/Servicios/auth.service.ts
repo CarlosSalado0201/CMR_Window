@@ -30,14 +30,14 @@ export class AuthService {
   // LOGOUT
   // ------------------------
   logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true });
+    return this.http.post(`${this.apiUrl}/logout`, {} );
   }
 
   // ------------------------
   // INFO DEL USUARIO
   // ------------------------
   obtenerInfoUsuario(): Observable<{ username: string; roles: number[] }> {
-    return this.http.get<{ username: string; roles: number[] }>(`${this.apiUrl}/usuario/info`, { withCredentials: true });
+    return this.http.get<{ username: string; roles: number[] }>(`${this.apiUrl}/usuario/info` );
   }
 
   getToken(): string | null {
@@ -52,20 +52,20 @@ export class AuthService {
   // CLIENTES
   // ------------------------
   obtenerClientes(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/clientes/lista`, { withCredentials: true });
+    return this.http.get<any[]>(`${this.apiUrl}/clientes/lista` );
   }
 
   // ------------------------
   // TIPOS DE OPERACIÓN
   // ------------------------
   obtenerTiposOperacion(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/tipos-operacion`, { withCredentials: true });
+    return this.http.get<any[]>(`${this.apiUrl}/tipos-operacion` );
   }
 
   // ------------------------
   // ACTIVIDADES POR TIPO
   // ------------------------
   obtenerActividadesPorTipo(idTipoOperacion: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/actividades/tipo/${idTipoOperacion}`, { withCredentials: true });
+    return this.http.get<any[]>(`${this.apiUrl}/actividades/tipo/${idTipoOperacion}` );
   }
 }

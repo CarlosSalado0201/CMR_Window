@@ -42,7 +42,7 @@
     // ----------- CATEGORÍAS -----------
 
     obtenerCategorias(): Observable<Categoria[]> {
-      return this.http.get<Categoria[]>(`${this.URLCategoria}/mostrar`, { withCredentials: true }).pipe(
+      return this.http.get<Categoria[]>(`${this.URLCategoria}/mostrar` ).pipe(
         catchError(error => {
           console.error('Error al obtener categorías:', error);
           return of([]);
@@ -74,7 +74,7 @@
 
 
     editarCategoria(categoria: Categoria): Observable<Categoria | null> {
-      return this.http.put<Categoria>(`${this.URLCategoria}/editar`, categoria, { withCredentials: true }).pipe(
+      return this.http.put<Categoria>(`${this.URLCategoria}/editar`, categoria ).pipe(
         catchError(error => {
           console.error('Error al editar categoría:', error);
           return of(null);
@@ -83,7 +83,7 @@
     }
 
     eliminarCategoria(id: number): Observable<void> {
-      return this.http.delete<void>(`${this.URLCategoria}/eliminar/${id}`, { withCredentials: true }).pipe(
+      return this.http.delete<void>(`${this.URLCategoria}/eliminar/${id}` ).pipe(
         catchError(error => {
           console.error('Error al eliminar categoría:', error);
           return of();
@@ -92,7 +92,7 @@
     }
 
     buscarCategoriaPorNombre(nombre: string): Observable<Categoria | null> {
-      return this.http.get<Categoria>(`${this.URLCategoria}/buscarPorNombre/${nombre}`, { withCredentials: true }).pipe(
+      return this.http.get<Categoria>(`${this.URLCategoria}/buscarPorNombre/${nombre}` ).pipe(
         catchError(error => {
           console.error('Error al buscar categoría por nombre:', error);
           return of(null);
@@ -103,7 +103,7 @@
     // ----------- EQUIPOS -----------
 
     obtenerEquipos(): Observable<Equipo[]> {
-      return this.http.get<Equipo[]>(`${this.URLEquipo}/mostrar`, { withCredentials: true }).pipe(
+      return this.http.get<Equipo[]>(`${this.URLEquipo}/mostrar` ).pipe(
         catchError(error => {
           console.error('Error al obtener equipos:', error);
           return of([]);
@@ -113,7 +113,7 @@
 
     obtenerEquiposPorCategoria(idCategoria: number): Observable<Equipo[]> {
       const categoria = { id: idCategoria };
-      return this.http.post<Equipo[]>(`${this.URLEquipo}/buscarPorCategoria`, categoria, { withCredentials: true }).pipe(
+      return this.http.post<Equipo[]>(`${this.URLEquipo}/buscarPorCategoria`, categoria ).pipe(
         catchError(error => {
           console.error('Error al obtener equipos por categoría:', error);
           return of([]);
@@ -141,7 +141,7 @@
 
 
     editarEquipo(equipo: Equipo): Observable<Equipo | null> {
-      return this.http.put<Equipo>(`${this.URLEquipo}/editar`, equipo, { withCredentials: true }).pipe(
+      return this.http.put<Equipo>(`${this.URLEquipo}/editar`, equipo ).pipe(
         catchError(error => {
           console.error('Error al editar equipo:', error);
           return of(null);
@@ -150,7 +150,7 @@
     }
 
     eliminarEquipo(id: number): Observable<void> {
-      return this.http.delete<void>(`${this.URLEquipo}/eliminar/${id}`, { withCredentials: true }).pipe(
+      return this.http.delete<void>(`${this.URLEquipo}/eliminar/${id}` ).pipe(
         catchError(error => {
           console.error('Error al eliminar equipo:', error);
           return of();
@@ -159,7 +159,7 @@
     }
 
     buscarEquipoPorNombre(nombre: string): Observable<Equipo | null> {
-      return this.http.get<Equipo>(`${this.URLEquipo}/buscarPorNombre/${nombre}`, { withCredentials: true }).pipe(
+      return this.http.get<Equipo>(`${this.URLEquipo}/buscarPorNombre/${nombre}` ).pipe(
         catchError(error => {
           console.error('Error al buscar equipo por nombre:', error);
           return of(null);
@@ -169,12 +169,12 @@
 
 
   obtenerMaterialesPorEquipo(material: Materiales): Observable<Materiales[]> {
-    return this.http.post<Materiales[]>(`${this.urlMateriales}/buscarPorEquipoId`, material, { withCredentials: true });
+    return this.http.post<Materiales[]>(`${this.urlMateriales}/buscarPorEquipoId`, material );
   }
   // Ejemplo en servicios.service.ts
 
   obtenerMateriales() {
-    return this.http.get<Materiales[]>(`${this.urlMateriales}/mostrar`, { withCredentials: true });
+    return this.http.get<Materiales[]>(`${this.urlMateriales}/mostrar` );
   }
   guardarMaterial(material: any): Observable<Materiales | string | null> {
     return this.http.post<Materiales>(`${this.urlMateriales}/guardar`, material, { observe: 'response', withCredentials: true }).pipe(
@@ -196,16 +196,16 @@
 
 
   editarMaterial(material: any): Observable<boolean> {
-    return this.http.put<boolean>(this.urlMateriales + `/editar`, material, { withCredentials: true });
+    return this.http.put<boolean>(this.urlMateriales + `/editar`, material );
   }
 
   eliminarMaterial(id: number): Observable<void> {
-    return this.http.delete<void>(this.urlMateriales + `/eliminar/${id}`, { withCredentials: true });
+    return this.http.delete<void>(this.urlMateriales + `/eliminar/${id}` );
   }
   ///Modelos//////////////////
   // Ya lo tienes
   getModelos(): Observable<Modelos[]> {
-    return this.http.get<Modelos[]>(`${this.modelosURL}/mostrar`, { withCredentials: true });
+    return this.http.get<Modelos[]>(`${this.modelosURL}/mostrar` );
   }
 
   // Agrégalo:
@@ -235,7 +235,7 @@
   // Obtener todos los modelos
 
   eliminarModelo(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.modelosURL}/eliminar/${id}`, { withCredentials: true }).pipe(
+    return this.http.delete<void>(`${this.modelosURL}/eliminar/${id}` ).pipe(
       catchError(error => {
         console.error('Error al eliminar modelo:', error);
         return of();
@@ -243,7 +243,7 @@
     );
   }
   editarModelo(modelo: Modelos): Observable<Modelos | null> {
-    return this.http.put<Modelos>(`${this.modelosURL}/editar`, modelo, { withCredentials: true }).pipe(
+    return this.http.put<Modelos>(`${this.modelosURL}/editar`, modelo ).pipe(
       catchError(error => {
         console.error('Error al editar modelo:', error);
         return of(null);
@@ -253,11 +253,11 @@
 
   // En el servicio Angular
   obtenerModelosPorCategoria(categoria: Categoria): Observable<Modelos[]> {
-    return this.http.post<Modelos[]>(`${this.modelosURL}/buscarPorCategoria`, categoria, { withCredentials: true });
+    return this.http.post<Modelos[]>(`${this.modelosURL}/buscarPorCategoria`, categoria );
   }
   obtenerMaterialesPorModelo(idModelo: number): Observable<Materiales[]> {
     const modelo = { id: idModelo };
-    return this.http.post<Materiales[]>(`${this.urlMateriales}/buscarPorModelo`, modelo, { withCredentials: true }).pipe(
+    return this.http.post<Materiales[]>(`${this.urlMateriales}/buscarPorModelo`, modelo ).pipe(
       catchError(error => {
         console.error('Error al obtener materiales por modelo:', error);
         return of([]);
@@ -325,7 +325,7 @@
 
   // Método para obtener todos los reportes
   obtenerReportes(): Observable<any[]> {
-    return this.http.get<any[]>('https://proyecto-cmr.onrender.com/api/reportes', { withCredentials: true });
+    return this.http.get<any[]>('https://proyecto-cmr.onrender.com/api/reportes' );
   }
 
     // ---------------- CLIENTES -----------------
@@ -333,7 +333,7 @@
 
     // Obtener todos los clientes
     obtenerClientes(): Observable<any[]> {
-      return this.http.get<any[]>(`${this.URLClientes}/lista`, { withCredentials: true }).pipe(
+      return this.http.get<any[]>(`${this.URLClientes}/lista` ).pipe(
         catchError(error => {
           console.error('Error al obtener clientes:', error);
           return of([]);
@@ -362,7 +362,7 @@
 
   // Editar cliente
   editarCliente(cliente: any): Observable<any | null> {
-    return this.http.put<any>(`${this.URLClientes}/editar`, cliente, { withCredentials: true }).pipe(
+    return this.http.put<any>(`${this.URLClientes}/editar`, cliente ).pipe(
       catchError(error => {
         console.error('Error al editar cliente:', error);
         return of(null);
@@ -372,7 +372,7 @@
 
   // Eliminar cliente
   eliminarCliente(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.URLClientes}/eliminar/${id}`, { withCredentials: true }).pipe(
+    return this.http.delete<void>(`${this.URLClientes}/eliminar/${id}` ).pipe(
       catchError(error => {
         console.error('Error al eliminar cliente:', error);
         return of();
@@ -382,7 +382,7 @@
 
   // Buscar cliente por nombre
   buscarClientePorNombre(nombre: string): Observable<any | null> {
-    return this.http.get<any>(`${this.URLClientes}/buscarPorNombre/${nombre}`, { withCredentials: true }).pipe(
+    return this.http.get<any>(`${this.URLClientes}/buscarPorNombre/${nombre}` ).pipe(
       catchError(error => {
         console.error('Error al buscar cliente por nombre:', error);
         return of(null);
@@ -393,7 +393,7 @@
   private URLUsuarios = 'https://proyecto-cmr.onrender.com/api/usuario';
   // Servicio para obtener usuario actual
   obtenerUsuarioActual(): Observable<any> {
-    return this.http.get<any>(`${this.URLUsuarios}/info`, { withCredentials: true }).pipe(
+    return this.http.get<any>(`${this.URLUsuarios}/info` ).pipe(
       catchError(error => {
         console.error('Error al obtener usuario actual:', error);
         return of(null);
@@ -406,7 +406,7 @@
 
 
   obtenerUsuarios(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.URLUsuarios}/lista`, { withCredentials: true }).pipe(
+    return this.http.get<any[]>(`${this.URLUsuarios}/lista` ).pipe(
       catchError(error => {
         console.error('Error al obtener usuarios:', error);
         return of([]);
@@ -433,7 +433,7 @@
 
   // Editar usuario
   editarUsuario(usuario: any): Observable<any | null> {
-    return this.http.put<any>(`${this.URLUsuarios}/editar`, usuario, { withCredentials: true }).pipe(
+    return this.http.put<any>(`${this.URLUsuarios}/editar`, usuario ).pipe(
       catchError(error => {
         console.error('Error al editar usuario:', error);
         return of(null);
@@ -443,7 +443,7 @@
 
   // Eliminar usuario
   eliminarUsuario(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.URLUsuarios}/eliminar/${id}`, { withCredentials: true }).pipe(
+    return this.http.delete<void>(`${this.URLUsuarios}/eliminar/${id}` ).pipe(
       catchError(error => {
         console.error('Error al eliminar usuario:', error);
         return of();
@@ -453,7 +453,7 @@
 
   // Buscar usuario por nombre
   buscarUsuarioPorNombre(nombre: string): Observable<any | null> {
-    return this.http.get<any>(`${this.URLUsuarios}/buscarPorNombre/${nombre}`, { withCredentials: true }).pipe(
+    return this.http.get<any>(`${this.URLUsuarios}/buscarPorNombre/${nombre}` ).pipe(
       catchError(error => {
         console.error('Error al buscar usuario por nombre:', error);
         return of(null);
@@ -467,11 +467,11 @@
 
 
   obtenerTiposOperacion(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/tipos-operacion`, { withCredentials: true });
+    return this.http.get<any[]>(`${this.apiUrl}/tipos-operacion` );
   }
 
   obtenerActividadesPorTipo(idTipoOperacion: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/actividades/tipo/${idTipoOperacion}`, { withCredentials: true });
+    return this.http.get<any[]>(`${this.apiUrl}/actividades/tipo/${idTipoOperacion}` );
   }
 
     }
