@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { PantallaReportesComponent } from './pantalla-reportes/pantalla-reportes.component';
 import { ReportesComponent } from './reportes/reportes.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CredentialsInterceptor } from './interceptors/credentials.interceptor';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,14 @@ import { ReportesComponent } from './reportes/reportes.component';
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+providers: [
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: CredentialsInterceptor,
+    multi: true
+  }
+],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }
