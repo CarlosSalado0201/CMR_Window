@@ -6,35 +6,66 @@ import { Usuario } from '../Models/Usuario';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
+  private apiUrl = 'https://proyecto-cmr.onrender.com/api'; // URL del backend en Render
+
+  public usuarioActual: Usuario | null = null;
+
   constructor(private http: HttpClient) {}
 
-  
-// Servicio login
-login(username: string, password: string): Observable<any> {
-  const body = new HttpParams()
-    .set('username', username)
-    .set('password', password);
+  // ------------------------
+  // LOGIN
+  // ------------------------
+  login(username: string, password: string): Observable<any> {
+    const body = new HttpParams()
+      .set('username', username)
+      .set('password', password);
 
-  return this.http.post('http://localhost:8080/api/login', body.toString(), {
-    withCredentials: true,
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-  });
-}
-  logout(): Observable<any> {
-    return this.http.post('http://localhost:8080/api/logout', {}, { withCredentials: true });
+    return this.http.post(`${this.apiUrl}/login`, body.toString(), {
+      withCredentials: true,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
   }
-obtenerInfoUsuario(): Observable<{ username: string; roles: number[] }> {
-  return this.http.get<{ username: string; roles: number[] }>('http://localhost:8080/api/usuario/info', { withCredentials: true });
-}
+
+  // ------------------------
+  // LOGOUT
+  // ------------------------
+  logout(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true });
+  }
+
+  // ------------------------
+  // INFO DEL USUARIO
+  // ------------------------
+  obtenerInfoUsuario(): Observable<{ username: string; roles: number[] }> {
+    return this.http.get<{ username: string; roles: number[] }>(`${this.apiUrl}/usuario/info`, { withCredentials: true });
+  }
+
   getToken(): string | null {
-    // Si hay usuario logueado, permitimos navegar
     return this.usuarioActual ? 'ok' : null;
   }
-public usuarioActual: Usuario | null = null;
- // Guardar usuario logueado
+
   setUsuarioActual(usuario: Usuario) {
     this.usuarioActual = usuario;
   }
 
+  // ------------------------
+  // CLIENTES
+  // ------------------------
+  obtenerClientes(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/clientes/lista`, { withCredentials: true });
+  }
 
+  // ------------------------
+  // TIPOS DE OPERACIÓN
+  // ------------------------
+  obtenerTiposOperacion(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/tipos-operacion`, { withCredentials: true });
+  }
+
+  // ------------------------
+  // ACTIVIDADES POR TIPO
+  // ------------------------
+  obtenerActividadesPorTipo(idTipoOperacion: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/actividades/tipo/${idTipoOperacion}`, { withCredentials: true });
+  }
 }
