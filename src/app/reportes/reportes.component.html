@@ -228,7 +228,7 @@ dame todo el codigo htlm
       </ul>
     </div>
   </div>
-  
+
     <label>Descripción / Trabajo realizado</label>
     <textarea [(ngModel)]="descripcionTrabajo" name="descripcionTrabajo" rows="5" placeholder="Describe aquí las actividades realizadas..."></textarea>
 
@@ -256,7 +256,11 @@ dame todo el codigo htlm
   </select>
 </div>
 
+    <label>Imágenes (múltiple, máx. 50)</label>
+    <input type="file" multiple accept="image/*" (change)="onImagenesSeleccionadas($event)" />
+
 <button class="add-client-button" (click)="agregarActividadesSeleccionadas()">Añadir actividades</button>
+
 
 <div class="actividades-seleccionadas" *ngIf="actividadesSeleccionadas.length > 0">
   <p><strong>Seleccionadas:</strong></p>
@@ -268,9 +272,21 @@ dame todo el codigo htlm
   </ul>
 </div>
 
+<!-- 🔻 Formulario de ubicación y equipo -->
+<div class="info-container">
+  <!-- Ubicación -->
+  <div class="info-field">
+    <label for="ubicacion">Ubicación</label>
+    <input type="text" id="ubicacion" placeholder="Escribe la ubicación..." />
+  </div>
 
-    <label>Imágenes (múltiple, máx. 50)</label>
-    <input type="file" multiple accept="image/*" (change)="onImagenesSeleccionadas($event)" />
+  <!-- Tipo de equipo / equipos -->
+  <div class="info-field">
+    <label for="equipo">Tipo de equipo / equipos</label>
+    <input type="text" id="equipo" placeholder="Escribe el tipo de equipo..." />
+  </div>
+</div>
+
 
     <label>Firma</label>
     <canvas

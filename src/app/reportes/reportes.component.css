@@ -487,3 +487,34 @@
   flex: 1;
 }
 
+.info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 20px 0; /* espacio arriba y abajo */
+}
+
+.info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-field label {
+  font-weight: 700;
+  color: #dc3545; /* rojo fuerte */
+  font-size: 1rem;
+}
+
+.info-field input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #dc3545; /* borde rojo */
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.info-field input:focus {
+  border-color: #b92c3a; /* rojo más oscuro al enfocar */
+}
