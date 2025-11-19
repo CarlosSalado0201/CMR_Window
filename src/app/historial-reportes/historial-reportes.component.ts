@@ -86,18 +86,18 @@ export class HistorialReportesComponent implements OnInit {
   hasReports(day: number): boolean {
     return false; // Por ahora siempre falso
   }
-openDatePicker() {
-  const selectedDate = prompt("Selecciona una fecha (YYYY-MM-DD):");
-  if (selectedDate) {
-    const date = new Date(selectedDate);
-    if (!isNaN(date.getTime())) {
-      this.currentMonth = date.getMonth();
-      this.currentYear = date.getFullYear();
-      this.generateCalendar(); // tu función que recalcula los días del mes
-    } else {
-      alert("Fecha inválida");
-    }
-  }
+showMiniCalendar = false;
+
+toggleMiniCalendar() {
+  this.showMiniCalendar = !this.showMiniCalendar;
+}
+
+onMiniCalendarChange(event: any) {
+  const [year, month] = event.target.value.split('-').map(Number);
+  this.currentYear = year;
+  this.currentMonth = month - 1;
+  this.showMiniCalendar = false;
+  this.generateCalendar(); // tu función que recalcula los días
 }
 
 }
