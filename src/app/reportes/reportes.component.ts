@@ -62,6 +62,11 @@ firmaSupervisorFile: File | null = null;      // File si quieres enviar al backe
     this.cargarTiposOperacion(); // ⚠️ asegúrate de llamarlo
   // ... tu código existente
 }
+menuOpen = false;
+
+toggleMenu() {
+  this.menuOpen = !this.menuOpen;
+}
 
 
   ngAfterViewInit(): void {

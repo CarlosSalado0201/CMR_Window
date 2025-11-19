@@ -166,9 +166,16 @@ dame todo el codigo htlm
 <!-- 🔻 BARRA SUPERIOR -->
 <div class="toolbar">
   <img src="assets/CMR.jpg" alt="Logo CMR" style="cursor:pointer" routerLink="/reportes" />
-  <button routerLink="/reportes">Generar Reportes</button>
-  <button (click)="logout()">Cerrar sesión</button>
-</div>
+
+  <!-- 🔻 DESPLEGABLE NUEVO DE REPORTES -->
+  <div class="dropdown">
+    <button class="dropdown-btn" (click)="toggleMenu()">Reportes ▼</button>
+
+    <div class="dropdown-content" *ngIf="menuOpen">
+      <a routerLink="/reportes">Generar reporte</a>
+      <a routerLink="/reportes">Historial</a>
+    </div>
+  </div>
 
 <div class="form-wrapper">
   <div class="report-form">
