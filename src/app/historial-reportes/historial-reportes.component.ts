@@ -27,6 +27,8 @@ export class HistorialReportesComponent implements OnInit {
     this.currentMonth = hoy.getMonth();
     this.currentYear = hoy.getFullYear();
     this.generateCalendar();
+      const currentYear = new Date().getFullYear();
+  this.years = Array.from({length: 10}, (_, i) => currentYear - 5 + i);
   }
 
   // ============================
@@ -87,17 +89,24 @@ export class HistorialReportesComponent implements OnInit {
     return false; // Por ahora siempre falso
   }
 showMiniCalendar = false;
+years: number[] = [];
+
 
 toggleMiniCalendar() {
   this.showMiniCalendar = !this.showMiniCalendar;
 }
 
-onMiniCalendarChange(event: any) {
-  const [year, month] = event.target.value.split('-').map(Number);
-  this.currentYear = year;
-  this.currentMonth = month - 1;
+selectMonth(monthIndex: number) {
+  this.currentMonth = monthIndex;
   this.showMiniCalendar = false;
-  this.generateCalendar(); // recalcula los días del mes
+  this.generateCalendar();
 }
+
+selectYear(year: number) {
+  this.currentYear = year;
+  this.showMiniCalendar = false;
+  this.generateCalendar();
+}
+
 
 }

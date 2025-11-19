@@ -14,12 +14,23 @@
     <!-- 🔻 Encabezado del calendario -->
     <div class="calendar-header">
   <div class="month-year-container">
-    <h2>{{ monthNames[currentMonth] }} {{ currentYear }}</h2>
+    <button class="prev-month" (click)="prevMonth()">&#9664;</button>
+
+    <span class="month-year">{{ monthNames[currentMonth] }} {{ currentYear }}</span>
+
+    <button class="next-month" (click)="nextMonth()">&#9654;</button>
+
     <button class="calendar-picker-btn" (click)="toggleMiniCalendar()">📅</button>
 
     <!-- Mini calendario emergente -->
     <div class="mini-calendar" *ngIf="showMiniCalendar">
-      <input type="month" (change)="onMiniCalendarChange($event)" />
+      <div class="months">
+        <button *ngFor="let month of monthNames; let i = index"
+                (click)="selectMonth(i)">{{ month }}</button>
+      </div>
+      <div class="years">
+        <button *ngFor="let y of years" (click)="selectYear(y)">{{ y }}</button>
+      </div>
     </div>
   </div>
 </div>
