@@ -170,20 +170,15 @@ dame todo el codigo htlm
   <button (click)="logout()">Cerrar sesión</button>
 </div>
 
+
+  <!-- ================= CLIENTES ================= -->
+  
+
 <div class="form-wrapper">
   <div class="report-form">
     <h2>Generar Reporte</h2>
 
-    <label>Título (opcional)</label>
-    <input type="text" [(ngModel)]="titulo" name="titulo" placeholder="Ej: Reporte semanal de avances" />
-
-    <label>Descripción / Trabajo realizado</label>
-    <textarea [(ngModel)]="descripcionTrabajo" name="descripcionTrabajo" rows="5" placeholder="Describe aquí las actividades realizadas..."></textarea>
-
-  <!-- ================= TRABAJADORES ================= -->
-  
-  <!-- ================= CLIENTES ================= -->
-  <div class="clientes-section">
+     <div class="clientes-section">
     <div class="trabajadores-section">
     <div class="encargado-reporte">
     <p><strong>Encargado del reporte:</strong></p>
@@ -213,6 +208,32 @@ dame todo el codigo htlm
       </ul>
     </div>
   </div>
+
+
+    <h4>Clientes</h4>
+    <select multiple [(ngModel)]="clientesSeleccionadosIds" name="clientesSeleccionadosIds">
+      <option *ngFor="let c of clientesDisponibles" [ngValue]="c.id">
+        {{ c.nombre }}
+      </option>
+    </select>
+    <button class="add-client-button" (click)="agregarClientesSeleccionados()">Añadir clientes</button>
+
+    <div class="clientes-seleccionados" *ngIf="clientesSeleccionados.length > 0">
+      <p><strong>Seleccionados:</strong></p>
+      <ul>
+        <li *ngFor="let c of clientesSeleccionados">
+          {{ c.nombre }}
+          <button class="remove-client-button" (click)="eliminarCliente(clientesSeleccionados.indexOf(c))">✕</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+    <label>Descripción / Trabajo realizado</label>
+    <textarea [(ngModel)]="descripcionTrabajo" name="descripcionTrabajo" rows="5" placeholder="Describe aquí las actividades realizadas..."></textarea>
+
+  <!-- ================= TRABAJADORES ================= -->
+  
 <!-- ========================================================== -->
 <!-- 🏗️ SECCIÓN: Tipo de Operación y Actividades -->
 <!-- ========================================================== -->
@@ -247,24 +268,6 @@ dame todo el codigo htlm
   </ul>
 </div>
 
-    <h4>Clientes</h4>
-    <select multiple [(ngModel)]="clientesSeleccionadosIds" name="clientesSeleccionadosIds">
-      <option *ngFor="let c of clientesDisponibles" [ngValue]="c.id">
-        {{ c.nombre }}
-      </option>
-    </select>
-    <button class="add-client-button" (click)="agregarClientesSeleccionados()">Añadir clientes</button>
-
-    <div class="clientes-seleccionados" *ngIf="clientesSeleccionados.length > 0">
-      <p><strong>Seleccionados:</strong></p>
-      <ul>
-        <li *ngFor="let c of clientesSeleccionados">
-          {{ c.nombre }}
-          <button class="remove-client-button" (click)="eliminarCliente(clientesSeleccionados.indexOf(c))">✕</button>
-        </li>
-      </ul>
-    </div>
-  </div>
 
     <label>Imágenes (múltiple, máx. 50)</label>
     <input type="file" multiple accept="image/*" (change)="onImagenesSeleccionadas($event)" />
