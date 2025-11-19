@@ -225,3 +225,8 @@
   font-weight: 700;
   font-size: 1rem;
 }
+.month-year {
+  color: #dc3545; /* rojo fuerte */
+  font-weight: 700;
+  font-size: 1.8rem;
+}
