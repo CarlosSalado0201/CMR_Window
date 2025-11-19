@@ -159,7 +159,6 @@
   border-radius: 6px;
   cursor: pointer;
   font-size: 1.2rem;
-  transition: background-color 0.3s ease;
 }
 
 .calendar-picker-btn:hover {
@@ -179,24 +178,50 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  align-items: center;
 }
 
-.mini-calendar .months, .mini-calendar .years {
+.mini-calendar .months {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
   justify-content: center;
 }
 
-.mini-calendar button {
+.mini-calendar .months button {
   background-color: #dc3545;
   color: white;
   border: none;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
 }
 
-.mini-calendar button:hover {
+.mini-calendar .months button:hover {
   background-color: #b92c3a;
+}
+
+.year-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.year-bar button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.year-bar button:hover {
+  background-color: #b92c3a;
+}
+
+.year-bar span {
+  font-weight: 700;
+  font-size: 1rem;
 }

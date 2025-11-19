@@ -17,18 +17,13 @@ export class HistorialReportesComponent implements OnInit {
     'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
   ];
 
-  // ===============================================================
-  // 🔹 Reportes mock — NO se usarán por ahora, solo placeholder
-  // ===============================================================
-  private reportesMock: Record<string, boolean> = {};
+  showMiniCalendar = false;
 
   ngOnInit(): void {
     const hoy = new Date();
     this.currentMonth = hoy.getMonth();
     this.currentYear = hoy.getFullYear();
     this.generateCalendar();
-      const currentYear = new Date().getFullYear();
-  this.years = Array.from({length: 10}, (_, i) => currentYear - 5 + i);
   }
 
   // ============================
@@ -51,25 +46,37 @@ export class HistorialReportesComponent implements OnInit {
     }
   }
 
+  // ============================
+  // Navegar meses
+  // ============================
   prevMonth() {
     this.currentMonth--;
-
     if (this.currentMonth < 0) {
       this.currentMonth = 11;
       this.currentYear--;
     }
-
     this.generateCalendar();
   }
 
   nextMonth() {
     this.currentMonth++;
-
     if (this.currentMonth > 11) {
       this.currentMonth = 0;
       this.currentYear++;
     }
+    this.generateCalendar();
+  }
 
+  // ============================
+  // Navegar años
+  // ============================
+  prevYear() {
+    this.currentYear--;
+    this.generateCalendar();
+  }
+
+  nextYear() {
+    this.currentYear++;
     this.generateCalendar();
   }
 
@@ -83,30 +90,21 @@ export class HistorialReportesComponent implements OnInit {
   }
 
   // ============================
-  // Placeholder por si luego hay reportes
+  // Mini calendario
   // ============================
-  hasReports(day: number): boolean {
-    return false; // Por ahora siempre falso
+  toggleMiniCalendar() {
+    this.showMiniCalendar = !this.showMiniCalendar;
   }
-showMiniCalendar = false;
-years: number[] = [];
 
+  selectMonth(monthIndex: number) {
+    this.currentMonth = monthIndex;
+    this.showMiniCalendar = false;
+    this.generateCalendar();
+  }
 
-toggleMiniCalendar() {
-  this.showMiniCalendar = !this.showMiniCalendar;
-}
-
-selectMonth(monthIndex: number) {
-  this.currentMonth = monthIndex;
-  this.showMiniCalendar = false;
-  this.generateCalendar();
-}
-
-selectYear(year: number) {
-  this.currentYear = year;
-  this.showMiniCalendar = false;
-  this.generateCalendar();
-}
-
-
+  selectYear(year: number) {
+    this.currentYear = year;
+    this.showMiniCalendar = false;
+    this.generateCalendar();
+  }
 }
