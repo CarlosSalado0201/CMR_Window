@@ -110,8 +110,8 @@
   padding: 16px;
   cursor: pointer;
   position: relative;
-  background-color: #dc3545; /* rojo fuerte */
-  color: white;
+  background-color: rgba(220, 53, 69, 0.15); /* rojo clarito transparente */
+  color: #dc3545; /* letras rojo fuerte */
   font-weight: 700;
   font-size: 1.4rem;
   display: flex;
@@ -119,11 +119,11 @@
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
-  word-wrap: break-word; /* nombres largos se ajustan */
+  word-wrap: break-word;
 }
 
 .calendar-day:hover {
-  background-color: #b92c3a;
+  background-color: rgba(220, 53, 69, 0.3); /* rojo un poco más intenso al pasar el mouse */
 }
 
 .calendar-day.empty {
