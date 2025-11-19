@@ -103,9 +103,8 @@
   gap: 8px; /* espacio entre cuadros */
 }
 /* ---- BOTONES DE LOS DÍAS GIGANTES ---- */
-/* ---- BOTONES DE LOS DÍAS COMPLETAMENTE GRANDES ---- */
 .calendar-day {
-  height: 40vh; /* cada día ocupa toda la altura de la ventana */
+  height: 40vh; /* cada día ocupa el 40% de la altura de la ventana */
   border-radius: 12px;
   text-align: center;
   padding: 16px;
@@ -130,7 +129,7 @@
 .calendar-day.empty {
   background: transparent;
   cursor: default;
-  height: 100vh; /* mismo tamaño que los días con contenido */
+  height: 40vh; /* mismo tamaño que los días con contenido */
 }
 
 
