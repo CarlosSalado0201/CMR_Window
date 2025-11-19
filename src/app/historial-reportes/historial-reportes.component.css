@@ -50,12 +50,11 @@
   background-color: #f8d7da;
 }
 
-/* ---- AQUI INICIA EL CALENDARIO ---- */
-
+/* ---- CALENDARIO ---- */
 .calendar-container {
-  margin-top: 140px; /* debajo de la barra roja */
+  margin-top: 140px; /* espacio debajo de la barra */
   width: 90%;
-  max-width: 700px; /* más ancho para días grandes */
+  max-width: 800px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -69,7 +68,7 @@
 
 .calendar-header h2 {
   color: #dc3545;
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   margin: 0;
   font-weight: 700;
 }
@@ -78,10 +77,10 @@
   background-color: #dc3545;
   border: none;
   color: white;
-  padding: 6px 12px;
+  padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 .calendar-header button:hover {
@@ -95,20 +94,20 @@
   font-weight: 700;
   margin-bottom: 8px;
   color: #dc3545;
+  font-size: 1.1rem;
 }
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px; /* un poquito más de espacio */
+  gap: 12px; /* espacio entre cuadros grande */
 }
 
-/* ---- BOTONES DE LOS DÍAS GRANDES ---- */
+/* ---- BOTONES DE LOS DÍAS ENORMES ---- */
 .calendar-day {
-  min-height: 120px; /* enorme */
-  min-width: 120px;  /* para que sea cuadrado grande */
-  border: none;
-  border-radius: 8px;
+  height: 50vh; /* la mitad de la pantalla */
+  width: 100%; /* ocupa todo el ancho de la columna */
+  border-radius: 12px;
   text-align: center;
   padding: 8px;
   cursor: pointer;
@@ -116,34 +115,34 @@
   background-color: #dc3545; /* rojo fuerte */
   color: white;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
-  word-wrap: break-word; /* para que nombres largos se ajusten */
+  word-wrap: break-word; /* nombres largos se ajustan */
 }
 
 .calendar-day:hover {
-  background-color: #b92c3a; /* rojo más oscuro */
+  background-color: #b92c3a;
 }
 
 .calendar-day.empty {
   background: transparent;
   cursor: default;
-  min-height: 120px;
-  min-width: 120px;
+  height: 50vh; /* mismo tamaño que los días con número */
+  width: 100%;
 }
 
 /* PUNTO DE REPORTE */
 .report-indicator {
-  width: 10px;
-  height: 10px;
-  background-color: #fff; /* se ve sobre rojo */
+  width: 12px;
+  height: 12px;
+  background-color: #fff;
   border-radius: 50%;
   position: absolute;
-  bottom: 6px;
+  bottom: 12px;
   left: 50%;
   transform: translateX(-50%);
 }
