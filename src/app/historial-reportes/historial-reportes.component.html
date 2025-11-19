@@ -13,6 +13,10 @@
 
   <!-- 🔻 Encabezado del calendario -->
   <div class="calendar-header">
+    <!-- Flecha mes anterior -->
+    <button class="month-arrow" (click)="prevMonth()">&#9664;</button>
+
+    <!-- Mes y año + mini calendario -->
     <div class="month-year-container">
       <span class="month-year">{{ monthNames[currentMonth] }} {{ currentYear }}</span>
       <button class="calendar-picker-btn" (click)="toggleMiniCalendar()">📅</button>
@@ -35,6 +39,9 @@
         </div>
       </div>
     </div>
+
+    <!-- Flecha mes siguiente -->
+    <button class="month-arrow" (click)="nextMonth()">&#9654;</button>
   </div>
 
   <!-- 🔻 Días de la semana -->
