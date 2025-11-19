@@ -52,9 +52,9 @@
 
 /* ---- CALENDARIO ---- */
 .calendar-container {
-  margin-top: 140px; /* espacio debajo de la barra */
-  width: 90%;
-  max-width: 800px;
+  margin-top: 140px; /* debajo de la barra */
+  width: 95%;
+  max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -89,24 +89,23 @@
 
 .calendar-weekdays {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, 1fr); /* 7 columnas para los días */
   text-align: center;
   font-weight: 700;
   margin-bottom: 8px;
   color: #dc3545;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 12px; /* espacio entre cuadros grande */
+  grid-template-columns: repeat(7, 1fr); /* 7 columnas de extremo a extremo */
+  gap: 8px; /* espacio entre cuadros */
 }
 
-/* ---- BOTONES DE LOS DÍAS ENORMES ---- */
+/* ---- BOTONES DE LOS DÍAS GORDOS ---- */
 .calendar-day {
-  height: 50vh; /* la mitad de la pantalla */
-  width: 100%; /* ocupa todo el ancho de la columna */
+  height: 150px; /* bastante alto */
   border-radius: 12px;
   text-align: center;
   padding: 8px;
@@ -115,7 +114,7 @@
   background-color: #dc3545; /* rojo fuerte */
   color: white;
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -131,8 +130,7 @@
 .calendar-day.empty {
   background: transparent;
   cursor: default;
-  height: 50vh; /* mismo tamaño que los días con número */
-  width: 100%;
+  height: 150px;
 }
 
 /* PUNTO DE REPORTE */
