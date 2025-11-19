@@ -55,7 +55,7 @@
 .calendar-container {
   margin-top: 140px; /* debajo de la barra roja */
   width: 90%;
-  max-width: 600px;
+  max-width: 700px; /* más ancho para días grandes */
   margin-left: auto;
   margin-right: auto;
 }
@@ -100,39 +100,47 @@
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
+  gap: 8px; /* un poquito más de espacio */
 }
 
-/* ---- BOTONES DE LOS DÍAS ---- */
+/* ---- BOTONES DE LOS DÍAS GRANDES ---- */
 .calendar-day {
-  height: 50px; /* bajito */
-  border: none; /* sin borde para look limpio */
-  border-radius: 6px;
+  min-height: 120px; /* enorme */
+  min-width: 120px;  /* para que sea cuadrado grande */
+  border: none;
+  border-radius: 8px;
   text-align: center;
-  padding-top: 12px;
+  padding: 8px;
   cursor: pointer;
   position: relative;
-  background-color: #dc3545; /* rojo */
-  color: white; /* texto blanco */
+  background-color: #dc3545; /* rojo fuerte */
+  color: white;
   font-weight: 700;
   font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   transition: background-color 0.3s ease;
+  word-wrap: break-word; /* para que nombres largos se ajusten */
 }
 
 .calendar-day:hover {
-  background-color: #b92c3a; /* rojo más oscuro al pasar mouse */
+  background-color: #b92c3a; /* rojo más oscuro */
 }
 
 .calendar-day.empty {
   background: transparent;
   cursor: default;
+  min-height: 120px;
+  min-width: 120px;
 }
 
 /* PUNTO DE REPORTE */
 .report-indicator {
-  width: 8px;
-  height: 8px;
-  background-color: #dc3545;
+  width: 10px;
+  height: 10px;
+  background-color: #fff; /* se ve sobre rojo */
   border-radius: 50%;
   position: absolute;
   bottom: 6px;
