@@ -1,0 +1,38 @@
+<p>historial-reportes works!</p>
+<!-- 🔻 BARRA SUPERIOR -->
+<div class="toolbar">
+  <img src="assets/CMR.jpg" alt="Logo CMR" style="cursor:pointer" routerLink="/inicio" />
+  <button routerLink="/calculadora">Abrir calculadora</button>
+  <button routerLink="/editar">Editar inventario</button>
+  <button routerLink="/historial-reportes">Historial de reportes</button>
+  <button routerLink="/login">Cerrar sesión</button>
+</div>
+
+<div class="calendar-container">
+
+  <!-- 🔻 Encabezado del Mes -->
+  <div class="calendar-header">
+    <button (click)="prevMonth()">&#9664;</button>
+    <h2>{{ monthNames[currentMonth] }} {{ currentYear }}</h2>
+    <button (click)="nextMonth()">&#9654;</button>
+  </div>
+
+  <!-- 🔻 Días de la semana -->
+  <div class="calendar-weekdays">
+    <div *ngFor="let day of weekDays">{{ day }}</div>
+  </div>
+
+  <!-- 🔻 Cuadros de días -->
+  <div class="calendar-grid">
+    <div class="calendar-day"
+      *ngFor="let day of daysInMonth"
+      [class.empty]="day === 0"
+      (click)="day !== 0 && selectDate(day)">
+      
+      <span *ngIf="day !== 0">{{ day }}</span>
+
+      <!-- Aquí se mostrará un puntito si hay reportes -->
+      <div class="report-indicator" *ngIf="hasReports(day)"></div>
+    </div>
+  </div>
+</div>

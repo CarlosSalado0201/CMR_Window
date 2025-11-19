@@ -15,6 +15,7 @@ import { PantallaReportesComponent } from './pantalla-reportes/pantalla-reportes
 import { ReportesComponent } from './reportes/reportes.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CredentialsInterceptor } from './interceptors/credentials.interceptor';
+import { HistorialReportesComponent } from './historial-reportes/historial-reportes.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { CredentialsInterceptor } from './interceptors/credentials.interceptor';
     ProyectoGrandeComponent,
     EditarInventarioComponent,
     PantallaReportesComponent,
-    ReportesComponent
+    ReportesComponent,
+    HistorialReportesComponent
   ],
   imports: [
     BrowserModule,
