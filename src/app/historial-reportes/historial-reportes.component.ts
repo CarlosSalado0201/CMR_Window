@@ -97,7 +97,7 @@ onMiniCalendarChange(event: any) {
   this.currentYear = year;
   this.currentMonth = month - 1;
   this.showMiniCalendar = false;
-  this.generateCalendar(); // tu función que recalcula los días
+  this.generateCalendar(); // recalcula los días del mes
 }
 
 }

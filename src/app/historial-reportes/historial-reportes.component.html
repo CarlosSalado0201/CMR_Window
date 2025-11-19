@@ -13,19 +13,15 @@
 
     <!-- 🔻 Encabezado del calendario -->
     <div class="calendar-header">
-  <button (click)="prevMonth()">&#9664;</button>
-
   <div class="month-year-container">
     <h2>{{ monthNames[currentMonth] }} {{ currentYear }}</h2>
     <button class="calendar-picker-btn" (click)="toggleMiniCalendar()">📅</button>
-    
+
     <!-- Mini calendario emergente -->
     <div class="mini-calendar" *ngIf="showMiniCalendar">
       <input type="month" (change)="onMiniCalendarChange($event)" />
     </div>
   </div>
-
-  <button (click)="nextMonth()">&#9654;</button>
 </div>
 
 
