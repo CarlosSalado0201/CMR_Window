@@ -102,19 +102,18 @@
   grid-template-columns: repeat(7, 1fr); /* 7 columnas de extremo a extremo */
   gap: 8px; /* espacio entre cuadros */
 }
-
-/* ---- BOTONES DE LOS DÍAS GORDOS ---- */
+/* ---- BOTONES DE LOS DÍAS GIGANTES ---- */
 .calendar-day {
-  height: 150px; /* bastante alto */
+  height: 50vh; /* cada día ocupa la mitad de la pantalla */
   border-radius: 12px;
   text-align: center;
-  padding: 8px;
+  padding: 12px;
   cursor: pointer;
   position: relative;
   background-color: #dc3545; /* rojo fuerte */
   color: white;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -130,8 +129,9 @@
 .calendar-day.empty {
   background: transparent;
   cursor: default;
-  height: 150px;
+  height: 50vh;
 }
+
 
 /* PUNTO DE REPORTE */
 .report-indicator {
