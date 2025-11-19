@@ -86,5 +86,18 @@ export class HistorialReportesComponent implements OnInit {
   hasReports(day: number): boolean {
     return false; // Por ahora siempre falso
   }
+openDatePicker() {
+  const selectedDate = prompt("Selecciona una fecha (YYYY-MM-DD):");
+  if (selectedDate) {
+    const date = new Date(selectedDate);
+    if (!isNaN(date.getTime())) {
+      this.currentMonth = date.getMonth();
+      this.currentYear = date.getFullYear();
+      this.generateCalendar(); // tu función que recalcula los días del mes
+    } else {
+      alert("Fecha inválida");
+    }
+  }
+}
 
 }
