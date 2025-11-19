@@ -1,68 +1,90 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-historial-reportes',
   templateUrl: './historial-reportes.component.html',
   styleUrls: ['./historial-reportes.component.css']
 })
-export class HistorialReportesComponent {
+export class HistorialReportesComponent implements OnInit {
 
-  weekDays = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
-  monthNames = [
+  currentYear: number = 0;
+  currentMonth: number = 0; // 0 = Enero
+  daysInMonth: number[] = [];
+
+  weekDays: string[] = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+  monthNames: string[] = [
     'Enero','Febrero','Marzo','Abril','Mayo','Junio',
     'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
   ];
 
-  currentMonth = new Date().getMonth();
-  currentYear = new Date().getFullYear();
-  daysInMonth: number[] = [];
+  // ===============================================================
+  // 🔹 Reportes mock — NO se usarán por ahora, solo placeholder
+  // ===============================================================
+  private reportesMock: Record<string, boolean> = {};
 
-  // Simulación de fechas con reportes
-  reportDays = [3, 7, 10, 15, 22, 29];
-
-  constructor() {
-    this.loadCalendar();
+  ngOnInit(): void {
+    const hoy = new Date();
+    this.currentMonth = hoy.getMonth();
+    this.currentYear = hoy.getFullYear();
+    this.generateCalendar();
   }
 
-  loadCalendar() {
-    this.daysInMonth = [];
+  // ============================
+  // Generar calendario
+  // ============================
+  generateCalendar() {
     const firstDay = new Date(this.currentYear, this.currentMonth, 1).getDay();
-    const daysCount = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
+    const totalDays = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
 
-    const start = (firstDay === 0 ? 6 : firstDay - 1);
+    this.daysInMonth = [];
 
-    for (let i = 0; i < start; i++) {
+    // Espacios vacíos antes del día 1
+    for (let i = 0; i < firstDay; i++) {
       this.daysInMonth.push(0);
     }
 
-    for (let d = 1; d <= daysCount; d++) {
-      this.daysInMonth.push(d);
+    // Días reales
+    for (let i = 1; i <= totalDays; i++) {
+      this.daysInMonth.push(i);
     }
   }
 
   prevMonth() {
     this.currentMonth--;
+
     if (this.currentMonth < 0) {
       this.currentMonth = 11;
       this.currentYear--;
     }
-    this.loadCalendar();
+
+    this.generateCalendar();
   }
 
   nextMonth() {
     this.currentMonth++;
+
     if (this.currentMonth > 11) {
       this.currentMonth = 0;
       this.currentYear++;
     }
-    this.loadCalendar();
+
+    this.generateCalendar();
   }
 
-  hasReports(day: number): boolean {
-    return this.reportDays.includes(day);
-  }
-
+  // ============================
+  // Seleccionar fecha (solo consola)
+  // ============================
   selectDate(day: number) {
-    alert(`Mostrar reportes del día: ${day}/${this.currentMonth + 1}/${this.currentYear}`);
+    if (day === 0) return;
+    const fullDate = `${this.currentYear}-${this.currentMonth + 1}-${day}`;
+    console.log("Fecha seleccionada:", fullDate);
   }
+
+  // ============================
+  // Placeholder por si luego hay reportes
+  // ============================
+  hasReports(day: number): boolean {
+    return false; // Por ahora siempre falso
+  }
+
 }
