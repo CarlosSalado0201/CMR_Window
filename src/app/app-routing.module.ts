@@ -10,6 +10,7 @@ import { PantallaPrincipalComponent } from './pantallaprincipal/pantallaprincipa
 import { PantallaReportesComponent } from './pantalla-reportes/pantalla-reportes.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { AuthGuard } from './guards/guard';
+import { HistorialReportesComponent } from './historial-reportes/historial-reportes.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,7 +21,9 @@ const routes: Routes = [
   { path: 'trabajoDiario', component: TrabajoDiarioComponent,canActivate: [AuthGuard] },
   { path: '', redirectTo: '/login', pathMatch: 'full' }, // por defecto va al login
   { path: 'reportes', component: PantallaReportesComponent, canActivate: [AuthGuard] },
-  { path: 'generar', component: ReportesComponent,canActivate: [AuthGuard]}
+  { path: 'generar', component: ReportesComponent,canActivate: [AuthGuard]},
+  { path: 'historial-reportes', component: HistorialReportesComponent, canActivate: [AuthGuard] },
+
 ];
 
 @NgModule({
@@ -28,4 +31,3 @@ imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-  
