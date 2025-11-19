@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' }, // por defecto va al login
   { path: 'reportes', component: PantallaReportesComponent, canActivate: [AuthGuard] },
   { path: 'generar', component: ReportesComponent,canActivate: [AuthGuard]},
-  { path: 'historial-reportes', component: HistorialReportesComponent, canActivate: [AuthGuard] },
+  { path: 'historial', component: HistorialReportesComponent, canActivate: [AuthGuard] },
 
 ];
 
