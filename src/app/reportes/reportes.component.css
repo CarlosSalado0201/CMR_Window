@@ -408,3 +408,73 @@ canvas {
   from { transform: translateY(-20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+/* ==============================
+   SELECCIÓN DE CLIENTES Y TRABAJADORES
+   ============================== */
+.selection-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 16px;
+  border: 1px solid #f0c2c7;
+  border-radius: 10px;
+  background: #fff0f2;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+}
+
+.selection-box:hover {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+.selection-box select {
+  width: 100%;
+  min-height: 120px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: #fffafc;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.selection-box button.add-client-button,
+.selection-box button.add-worker-button {
+  align-self: flex-end;
+  margin-top: 6px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  background: linear-gradient(90deg, #dc3545, #e8505b);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.selection-box button.add-client-button:hover,
+.selection-box button.add-worker-button:hover {
+  background: linear-gradient(90deg, #e8505b, #dc3545);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(220,53,69,0.3);
+}
+
+/* Lista de elementos seleccionados dentro del box */
+.selection-box .clientes-seleccionados,
+.selection-box .trabajadores-seleccionados {
+  margin-top: 10px;
+}
+
+.selection-box .clientes-seleccionados li,
+.selection-box .trabajadores-seleccionados li {
+  background: #fff5f5;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #f0c2c7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
