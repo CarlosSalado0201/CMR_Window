@@ -96,16 +96,36 @@ export class ReportesComponent implements AfterViewInit, OnInit {
   }
 
   // ===================== FIRMA ENCARGADO =====================
-guardarFirma(): Promise<void> {
-  return new Promise((resolve, reject) => {
+async guardarFirma() {
+  return new Promise<void>((resolve, reject) => {
     this.canvas.nativeElement.toBlob(blob => {
       if (blob) {
         this.firmaFile = new File([blob], 'firma.png', { type: 'image/png' });
         alert('✅ Firma del encargado guardada con éxito');
+        this.verificado = !!this.firmaFile && !!this.firmaSupervisorFile; // desbloquea si ambas firmas listas
         resolve();
       } else {
         alert('❌ Error al generar la firma del encargado.');
         reject('Error al generar la firma del encargado.');
+      }
+    });
+  });
+}
+
+async guardarFirmaSupervisor() {
+  return new Promise<void>((resolve, reject) => {
+    const canvas = this.canvasSupervisor.nativeElement;
+    this.firmaSupervisor = canvas.toDataURL('image/png');
+
+    canvas.toBlob(blob => {
+      if (blob) {
+        this.firmaSupervisorFile = new File([blob], 'firma_supervisor.png', { type: 'image/png' });
+        alert('✅ Firma del supervisor guardada con éxito');
+        this.verificado = !!this.firmaFile && !!this.firmaSupervisorFile; // desbloquea si ambas firmas listas
+        resolve();
+      } else {
+        alert('❌ Error al generar la firma del supervisor');
+        reject('Error al generar la firma del supervisor');
       }
     });
   });
@@ -156,23 +176,6 @@ guardarFirma(): Promise<void> {
   }
 
 // ===================== FIRMA SUPERVISOR =====================
-guardarFirmaSupervisor(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const canvas = this.canvasSupervisor.nativeElement;
-    this.firmaSupervisor = canvas.toDataURL('image/png');
-
-    canvas.toBlob(blob => {
-      if (blob) {
-        this.firmaSupervisorFile = new File([blob], 'firma_supervisor.png', { type: 'image/png' });
-        alert('✅ Firma del supervisor guardada con éxito');
-        resolve();
-      } else {
-        alert('❌ Error al generar la firma del supervisor');
-        reject('Error al generar la firma del supervisor');
-      }
-    });
-  });
-}
 
 
 
