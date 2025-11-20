@@ -12,31 +12,28 @@ import { Cliente } from 'src/app/Models/Cliente';
 })
 export class ReportesComponent implements AfterViewInit, OnInit {
 
-  // ===================== VARIABLES =====================
   urlPdf: string | null = null;
+  pdfLink: string = '';
 
-  // Firma encargado
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
   private ctx!: CanvasRenderingContext2D;
   private dibujando = false;
   firmaFile: File | null = null;
 
-  // Firma supervisor
   @ViewChild('canvasSupervisor', { static: false }) canvasSupervisor!: ElementRef<HTMLCanvasElement>;
   dibujandoSupervisor = false;
   firmaSupervisor: string | null = null;
   firmaSupervisorFile: File | null = null;
 
-  // Formulario
   titulo = '';
   descripcionTrabajo = '';
   imagenes: File[] = [];
+  imagenesLecturas: File[] = [];
   lecturas = '';
   observaciones = '';
   autorizacion = '';
   nombreSupervisor = '';
 
-  // Usuarios y clientes
   usuarioActual: Usuario | null = null;
   usuariosDisponibles: Usuario[] = [];
   trabajadoresSeleccionados: Usuario[] = [];
@@ -45,18 +42,14 @@ export class ReportesComponent implements AfterViewInit, OnInit {
   clientesSeleccionados: Cliente[] = [];
   clientesSeleccionadosIds: number[] = [];
 
-  // Actividades y operaciones
   tiposOperacion: any[] = [];
   tipoOperacionSeleccionadaId: number | null = null;
   actividadesDisponibles: any[] = [];
   actividadesSeleccionadas: any[] = [];
   actividadesSeleccionadasIds: number[] = [];
 
-  // Verificación y control
   mostrarVerificacion = false;
   verificado = false;
-
-  menuOpen = false;
 
   constructor(
     private serviciosService: ServiciosService,
@@ -64,7 +57,6 @@ export class ReportesComponent implements AfterViewInit, OnInit {
     private router: Router
   ) {}
 
-  // ===================== CICLO DE VIDA =====================
   ngOnInit(): void {
     this.obtenerUsuarioActual();
     this.cargarUsuariosDisponibles();
@@ -76,11 +68,6 @@ export class ReportesComponent implements AfterViewInit, OnInit {
     this.ctx = this.canvas.nativeElement.getContext('2d')!;
     this.ctx.lineWidth = 2;
     this.ctx.strokeStyle = '#000';
-  }
-
-  // ===================== MENU =====================
-  toggleMenu() {
-    this.menuOpen = !this.menuOpen;
   }
 
   // ===================== FIRMA ENCARGADO =====================
@@ -113,10 +100,8 @@ export class ReportesComponent implements AfterViewInit, OnInit {
       this.canvas.nativeElement.toBlob(blob => {
         if (blob) {
           this.firmaFile = new File([blob], 'firma.png', { type: 'image/png' });
-          alert('✅ Firma guardada correctamente.');
           resolve();
         } else {
-          alert('❌ No se pudo generar la firma.');
           reject('Error al generar la firma.');
         }
       });
@@ -130,7 +115,7 @@ export class ReportesComponent implements AfterViewInit, OnInit {
     if ((event as MouseEvent).clientX !== undefined) {
       clientX = (event as MouseEvent).clientX;
       clientY = (event as MouseEvent).clientY;
-    } else if ((event as TouchEvent).touches && (event as TouchEvent).touches.length > 0) {
+    } else if ((event as TouchEvent).touches?.length) {
       clientX = (event as TouchEvent).touches[0].clientX;
       clientY = (event as TouchEvent).touches[0].clientY;
     }
@@ -171,30 +156,24 @@ export class ReportesComponent implements AfterViewInit, OnInit {
     const canvas = this.canvasSupervisor.nativeElement;
     this.firmaSupervisor = canvas.toDataURL('image/png');
     canvas.toBlob(blob => {
-      if (blob) this.firmaSupervisorFile = new File([blob], 'firma_supervisor.png', { type: 'image/png' });
-      alert('✅ Firma del supervisor guardada correctamente.');
-    }, 'image/png');
-  }
-
-  // ===================== USUARIO ACTUAL =====================
-  obtenerUsuarioActual() {
-    this.serviciosService.obtenerUsuarioActual().subscribe({
-      next: (data: Usuario) => this.usuarioActual = data,
-      error: err => console.error('Error al obtener usuario actual', err)
+      if (blob) {
+        this.firmaSupervisorFile = new File([blob], 'firma_supervisor.png', { type: 'image/png' });
+      }
     });
   }
 
-  // ===================== TRABAJADORES =====================
+  // ===================== USUARIOS =====================
+  obtenerUsuarioActual() {
+    this.serviciosService.obtenerUsuarioActual().subscribe({
+      next: (data: Usuario) => this.usuarioActual = data,
+      error: err => console.error(err)
+    });
+  }
+
   cargarUsuariosDisponibles() {
     this.serviciosService.obtenerUsuarios().subscribe({
-      next: (data: any[]) => {
-        this.usuariosDisponibles = data.map(u => ({
-          ...u,
-          roles: Array.isArray(u.roles) ? u.roles : Array.from(u.roles),
-          rolesIds: Array.isArray(u.rolesIds) ? u.rolesIds : Array.from(u.rolesIds || [])
-        }));
-      },
-      error: err => console.error('Error al cargar usuarios', err)
+      next: (data: any[]) => this.usuariosDisponibles = data,
+      error: err => console.error(err)
     });
   }
 
@@ -222,7 +201,7 @@ export class ReportesComponent implements AfterViewInit, OnInit {
   cargarClientes() {
     this.serviciosService.obtenerClientes().subscribe({
       next: (data: Cliente[]) => this.clientesDisponibles = data,
-      error: err => console.error('Error al cargar clientes', err)
+      error: err => console.error(err)
     });
   }
 
@@ -240,11 +219,11 @@ export class ReportesComponent implements AfterViewInit, OnInit {
     this.clientesSeleccionados.splice(index, 1);
   }
 
-  // ===================== OPERACIONES Y ACTIVIDADES =====================
+  // ===================== OPERACIONES =====================
   cargarTiposOperacion() {
     this.serviciosService.obtenerTiposOperacion().subscribe({
       next: tipos => this.tiposOperacion = tipos,
-      error: err => console.error('Error al cargar tipos de operación:', err)
+      error: err => console.error(err)
     });
   }
 
@@ -252,18 +231,14 @@ export class ReportesComponent implements AfterViewInit, OnInit {
     if (!this.tipoOperacionSeleccionadaId) return;
     this.serviciosService.obtenerActividadesPorTipo(this.tipoOperacionSeleccionadaId).subscribe({
       next: data => this.actividadesDisponibles = data || [],
-      error: err => {
-        console.error('Error al cargar actividades:', err);
-        alert('❌ Error al conectar con el servidor.');
-        this.actividadesDisponibles = [];
-      }
+      error: err => console.error(err)
     });
   }
 
   agregarActividadesSeleccionadas() {
     this.actividadesSeleccionadasIds.forEach(id => {
       const actividad = this.actividadesDisponibles.find(a => a.idActividad === id);
-      if (actividad && !this.actividadesSeleccionadas.includes(actividad)) {
+      if (actividad && !this.actividadesSeleccionadas.some(a => a.idActividad === id)) {
         this.actividadesSeleccionadas.push(actividad);
       }
     });
@@ -273,149 +248,124 @@ export class ReportesComponent implements AfterViewInit, OnInit {
   eliminarActividad(index: number) {
     this.actividadesSeleccionadas.splice(index, 1);
   }
-// ===================== REPORTES =====================
-async generarReporte() {
-  if (
-    !this.descripcionTrabajo ||
-    !this.usuarioActual ||
-    !this.nombreSupervisor ||
-    !this.firmaSupervisor
-  ) {
-    alert('⚠️ Complete todos los campos requeridos antes de generar el reporte.');
-    return;
-  }
 
-  // Encargado
-  const encargado = {
-    nombre: this.usuarioActual.nombre,
-    cargo: this.usuarioActual.cargo
-  };
+  // ===================== REPORTES =====================
+  async generarReporte() {
 
-  // Trabajadores
-  const trabajadores = this.trabajadoresSeleccionados.map(t => ({
-    nombre: t.nombre,
-    cargo: t.cargo
-  }));
+    if (!this.descripcionTrabajo || !this.usuarioActual || !this.nombreSupervisor || !this.firmaSupervisor) {
+      alert('⚠️ Complete todos los campos requeridos.');
+      return;
+    }
 
-  // Cliente
-  const cliente = this.clientesSeleccionados[0];
-  if (!cliente) {
-    alert('⚠️ Seleccione al menos un cliente.');
-    return;
-  }
+    const encargado = {
+      nombre: this.usuarioActual.nombre,
+      cargo: this.usuarioActual.cargo
+    };
 
-  try {
-    await this.guardarFirma();
+    const trabajadores = this.trabajadoresSeleccionados.map(t => ({
+      nombre: t.nombre,
+      cargo: t.cargo
+    }));
 
-    // IDs de actividades
-    const actividadesIds = this.actividadesSeleccionadas.map(a => a.idActividad);
+    const cliente = this.clientesDisponibles[0];
+    if (!cliente) {
+      alert('⚠️ Seleccione al menos un cliente.');
+      return;
+    }
 
-    // ----------------------
-    // LLAMADA AL SERVICE
-    // ----------------------
-    this.serviciosService
-      .generarReporte(
+    try {
+      await this.guardarFirma();
+
+      const actividadesIds = this.actividadesSeleccionadas.map(a => a.idActividad);
+
+      this.serviciosService.generarReporte(
         encargado,
         trabajadores,
         cliente,
         this.descripcionTrabajo,
-
-        // imágenes de descripción
         this.imagenes,
-
-        // firma del encargado
         this.firmaFile,
-
-        // actividades
         actividadesIds,
-
-        // supervisor
         this.nombreSupervisor,
         this.firmaSupervisorFile,
-
-        // nuevas imágenes de lecturas
         this.imagenesLecturas,
-
-        // ubicación
         cliente.direccion,
-
-        // lecturas
         this.lecturas,
-
-        // observaciones
         this.observaciones
-      )
-      .subscribe({
+      ).subscribe({
         next: res => {
           this.urlPdf = res.urlPdf;
+          this.pdfLink = res.urlPdf;
+
           setTimeout(() => {
-            if (confirm('✅ Reporte generado correctamente. ¿Desea abrir el PDF?')) {
+            if (confirm('Reporte generado. ¿Abrir PDF?')) {
               window.open(this.urlPdf!, '_blank');
             }
             this.limpiarFormulario();
-          }, 0);
+          }, 50);
         },
-        error: err => {
-          console.error('Error al generar reporte:', err);
-          alert('❌ Ocurrió un error al generar el reporte.');
-        }
+        error: err => console.error(err)
       });
 
-  } catch (error) {
-    alert('❌ No se pudo guardar la firma: ' + error);
+    } catch (e) {
+      alert('❌ No se pudo guardar la firma.');
+    }
+  }
+
+  // ===================== LOGOUT =====================
+  logout() {
+    document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    window.location.href = '/login';
+  }
+
+  // ===================== IMÁGENES =====================
+onImagenesSeleccionadas(event: any) {
+  const files = event.target.files as FileList;
+  if (files && files.length) {
+    this.imagenes = Array.from(files).slice(0, 10);
   }
 }
 
-
-  private limpiarFormulario() {
-    this.titulo = '';
-    this.descripcionTrabajo = '';
-    this.limpiarFirma();
-    this.clientesSeleccionados = [];
-    this.trabajadoresSeleccionados = [];
-    this.nombreSupervisor = '';
-    this.actividadesSeleccionadas = [];
-    this.verificado = false;
-    this.firmaSupervisor = null;
-    this.firmaSupervisorFile = null;
+onLecturasSeleccionadas(event: any) {
+  const files = event.target.files as FileList;
+  if (files && files.length) {
+    this.imagenesLecturas = Array.from(files).slice(0, 10);
   }
+}
 
   // ===================== VERIFICACIÓN =====================
-  abrirVerificacion() { this.mostrarVerificacion = true; }
-  cerrarVerificacion() { this.mostrarVerificacion = false; }
+  abrirVerificacion() {
+    this.mostrarVerificacion = true;
+  }
+
+  cerrarVerificacion() {
+    this.mostrarVerificacion = false;
+  }
 
   aprobarVerificacion() {
-    if (!this.nombreSupervisor || !this.firmaSupervisor) {
-      alert('Por favor ingrese nombre y firma del supervisor.');
-      return;
-    }
-    this.verificado = true;
-    this.mostrarVerificacion = false;
-    alert('✅ Verificación aprobada.');
+    alert("Verificación aprobada");
+    this.cerrarVerificacion();
   }
 
-  // ===================== UTILIDADES =====================
-  onImagenesSeleccionadas(event: any) { this.imagenes = Array.from(event.target.files); }
-
-  cerrarLayer() { this.urlPdf = null; }
-
-  copiarEnlace(input: HTMLInputElement) {
-    input.select();
-    document.execCommand('copy');
-    alert('Enlace copiado al portapapeles ✅');
+  // ===================== COPIAR ENLACE =====================
+  copiarEnlace(elemento: HTMLInputElement) {
+    navigator.clipboard.writeText(elemento.value)
+      .then(() => alert("📋 Enlace copiado."))
+      .catch(() => alert("❌ No se pudo copiar."));
   }
 
-  logout() {
-    this.auth.logout().subscribe({
-      next: () => this.router.navigate(['/login']),
-      error: () => console.error('Error al cerrar sesión')
-    });
+  // ===================== LIMPIAR FORMULARIO =====================
+  limpiarFormulario() {
+    this.imagenes = [];
+    this.imagenesLecturas = [];
+    this.descripcionTrabajo = '';
+    this.lecturas = '';
+    this.observaciones = '';
+    this.actividadesSeleccionadas = [];
+    this.trabajadoresSeleccionados = [];
+    this.clientesSeleccionados = [];
+    this.firmaFile = null;
+    this.firmaSupervisorFile = null;
+    this.firmaSupervisor = null;
   }
-  imagenesLecturas: File[] = [];
-
-onImagenesLecturas(event: any) {
-  this.imagenesLecturas = Array.from(event.target.files);
-}
-
-
 }

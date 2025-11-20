@@ -270,78 +270,7 @@
       { modelo: { id } }, // El cuerpo esperado por el backend
       { withCredentials: true }
     );
-  }// ---------------- REPORTES -----------------
-// ---------------- REPORTES -----------------
-// Servicio: generarReporte
-generarReporte(
-  encargado: any,
-  trabajadores: any[],
-  cliente: any,
-  descripcion: string,
-  imagenesDescripcion: File[] = [],
-  imagenesLecturas: File[] = [],
-  firma: File | null = null,
-  actividades: number[] = [],
-  nombreSupervisor: string,
-  firmaSupervisor: File | null,
-  tipoOperacion: string,
-  ubicacion: string,
-  lecturas: string,
-  observaciones: string
-): Observable<any> {
-  const formData = new FormData();
-
-  // Datos JSON
-  formData.append('encargado', JSON.stringify(encargado));
-  formData.append('trabajadores', JSON.stringify(trabajadores));
-  formData.append('cliente', JSON.stringify(cliente));
-  formData.append('descripcion', descripcion);
-
-  // Nuevos campos
-  formData.append('tipoOperacion', tipoOperacion);
-  formData.append('ubicacion', ubicacion);
-  formData.append('lecturas', lecturas);
-  formData.append('observaciones', observaciones);
-
-  // Actividades
-  if (actividades && actividades.length > 0) {
-    actividades.forEach(id => formData.append('actividades', id.toString()));
   }
-
-  // Imágenes de descripción
-  if (imagenesDescripcion && imagenesDescripcion.length > 0) {
-    imagenesDescripcion.forEach(img =>
-      formData.append('imagenesDescripcion', img, img.name)
-    );
-  }
-
-  // Imágenes de lecturas
-  if (imagenesLecturas && imagenesLecturas.length > 0) {
-    imagenesLecturas.forEach(img =>
-      formData.append('imagenesLecturas', img, img.name)
-    );
-  }
-
-  // Firma del encargado
-  if (firma) {
-    formData.append('firma', firma, firma.name);
-  }
-
-  // Nombre y firma del supervisor
-  formData.append('nombreSupervisor', nombreSupervisor);
-  if (firmaSupervisor) {
-    formData.append('firmaSupervisor', firmaSupervisor, firmaSupervisor.name);
-  }
-
-  // Llamada POST al backend
-  return this.http.post<{ urlPdf: string }>(
-    'https://proyecto-cmr.onrender.com/api/reportes/generar',
-    formData,
-    { withCredentials: true }
-  );
-}
-
-
   // Método para obtener todos los reportes
   obtenerReportes(): Observable<any[]> {
     return this.http.get<any[]>('https://proyecto-cmr.onrender.com/api/reportes' );
@@ -492,6 +421,70 @@ generarReporte(
   obtenerActividadesPorTipo(idTipoOperacion: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/actividades/tipo/${idTipoOperacion}` );
   }
+// ==========================================================
+// 📄 GENERAR REPORTE (PDF)
+// ==========================================================
+generarReporte(
+  encargado: any,
+  trabajadores: any[],
+  cliente: any,
+  descripcion: string,
+  imagenesDescripcion: File[],
+  firma: File | null,
+  actividades: number[],
+  nombreSupervisor: string,
+  firmaSupervisor: File | null,
+  imagenesLecturas: File[],
+  ubicacion: string,
+  lecturas: string,
+  observaciones: string
+): Observable<any> {
+
+  const url = `${this.apiUrl}/reportes/generar`;
+
+  const formData = new FormData();
+
+  // -------- JSON --------
+  formData.append('encargado', JSON.stringify(encargado));
+  formData.append('trabajadores', JSON.stringify(trabajadores));
+  formData.append('cliente', JSON.stringify(cliente));
+  formData.append('descripcion', descripcion);
+
+  formData.append('ubicacion', ubicacion);
+  formData.append('lecturas', lecturas);
+  formData.append('observaciones', observaciones);
+
+  // -------- actividades --------
+  actividades.forEach(a => formData.append('actividades', a.toString()));
+
+  // -------- firma encargado --------
+  if (firma) {
+    formData.append('firma', firma);
+  }
+
+  // -------- supervisor --------
+  formData.append('nombreSupervisor', nombreSupervisor);
+
+  if (firmaSupervisor) {
+    formData.append('firmaSupervisor', firmaSupervisor);
+  }
+
+  // -------- imágenes descripción --------
+  if (imagenesDescripcion?.length) {
+    imagenesDescripcion.forEach(img =>
+      formData.append('imagenesDescripcion', img, img.name)
+    );
+  }
+
+  // -------- imágenes lecturas --------
+  if (imagenesLecturas?.length) {
+    imagenesLecturas.forEach(img =>
+      formData.append('imagenesLecturas', img, img.name)
+    );
+  }
+
+  return this.http.post(url, formData, { withCredentials: true });
+}
 
     }
 
