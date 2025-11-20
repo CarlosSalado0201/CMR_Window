@@ -273,47 +273,99 @@ export class ReportesComponent implements AfterViewInit, OnInit {
   eliminarActividad(index: number) {
     this.actividadesSeleccionadas.splice(index, 1);
   }
-
-  // ===================== REPORTES =====================
-  async generarReporte() {
-    if (!this.descripcionTrabajo || !this.usuarioActual || !this.nombreSupervisor || !this.firmaSupervisor) {
-      alert('⚠️ Complete todos los campos requeridos antes de generar el reporte.');
-      return;
-    }
-
-    const encargado = { nombre: this.usuarioActual.nombre, cargo: this.usuarioActual.cargo };
-    const trabajadores = this.trabajadoresSeleccionados.map(t => ({ nombre: t.nombre, cargo: t.cargo }));
-    const cliente = this.clientesSeleccionados[0];
-
-    if (!cliente) { alert('⚠️ Seleccione al menos un cliente.'); return; }
-
-    try {
-      await this.guardarFirma();
-
-      const actividadesIds = this.actividadesSeleccionadas.map(a => a.idActividad);
-
-      this.serviciosService
-        .generarReporte(encargado, trabajadores, cliente, this.descripcionTrabajo, this.imagenes, this.firmaFile, actividadesIds, this.nombreSupervisor, this.firmaSupervisorFile)
-        .subscribe({
-          next: res => {
-            this.urlPdf = res.urlPdf;
-            setTimeout(() => {
-              if (confirm('✅ Reporte generado correctamente. ¿Desea abrir el PDF?')) {
-                window.open(this.urlPdf!, '_blank');
-              }
-              this.limpiarFormulario();
-            }, 0);
-          },
-          error: err => {
-            console.error('Error al generar reporte:', err);
-            alert('❌ Ocurrió un error al generar el reporte.');
-          }
-        });
-
-    } catch (error) {
-      alert('❌ No se pudo guardar la firma: ' + error);
-    }
+// ===================== REPORTES =====================
+async generarReporte() {
+  if (
+    !this.descripcionTrabajo ||
+    !this.usuarioActual ||
+    !this.nombreSupervisor ||
+    !this.firmaSupervisor
+  ) {
+    alert('⚠️ Complete todos los campos requeridos antes de generar el reporte.');
+    return;
   }
+
+  // Encargado
+  const encargado = {
+    nombre: this.usuarioActual.nombre,
+    cargo: this.usuarioActual.cargo
+  };
+
+  // Trabajadores
+  const trabajadores = this.trabajadoresSeleccionados.map(t => ({
+    nombre: t.nombre,
+    cargo: t.cargo
+  }));
+
+  // Cliente
+  const cliente = this.clientesSeleccionados[0];
+  if (!cliente) {
+    alert('⚠️ Seleccione al menos un cliente.');
+    return;
+  }
+
+  try {
+    await this.guardarFirma();
+
+    // IDs de actividades
+    const actividadesIds = this.actividadesSeleccionadas.map(a => a.idActividad);
+
+    // ----------------------
+    // LLAMADA AL SERVICE
+    // ----------------------
+    this.serviciosService
+      .generarReporte(
+        encargado,
+        trabajadores,
+        cliente,
+        this.descripcionTrabajo,
+
+        // imágenes de descripción
+        this.imagenes,
+
+        // firma del encargado
+        this.firmaFile,
+
+        // actividades
+        actividadesIds,
+
+        // supervisor
+        this.nombreSupervisor,
+        this.firmaSupervisorFile,
+
+        // nuevas imágenes de lecturas
+        this.imagenesLecturas,
+
+        // ubicación
+        cliente.direccion,
+
+        // lecturas
+        this.lecturas,
+
+        // observaciones
+        this.observaciones
+      )
+      .subscribe({
+        next: res => {
+          this.urlPdf = res.urlPdf;
+          setTimeout(() => {
+            if (confirm('✅ Reporte generado correctamente. ¿Desea abrir el PDF?')) {
+              window.open(this.urlPdf!, '_blank');
+            }
+            this.limpiarFormulario();
+          }, 0);
+        },
+        error: err => {
+          console.error('Error al generar reporte:', err);
+          alert('❌ Ocurrió un error al generar el reporte.');
+        }
+      });
+
+  } catch (error) {
+    alert('❌ No se pudo guardar la firma: ' + error);
+  }
+}
+
 
   private limpiarFormulario() {
     this.titulo = '';

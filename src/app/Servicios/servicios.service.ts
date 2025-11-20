@@ -270,57 +270,76 @@
       { modelo: { id } }, // El cuerpo esperado por el backend
       { withCredentials: true }
     );
+  }// ---------------- REPORTES -----------------
+// ---------------- REPORTES -----------------
+// Servicio: generarReporte
+generarReporte(
+  encargado: any,
+  trabajadores: any[],
+  cliente: any,
+  descripcion: string,
+  imagenesDescripcion: File[] = [],
+  imagenesLecturas: File[] = [],
+  firma: File | null = null,
+  actividades: number[] = [],
+  nombreSupervisor: string,
+  firmaSupervisor: File | null,
+  tipoOperacion: string,
+  ubicacion: string,
+  lecturas: string,
+  observaciones: string
+): Observable<any> {
+  const formData = new FormData();
+
+  // Datos JSON
+  formData.append('encargado', JSON.stringify(encargado));
+  formData.append('trabajadores', JSON.stringify(trabajadores));
+  formData.append('cliente', JSON.stringify(cliente));
+  formData.append('descripcion', descripcion);
+
+  // Nuevos campos
+  formData.append('tipoOperacion', tipoOperacion);
+  formData.append('ubicacion', ubicacion);
+  formData.append('lecturas', lecturas);
+  formData.append('observaciones', observaciones);
+
+  // Actividades
+  if (actividades && actividades.length > 0) {
+    actividades.forEach(id => formData.append('actividades', id.toString()));
   }
-  // ---------------- REPORTES -----------------
-  // ---------------- REPORTES -----------------
-  // Servicio: generarReporte
-  generarReporte(
-    encargado: any,
-    trabajadores: any[],
-    cliente: any,
-    descripcion: string,
-    imagenes: File[] = [],
-    firma: File | null = null,
-    actividades: number[] = [],
-    nombreSupervisor: string,
-    firmaSupervisor: File | null
-  ): Observable<any> {
-    const formData = new FormData();
 
-    // Datos JSON
-    formData.append('encargado', JSON.stringify(encargado));
-    formData.append('trabajadores', JSON.stringify(trabajadores));
-    formData.append('cliente', JSON.stringify(cliente));
-    formData.append('descripcion', descripcion);
-
-    // Actividades
-    if (actividades && actividades.length > 0) {
-      actividades.forEach(id => formData.append('actividades', id.toString()));
-    }
-
-    // Imágenes
-    if (imagenes && imagenes.length > 0) {
-      imagenes.forEach(img => formData.append('imagenes', img, img.name));
-    }
-
-    // Firma del encargado
-    if (firma) {
-      formData.append('firma', firma, firma.name);
-    }
-
-    // Nombre y firma del supervisor
-    formData.append('nombreSupervisor', nombreSupervisor);
-    if (firmaSupervisor) {
-      formData.append('firmaSupervisor', firmaSupervisor, firmaSupervisor.name);
-    }
-
-    // Llamada POST al backend
-    return this.http.post<{ urlPdf: string }>(
-      'https://proyecto-cmr.onrender.com/api/reportes/generar',
-      formData,
-      { withCredentials: true }
+  // Imágenes de descripción
+  if (imagenesDescripcion && imagenesDescripcion.length > 0) {
+    imagenesDescripcion.forEach(img =>
+      formData.append('imagenesDescripcion', img, img.name)
     );
   }
+
+  // Imágenes de lecturas
+  if (imagenesLecturas && imagenesLecturas.length > 0) {
+    imagenesLecturas.forEach(img =>
+      formData.append('imagenesLecturas', img, img.name)
+    );
+  }
+
+  // Firma del encargado
+  if (firma) {
+    formData.append('firma', firma, firma.name);
+  }
+
+  // Nombre y firma del supervisor
+  formData.append('nombreSupervisor', nombreSupervisor);
+  if (firmaSupervisor) {
+    formData.append('firmaSupervisor', firmaSupervisor, firmaSupervisor.name);
+  }
+
+  // Llamada POST al backend
+  return this.http.post<{ urlPdf: string }>(
+    'https://proyecto-cmr.onrender.com/api/reportes/generar',
+    formData,
+    { withCredentials: true }
+  );
+}
 
 
   // Método para obtener todos los reportes
