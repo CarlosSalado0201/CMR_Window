@@ -10,6 +10,24 @@
   <div class="report-form">
     <h2>Generar Reporte</h2>
 
+    <!-- Clientes -->
+    <h4>Clientes</h4>
+    <select multiple [(ngModel)]="clientesSeleccionadosIds" name="clientesSeleccionadosIds">
+      <option *ngFor="let c of clientesDisponibles" [ngValue]="c.id">
+        {{ c.nombre }}
+      </option>
+    </select>
+    <button class="add-client-button" (click)="agregarClientesSeleccionados()">Añadir clientes</button>
+    <div class="clientes-seleccionados" *ngIf="clientesSeleccionados.length > 0">
+      <p><strong>Seleccionados:</strong></p>
+      <ul>
+        <li *ngFor="let c of clientesSeleccionados">
+          {{ c.nombre }}
+          <button class="remove-client-button" (click)="eliminarCliente(clientesSeleccionados.indexOf(c))">✕</button>
+        </li>
+      </ul>
+    </div>
+
     <!-- Encargado -->
     <div class="encargado-reporte">
       <p><strong>Encargado del reporte:</strong></p>
@@ -39,32 +57,6 @@
       </ul>
     </div>
 
-    <!-- Clientes -->
-    <h4>Clientes</h4>
-    <select multiple [(ngModel)]="clientesSeleccionadosIds" name="clientesSeleccionadosIds">
-      <option *ngFor="let c of clientesDisponibles" [ngValue]="c.id">
-        {{ c.nombre }}
-      </option>
-    </select>
-    <button class="add-client-button" (click)="agregarClientesSeleccionados()">Añadir clientes</button>
-    <div class="clientes-seleccionados" *ngIf="clientesSeleccionados.length > 0">
-      <p><strong>Seleccionados:</strong></p>
-      <ul>
-        <li *ngFor="let c of clientesSeleccionados">
-          {{ c.nombre }}
-          <button class="remove-client-button" (click)="eliminarCliente(clientesSeleccionados.indexOf(c))">✕</button>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Descripción -->
-    <label>Descripción / Trabajo realizado</label>
-    <textarea [(ngModel)]="descripcionTrabajo" name="descripcionTrabajo" rows="5" placeholder="Describe aquí las actividades realizadas..."></textarea>
-
-    <!-- Fotos de lo hecho -->
-    <label>Fotos del trabajo realizado</label>
-    <input type="file" multiple accept="image/*" (change)="onImagenesSeleccionadas($event)" />
-
     <!-- Operación -->
     <label>Operación</label>
     <select [(ngModel)]="tipoOperacionSeleccionadaId" name="tipoOperacionSeleccionadaId" (change)="cargarActividades()">
@@ -92,6 +84,7 @@
       </ul>
     </div>
 
+    
     <!-- Ubicación y tipo de equipo -->
     <div class="info-container">
       <div class="info-field">
@@ -104,6 +97,16 @@
       </div>
     </div>
 
+    
+    <!-- Descripción -->
+    <label>Descripción / Trabajo realizado</label>
+    <textarea [(ngModel)]="descripcionTrabajo" name="descripcionTrabajo" rows="5" placeholder="Describe aquí las actividades realizadas..."></textarea>
+
+    <!-- Fotos de lo hecho -->
+    <label>Fotos del trabajo realizado</label>
+    <input type="file" multiple accept="image/*" (change)="onImagenesSeleccionadas($event)" />
+
+
     <!-- Toma de lecturas -->
     <label>Toma de lecturas</label>
     <textarea [(ngModel)]="lecturas" rows="4" placeholder="Registrar lecturas..."></textarea>
@@ -112,6 +115,12 @@
     <label>Fotos de toma de lecturas</label>
     <input type="file" multiple accept="image/*" (change)="onImagenesLecturas($event)" />
 
+    
+    <!-- Observaciones / Autorización -->
+    <label>Observaciones</label>
+    <textarea [(ngModel)]="observaciones" rows="3" placeholder="Observaciones adicionales..."></textarea>
+
+    
     <!-- Firma -->
     <label>Firma</label>
     <canvas
@@ -134,10 +143,6 @@
       <button (click)="limpiarFirma()">Limpiar firma</button>
       <button (click)="guardarFirma()">Guardar firma (previsualizar)</button>
     </div>
-
-    <!-- Observaciones / Autorización -->
-    <label>Observaciones</label>
-    <textarea [(ngModel)]="observaciones" rows="3" placeholder="Observaciones adicionales..."></textarea>
 
     <label>Autorización</label>
     <input type="text" [(ngModel)]="autorizacion" placeholder="Nombre de quien autoriza..." />
