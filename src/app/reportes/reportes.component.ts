@@ -364,5 +364,10 @@ export class ReportesComponent implements AfterViewInit, OnInit {
 onImagenesLecturas(event: any) {
   this.imagenesLecturas = Array.from(event.target.files);
 }
+aprobarVerificacion() {
+  this.verificado = true;
+  this.cerrarVerificacion();
+}
+
 
 }
