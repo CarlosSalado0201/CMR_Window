@@ -130,7 +130,7 @@ async guardarFirmaSupervisor(): Promise<void> {
       if (blob) {
         this.firmaSupervisorFile = new File([blob], 'firma_supervisor.png', { type: 'image/png' });
         alert('✅ Firma del supervisor guardada con éxito');
-        this.verificado = true; // ✅ Desbloquea el botón de generar reporte
+        this.verificado = true; // ✅ Solo depende del supervisor
         resolve();
       } else {
         alert('❌ Error al generar la firma del supervisor');
@@ -139,6 +139,7 @@ async guardarFirmaSupervisor(): Promise<void> {
     });
   });
 }
+
 
 
 
