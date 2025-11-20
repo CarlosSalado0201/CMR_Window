@@ -1,4 +1,3 @@
-
 /* ==============================
    ESTILOS GENERALES
    ============================== */
@@ -10,6 +9,7 @@
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
 }
 
 /* ==============================
@@ -29,6 +29,7 @@
   padding: 0 24px;
   box-sizing: border-box;
   z-index: 1000;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
 }
 
 .toolbar img {
@@ -36,6 +37,7 @@
   width: auto;
   user-select: none;
   margin-right: 20px;
+  cursor: pointer;
 }
 
 .toolbar button {
@@ -43,19 +45,17 @@
   color: #dc3545;
   border: none;
   padding: 10px 16px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   font-size: 1rem;
-  white-space: normal;
-  max-width: 120px;
-  line-height: 1.2;
   margin-right: 10px;
 }
 
 .toolbar button:hover {
   background-color: #f8d7da;
+  transform: translateY(-1px);
 }
 
 /* ==============================
@@ -75,7 +75,7 @@
   justify-content: center;
   align-items: flex-start;
   gap: 40px;
-  margin: 115px auto; /* espacio desde la barra */
+  margin: 115px auto;
   max-width: 1200px;
   flex-wrap: wrap;
 }
@@ -83,11 +83,17 @@
 .report-form {
   flex: 1 1 700px;
   max-width: 800px;
-  background: #fff;
+  background: linear-gradient(145deg, #ffffff, #fff0f2);
   padding: 20px 30px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border: 1px solid #f0c2c7;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.report-form:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
 }
 
 .report-form h2 {
@@ -102,17 +108,35 @@
   display: block;
 }
 
+/* Inputs y Select modernos */
 .report-form input[type="text"],
 .report-form textarea,
-.report-form input[type="file"] {
+.report-form input[type="file"],
+.trabajadores-section select,
+.clientes-section select,
+.select-actividades {
   width: 100%;
   margin-top: 6px;
   margin-bottom: 16px;
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #fff;
   font-size: 14px;
   box-sizing: border-box;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.report-form input[type="text"]:focus,
+.report-form textarea:focus,
+.trabajadores-section select:focus,
+.clientes-section select:focus,
+.select-actividades:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 8px rgba(220, 53, 69, 0.2);
+  outline: none;
+  background-color: #fffafc;
 }
 
 /* ==============================
@@ -123,10 +147,10 @@ button, .submit-button, .pdf-link-layer button, .pdf-link-layer a {
   color: #dc3545;
   border: none;
   padding: 10px 16px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   font-size: 1rem;
   line-height: 1.2;
   margin-right: 10px;
@@ -135,92 +159,88 @@ button, .submit-button, .pdf-link-layer button, .pdf-link-layer a {
 
 button:hover, .submit-button:hover, .pdf-link-layer button:hover, .pdf-link-layer a:hover {
   background-color: #f8d7da;
+  transform: translateY(-1px);
 }
 
 /* ==============================
-   SECCIÓN CLIENTES
+   SECCIÓN CLIENTES, TRABAJADORES, ACTIVIDADES
    ============================== */
-.clientes-section {
-  flex: 0 0 300px;
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+.clientes-section,
+.trabajadores-section,
+.actividades-section {
+  background: linear-gradient(145deg, #ffffff, #fff0f2);
+  border: 1px solid #f0c2c7;
+  border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
 }
 
-.clientes-section h3 {
-  text-align: center;
-  margin-bottom: 10px;
+.clientes-section:hover,
+.trabajadores-section:hover,
+.actividades-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
 
-.clientes-list, .trabajadores-section select, .clientes-section select {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.cliente-item, .trabajador-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.add-client-button, .add-worker-button, .remove-client-button, .remove-worker-button {
-  background-color: #dc3545;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.add-client-button,
+.add-worker-button,
+.btn-generate,
+.btn-verify,
+.submit-button {
+  background: linear-gradient(90deg, #dc3545, #e8505b);
+  color: white;
+  border-radius: 8px;
+  padding: 10px 18px;
   font-weight: 600;
-  padding: 8px 14px;
-  transition: background-color 0.3s ease;
-  font-size: 14px;
+  box-shadow: 0 3px 8px rgba(220, 53, 69, 0.4);
+  transition: all 0.3s ease;
 }
 
-.add-client-button:hover, .add-worker-button:hover {
-  background-color: #b02a37;
+.add-client-button:hover,
+.add-worker-button:hover,
+.btn-generate:hover:not([disabled]),
+.btn-verify:hover,
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.5);
+  background: linear-gradient(90deg, #e8505b, #dc3545);
 }
 
+/* Remove button estilo */
 .remove-client-button, .remove-worker-button {
   background-color: transparent;
   color: #dc3545;
   font-size: 18px;
   padding: 0 5px;
+  transition: all 0.2s ease;
 }
 
 .remove-client-button:hover, .remove-worker-button:hover {
   color: #b02a37;
+  transform: scale(1.1);
 }
 
-.clientes-seleccionados ul {
-  margin: 5px 0 0;
-  padding-left: 20px;
+/* Lista de elementos seleccionados */
+.clientes-seleccionados li,
+.trabajadores-seleccionados li,
+.actividades-seleccionadas li {
+  padding: 6px 12px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  background: #fff0f2;
+  border: 1px solid #f0c2c7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
 }
 
-.clientes-seleccionados li {
-  color: #333;
-}
-
-/* ==============================
-   SELECCIÓN DE TRABAJADORES Y ACTIVIDADES
-   ============================== */
-.trabajadores-section select, .clientes-section select, .select-actividades {
-  width: 100%;
-  min-height: 120px;
-  margin-top: 6px;
-  margin-bottom: 10px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-}
-
-.select-actividades { 
-  height: 120px;
-  background-color: #fafafa;
+.clientes-seleccionados li:hover,
+.trabajadores-seleccionados li:hover,
+.actividades-seleccionadas li:hover {
+  background: #ffe6ec;
+  transform: translateX(2px);
 }
 
 /* ==============================
@@ -233,11 +253,11 @@ button:hover, .submit-button:hover, .pdf-link-layer button:hover, .pdf-link-laye
   background: #fff5f5;
   border: 1px solid #dc3545;
   padding: 16px;
-  border-radius: 6px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: start;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .pdf-link-layer p {
@@ -249,12 +269,12 @@ button:hover, .submit-button:hover, .pdf-link-layer button:hover, .pdf-link-laye
 .pdf-link-layer input[type="text"] {
   width: 100%;
   padding: 8px;
-  border-radius: 4px;
+  border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 14px;
   margin-bottom: 10px;
 }
-    
+
 /* ==============================
    MODAL DE VERIFICACIÓN
    ============================== */
@@ -273,14 +293,14 @@ button:hover, .submit-button:hover, .pdf-link-layer button:hover, .pdf-link-laye
 }
 
 .panel-content {
-  background: #fff;
+  background: linear-gradient(145deg, #ffffff, #fff0f2);
   padding: 30px;
-  border-radius: 10px;
+  border-radius: 12px;
   width: 100%;
   max-width: 650px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
   animation: slideIn 0.3s ease-out;
 }
 
@@ -296,10 +316,6 @@ button:hover, .submit-button:hover, .pdf-link-layer button:hover, .pdf-link-laye
   margin-bottom: 6px;
 }
 
-.panel-content ul {
-  padding-left: 20px;
-}
-
 .panel-actions {
   display: flex;
   justify-content: center;
@@ -312,10 +328,10 @@ button:hover, .submit-button:hover, .pdf-link-layer button:hover, .pdf-link-laye
   color: white;
   border: none;
   padding: 10px 16px;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .panel-actions button:hover {
@@ -331,82 +347,12 @@ button:hover, .submit-button:hover, .pdf-link-layer button:hover, .pdf-link-laye
 }
 
 /* ==============================
-   BOTONES REPORTE Y VERIFICACIÓN
+   CANVAS DE FIRMAS
    ============================== */
-.report-buttons {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.submit-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-  padding: 10px 16px;
-  border-radius: 6px;
-}
-
-.submit-button[disabled] {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.verify-button {
-  background-color: #d01111;
-  color: white;
-  border: none;
-  cursor: pointer;
-  padding: 10px 16px;
-  border-radius: 6px;
-}
-
-.verify-button:hover {
-  background-color: #b02a37;
-}
-
-/* Botones de acción dentro de contenedores */
-.report-btns-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-}
-
-.btn-generate, .btn-verify {
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  border: none;
-  transition: background-color 0.3s ease;
-}
-
-.btn-generate {
-  background-color: #007bff;
-  color: white;
-}
-
-.btn-generate[disabled] {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.btn-generate:hover:not([disabled]) {
-  background-color: #0056b3;
-}
-
-.btn-verify {
-  background-color: #e31313;
-  color: white;
-}
-
-.btn-verify:hover {
-  background-color: #db2505;
+canvas {
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  background-color: #fffafc;
 }
 
 /* ==============================
@@ -431,40 +377,8 @@ button:hover, .submit-button:hover, .pdf-link-layer button:hover, .pdf-link-laye
 
 .supervisor-input:focus {
   border-color: #dc3545;
-  box-shadow: 0 0 5px rgba(220, 53, 69, 0.3);
+  box-shadow: 0 0 6px rgba(220,53,69,0.3);
   outline: none;
-}
-
-.info-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 20px 0;
-}
-
-.info-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.info-field label {
-  font-weight: 700;
-  color: #dc3545;
-  font-size: 1rem;
-}
-
-.info-field input {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #dc3545;
-  font-size: 1rem;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.info-field input:focus {
-  border-color: #b92c3a;
 }
 
 /* ==============================
