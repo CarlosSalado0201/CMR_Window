@@ -140,7 +140,7 @@ async guardarFirmaSupervisor(): Promise<void> {
   });
 }
 
-
+  
 
 
   private obtenerPosicion(event: MouseEvent | TouchEvent, canvas: HTMLCanvasElement) {
@@ -320,6 +320,7 @@ async guardarFirmaSupervisor(): Promise<void> {
       this.imagenes,
       this.firmaFile,
       actividadesIds,
+      this.tipoOperacionSeleccionadaId, // <-- NUEVO
       this.nombreSupervisor,
       this.firmaSupervisorFile,
       this.imagenesLecturas,
