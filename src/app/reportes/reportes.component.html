@@ -27,25 +27,26 @@
       </li>
     </ul>
   </div>
-</div>
-<!-- Trabajadores -->
+</div><!-- Trabajadores -->
 <div class="selection-box">
   <h4>Trabajadores</h4>
 
-  <!-- Usuario actual por defecto -->
+  <!-- Usuario actual por defecto (encargado) -->
   <div class="usuario-actual-trabajador" *ngIf="usuarioActual">
     <p><strong>Usuario generando el reporte:</strong> {{ usuarioActual.nombre }} ({{ usuarioActual.cargo }})</p>
   </div>
 
-  <!-- Select para agregar otros trabajadores -->
-  <select multiple [(ngModel)]="trabajadoresSeleccionadosIds" name="trabajadoresSeleccionadosIds">
-    <option *ngFor="let t of usuariosDisponiblesFiltrados" [ngValue]="t.id">
-      {{ t.nombre }} ({{ t.cargo }})
-    </option>
-  </select>
+  <!-- Contenedor del select + botón -->
+  <div class="trabajadores-select-container">
+    <select multiple [(ngModel)]="trabajadoresSeleccionadosIds" name="trabajadoresSeleccionadosIds">
+      <option *ngFor="let t of usuariosDisponiblesFiltrados" [ngValue]="t.id">
+        {{ t.nombre }} ({{ t.cargo }})
+      </option>
+    </select>
+    <button class="add-worker-button" (click)="agregarTrabajadoresSeleccionados()">Añadir trabajadores</button>
+  </div>
 
-  <button class="add-worker-button" (click)="agregarTrabajadoresSeleccionados()">Añadir trabajadores</button>
-
+  <!-- Lista de trabajadores agregados -->
   <div class="trabajadores-seleccionados" *ngIf="trabajadoresSeleccionados.length > 0">
     <p><strong>Seleccionados:</strong></p>
     <ul>
