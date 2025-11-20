@@ -97,12 +97,17 @@ export class ReportesComponent implements AfterViewInit, OnInit {
 
   // ===================== FIRMA ENCARGADO =====================
 async guardarFirma() {
+  if (!this.canvas) {
+    alert('⚠️ Canvas del encargado no está listo.');
+    return;
+  }
+
   return new Promise<void>((resolve, reject) => {
     this.canvas.nativeElement.toBlob(blob => {
       if (blob) {
         this.firmaFile = new File([blob], 'firma.png', { type: 'image/png' });
         alert('✅ Firma del encargado guardada con éxito');
-        this.verificado = !!this.firmaFile && !!this.firmaSupervisorFile; // desbloquea si ambas firmas listas
+        this.verificado = !!this.firmaFile && !!this.firmaSupervisorFile;
         resolve();
       } else {
         alert('❌ Error al generar la firma del encargado.');
@@ -113,6 +118,11 @@ async guardarFirma() {
 }
 
 async guardarFirmaSupervisor() {
+  if (!this.canvasSupervisor) {
+    alert('⚠️ Canvas del supervisor no está listo.');
+    return;
+  }
+
   return new Promise<void>((resolve, reject) => {
     const canvas = this.canvasSupervisor.nativeElement;
     this.firmaSupervisor = canvas.toDataURL('image/png');
@@ -121,7 +131,7 @@ async guardarFirmaSupervisor() {
       if (blob) {
         this.firmaSupervisorFile = new File([blob], 'firma_supervisor.png', { type: 'image/png' });
         alert('✅ Firma del supervisor guardada con éxito');
-        this.verificado = !!this.firmaFile && !!this.firmaSupervisorFile; // desbloquea si ambas firmas listas
+        this.verificado = !!this.firmaFile && !!this.firmaSupervisorFile;
         resolve();
       } else {
         alert('❌ Error al generar la firma del supervisor');
@@ -130,6 +140,7 @@ async guardarFirmaSupervisor() {
     });
   });
 }
+
 
   private obtenerPosicion(event: MouseEvent | TouchEvent, canvas: HTMLCanvasElement) {
     const rect = canvas.getBoundingClientRect();
