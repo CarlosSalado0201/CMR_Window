@@ -18,7 +18,6 @@
     </option>
   </select>
   <button class="add-client-button" (click)="agregarClientesSeleccionados()">Añadir clientes</button>
-
   <div class="clientes-seleccionados" *ngIf="clientesSeleccionados.length > 0">
     <p><strong>Seleccionados:</strong></p>
     <ul>
@@ -39,7 +38,6 @@
     </option>
   </select>
   <button class="add-worker-button" (click)="agregarTrabajadoresSeleccionados()">Añadir trabajadores</button>
-
   <div class="trabajadores-seleccionados" *ngIf="trabajadoresSeleccionados.length > 0">
     <p><strong>Seleccionados:</strong></p>
     <ul>
@@ -51,50 +49,35 @@
   </div>
 </div>
 
-      <!-- Trabajadores -->
-      <h4>Trabajadores</h4>
-      <select multiple [(ngModel)]="trabajadoresSeleccionadosIds" name="trabajadoresSeleccionadosIds">
-        <option *ngFor="let t of usuariosDisponiblesFiltrados" [ngValue]="t.id">
-          {{ t.nombre }} ({{ t.cargo }})
-        </option>
-      </select>
-      <button class="add-worker-button" (click)="agregarTrabajadoresSeleccionados()">Añadir trabajadores</button>
-      <div class="trabajadores-seleccionados" *ngIf="trabajadoresSeleccionados.length > 0">
-        <p><strong>Seleccionados:</strong></p>
-        <ul>
-          <li *ngFor="let t of trabajadoresSeleccionados">
-            {{ t.nombre }} — {{ t.cargo }}
-            <button class="remove-worker-button" (click)="eliminarTrabajador(trabajadoresSeleccionados.indexOf(t))">✕</button>
-          </li>
-        </ul>
-      </div>
+<!-- Operación / Actividades -->
+<div class="selection-box">
+  <label>Operación</label>
+  <select [(ngModel)]="tipoOperacionSeleccionadaId" name="tipoOperacionSeleccionadaId" (change)="cargarActividades()">
+    <option [ngValue]="null" disabled selected>Selecciona tipo de operación</option>
+    <option *ngFor="let tipo of tiposOperacion" [ngValue]="tipo.idTipoOperacion">
+      {{ tipo.nombre }}
+    </option>
+  </select>
 
-      <!-- Operación -->
-      <label>Operación</label>
-      <select [(ngModel)]="tipoOperacionSeleccionadaId" name="tipoOperacionSeleccionadaId" (change)="cargarActividades()">
-        <option [ngValue]="null" disabled selected>Selecciona tipo de operación</option>
-        <option *ngFor="let tipo of tiposOperacion" [ngValue]="tipo.idTipoOperacion">
-          {{ tipo.nombre }}
-        </option>
-      </select>
+  <h4>Actividades</h4>
+  <select class="select-actividades" multiple [(ngModel)]="actividadesSeleccionadasIds" name="actividadesSeleccionadasIds">
+    <option *ngFor="let a of actividadesDisponibles" [ngValue]="a.idActividad">
+      {{ a.descripcion }}
+    </option>
+  </select>
+  <button class="add-actividad-button" (click)="agregarActividadesSeleccionadas()">Añadir actividades</button>
 
-      <!-- Actividades -->
-      <h4>Actividades</h4>
-      <select class="select-actividades" multiple [(ngModel)]="actividadesSeleccionadasIds" name="actividadesSeleccionadasIds">
-        <option *ngFor="let a of actividadesDisponibles" [ngValue]="a.idActividad">
-          {{ a.descripcion }}
-        </option>
-      </select>
-      <button class="add-client-button" (click)="agregarActividadesSeleccionadas()">Añadir actividades</button>
-      <div class="actividades-seleccionadas" *ngIf="actividadesSeleccionadas.length > 0">
-        <p><strong>Seleccionadas:</strong></p>
-        <ul>
-          <li *ngFor="let a of actividadesSeleccionadas">
-            {{ a.descripcion }}
-            <button class="remove-client-button" (click)="eliminarActividad(actividadesSeleccionadas.indexOf(a))">✕</button>
-          </li>
-        </ul>
-      </div>
+  <div class="actividades-seleccionadas" *ngIf="actividadesSeleccionadas.length > 0">
+    <p><strong>Seleccionadas:</strong></p>
+    <ul>
+      <li *ngFor="let a of actividadesSeleccionadas">
+        {{ a.descripcion }}
+        <button class="remove-client-button" (click)="eliminarActividad(actividadesSeleccionadas.indexOf(a))">✕</button>
+      </li>
+    </ul>
+  </div>
+</div>
+
 
       
       <!-- Ubicación y tipo de equipo -->
