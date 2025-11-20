@@ -491,4 +491,25 @@ canvas {
   font-weight: 600;
   color: #b02a37;
 }
+.btn-generate {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-generate:hover:enabled {
+  background-color: #b02a37; /* solo cambia si está habilitado */
+}
+
+.btn-generate:disabled {
+  background-color: #ccc; /* gris */
+  color: #666;
+  cursor: not-allowed;
+}
+
 
