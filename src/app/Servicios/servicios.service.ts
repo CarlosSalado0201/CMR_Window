@@ -429,6 +429,7 @@ generarReporte(
   trabajadores: any[],
   cliente: any,
   descripcion: string,
+    tipoEquipo: string,          // ✅ Nuevo parámetro
   imagenesDescripcion: File[],
   firma: File | null,
   actividades: number[],
@@ -450,6 +451,7 @@ generarReporte(
   formData.append('cliente', JSON.stringify(cliente));
   formData.append('descripcion', descripcion);
 
+    formData.append('tipoEquipo', tipoEquipo);  // ✅ Aquí se envía
   formData.append('ubicacion', ubicacion);
   formData.append('lecturas', lecturas);
   formData.append('observaciones', observaciones);

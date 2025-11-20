@@ -33,6 +33,7 @@ export class ReportesComponent implements AfterViewInit, OnInit {
   observaciones = '';
   autorizacion = '';
   nombreSupervisor = '';
+tipoEquipo = '';
 
   usuarioActual: Usuario | null = null;
   usuariosDisponibles: Usuario[] = [];
@@ -312,22 +313,22 @@ async guardarFirmaSupervisor(): Promise<void> {
     const actividadesIds = this.actividadesSeleccionadas.map(a => a.idActividad);
 
     // ===================== GENERAR REPORTE =====================
-    this.serviciosService.generarReporte(
-      encargado,
-      trabajadores,
-      cliente,
-      this.descripcionTrabajo,
-      this.imagenes,
-      this.firmaFile,
-      actividadesIds,
-      this.tipoOperacionSeleccionadaId, // <-- NUEVO
-      this.nombreSupervisor,
-      this.firmaSupervisorFile,
-      this.imagenesLecturas,
-      cliente.direccion,
-      this.lecturas,
-      this.observaciones
-    ).subscribe({
+this.serviciosService.generarReporte(
+  encargado,
+  trabajadores,
+  cliente,
+  this.descripcionTrabajo,
+  this.tipoEquipo,        // ✅ NUEVO: tipo de equipo
+  this.imagenes,
+  this.firmaFile,
+  actividadesIds,
+  this.nombreSupervisor,
+  this.firmaSupervisorFile,
+  this.imagenesLecturas,
+  cliente.direccion,
+  this.lecturas,
+  this.observaciones
+).subscribe({
       next: res => {
         this.urlPdf = res.urlPdf;
         this.pdfLink = res.urlPdf;
