@@ -116,22 +116,21 @@ async guardarFirma() {
     });
   });
 }
-
-async guardarFirmaSupervisor() {
+async guardarFirmaSupervisor(): Promise<void> {
   if (!this.canvasSupervisor) {
     alert('⚠️ Canvas del supervisor no está listo.');
     return;
   }
 
-  return new Promise<void>((resolve, reject) => {
-    const canvas = this.canvasSupervisor.nativeElement;
-    this.firmaSupervisor = canvas.toDataURL('image/png');
+  const canvas = this.canvasSupervisor.nativeElement;
+  this.firmaSupervisor = canvas.toDataURL('image/png');
 
+  return new Promise<void>((resolve, reject) => {
     canvas.toBlob(blob => {
       if (blob) {
         this.firmaSupervisorFile = new File([blob], 'firma_supervisor.png', { type: 'image/png' });
         alert('✅ Firma del supervisor guardada con éxito');
-        this.verificado = !!this.firmaFile && !!this.firmaSupervisorFile;
+        this.verificado = true; // ✅ Desbloquea el botón de generar reporte
         resolve();
       } else {
         alert('❌ Error al generar la firma del supervisor');
@@ -140,6 +139,7 @@ async guardarFirmaSupervisor() {
     });
   });
 }
+
 
 
   private obtenerPosicion(event: MouseEvent | TouchEvent, canvas: HTMLCanvasElement) {
