@@ -264,37 +264,39 @@ guardarFirmaSupervisor(): Promise<void> {
   }
 
   // ===================== REPORTES =====================
-
-async generarReporte() {
-
-  if (!this.descripcionTrabajo || !this.usuarioActual || !this.nombreSupervisor || !this.firmaSupervisor) {
-    alert('⚠️ Complete todos los campos requeridos.');
-    return;
-  }
-
-  const encargado = {
-    nombre: this.usuarioActual.nombre,
-    cargo: this.usuarioActual.cargo
-  };
-
-  const trabajadores = this.trabajadoresSeleccionados.map(t => ({
-    nombre: t.nombre,
-    cargo: t.cargo
-  }));
-
-  const cliente = this.clientesDisponibles[0];
-  if (!cliente) {
-    alert('⚠️ Seleccione al menos un cliente.');
-    return;
-  }
-
+  async generarReporte() {
   try {
-    // Guardar ambas firmas y notificar al usuario
+    // ===================== GUARDAR FIRMAS =====================
     await this.guardarFirma();           // Firma del encargado
     await this.guardarFirmaSupervisor(); // Firma del supervisor
 
+    // ===================== VALIDACIÓN =====================
+    if (!this.descripcionTrabajo || !this.usuarioActual || !this.nombreSupervisor 
+        || !this.firmaFile || !this.firmaSupervisorFile) {
+      alert('⚠️ Complete todos los campos requeridos y firme correctamente.');
+      return;
+    }
+
+    // ===================== PREPARAR DATOS =====================
+    const encargado = {
+      nombre: this.usuarioActual.nombre,
+      cargo: this.usuarioActual.cargo
+    };
+
+    const trabajadores = this.trabajadoresSeleccionados.map(t => ({
+      nombre: t.nombre,
+      cargo: t.cargo
+    }));
+
+    const cliente = this.clientesDisponibles[0];
+    if (!cliente) {
+      alert('⚠️ Seleccione al menos un cliente.');
+      return;
+    }
+
     const actividadesIds = this.actividadesSeleccionadas.map(a => a.idActividad);
 
+    // ===================== GENERAR REPORTE =====================
     this.serviciosService.generarReporte(
       encargado,
       trabajadores,
@@ -321,13 +323,18 @@ async generarReporte() {
           this.limpiarFormulario();
         }, 50);
       },
-      error: err => console.error(err)
+      error: err => {
+        console.error(err);
+        alert('❌ Ocurrió un error al generar el reporte.');
+      }
     });
 
   } catch (e) {
+    console.error(e);
     alert('❌ No se pudo guardar alguna firma.');
   }
 }
+
 
   // ===================== LOGOUT =====================
   logout() {
