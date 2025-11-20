@@ -95,18 +95,21 @@ export class ReportesComponent implements AfterViewInit, OnInit {
     this.firmaFile = null;
   }
 
-  guardarFirma(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.canvas.nativeElement.toBlob(blob => {
-        if (blob) {
-          this.firmaFile = new File([blob], 'firma.png', { type: 'image/png' });
-          resolve();
-        } else {
-          reject('Error al generar la firma.');
-        }
-      });
+  // ===================== FIRMA ENCARGADO =====================
+guardarFirma(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    this.canvas.nativeElement.toBlob(blob => {
+      if (blob) {
+        this.firmaFile = new File([blob], 'firma.png', { type: 'image/png' });
+        alert('✅ Firma del encargado guardada con éxito');
+        resolve();
+      } else {
+        alert('❌ Error al generar la firma del encargado.');
+        reject('Error al generar la firma del encargado.');
+      }
     });
-  }
+  });
+}
 
   private obtenerPosicion(event: MouseEvent | TouchEvent, canvas: HTMLCanvasElement) {
     const rect = canvas.getBoundingClientRect();
@@ -152,15 +155,26 @@ export class ReportesComponent implements AfterViewInit, OnInit {
     this.firmaSupervisorFile = null;
   }
 
-  guardarFirmaSupervisor() {
+// ===================== FIRMA SUPERVISOR =====================
+guardarFirmaSupervisor(): Promise<void> {
+  return new Promise((resolve, reject) => {
     const canvas = this.canvasSupervisor.nativeElement;
     this.firmaSupervisor = canvas.toDataURL('image/png');
+
     canvas.toBlob(blob => {
       if (blob) {
         this.firmaSupervisorFile = new File([blob], 'firma_supervisor.png', { type: 'image/png' });
+        alert('✅ Firma del supervisor guardada con éxito');
+        resolve();
+      } else {
+        alert('❌ Error al generar la firma del supervisor');
+        reject('Error al generar la firma del supervisor');
       }
     });
-  }
+  });
+}
+
+
 
   // ===================== USUARIOS =====================
   obtenerUsuarioActual() {
@@ -250,67 +264,70 @@ export class ReportesComponent implements AfterViewInit, OnInit {
   }
 
   // ===================== REPORTES =====================
-  async generarReporte() {
 
-    if (!this.descripcionTrabajo || !this.usuarioActual || !this.nombreSupervisor || !this.firmaSupervisor) {
-      alert('⚠️ Complete todos los campos requeridos.');
-      return;
-    }
+async generarReporte() {
 
-    const encargado = {
-      nombre: this.usuarioActual.nombre,
-      cargo: this.usuarioActual.cargo
-    };
-
-    const trabajadores = this.trabajadoresSeleccionados.map(t => ({
-      nombre: t.nombre,
-      cargo: t.cargo
-    }));
-
-    const cliente = this.clientesDisponibles[0];
-    if (!cliente) {
-      alert('⚠️ Seleccione al menos un cliente.');
-      return;
-    }
-
-    try {
-      await this.guardarFirma();
-
-      const actividadesIds = this.actividadesSeleccionadas.map(a => a.idActividad);
-
-      this.serviciosService.generarReporte(
-        encargado,
-        trabajadores,
-        cliente,
-        this.descripcionTrabajo,
-        this.imagenes,
-        this.firmaFile,
-        actividadesIds,
-        this.nombreSupervisor,
-        this.firmaSupervisorFile,
-        this.imagenesLecturas,
-        cliente.direccion,
-        this.lecturas,
-        this.observaciones
-      ).subscribe({
-        next: res => {
-          this.urlPdf = res.urlPdf;
-          this.pdfLink = res.urlPdf;
-
-          setTimeout(() => {
-            if (confirm('Reporte generado. ¿Abrir PDF?')) {
-              window.open(this.urlPdf!, '_blank');
-            }
-            this.limpiarFormulario();
-          }, 50);
-        },
-        error: err => console.error(err)
-      });
-
-    } catch (e) {
-      alert('❌ No se pudo guardar la firma.');
-    }
+  if (!this.descripcionTrabajo || !this.usuarioActual || !this.nombreSupervisor || !this.firmaSupervisor) {
+    alert('⚠️ Complete todos los campos requeridos.');
+    return;
   }
+
+  const encargado = {
+    nombre: this.usuarioActual.nombre,
+    cargo: this.usuarioActual.cargo
+  };
+
+  const trabajadores = this.trabajadoresSeleccionados.map(t => ({
+    nombre: t.nombre,
+    cargo: t.cargo
+  }));
+
+  const cliente = this.clientesDisponibles[0];
+  if (!cliente) {
+    alert('⚠️ Seleccione al menos un cliente.');
+    return;
+  }
+
+  try {
+    // Guardar ambas firmas y notificar al usuario
+    await this.guardarFirma();           // Firma del encargado
+    await this.guardarFirmaSupervisor(); // Firma del supervisor
+
+    const actividadesIds = this.actividadesSeleccionadas.map(a => a.idActividad);
+
+    this.serviciosService.generarReporte(
+      encargado,
+      trabajadores,
+      cliente,
+      this.descripcionTrabajo,
+      this.imagenes,
+      this.firmaFile,
+      actividadesIds,
+      this.nombreSupervisor,
+      this.firmaSupervisorFile,
+      this.imagenesLecturas,
+      cliente.direccion,
+      this.lecturas,
+      this.observaciones
+    ).subscribe({
+      next: res => {
+        this.urlPdf = res.urlPdf;
+        this.pdfLink = res.urlPdf;
+
+        setTimeout(() => {
+          if (confirm('Reporte generado. ¿Abrir PDF?')) {
+            window.open(this.urlPdf!, '_blank');
+          }
+          this.limpiarFormulario();
+        }, 50);
+      },
+      error: err => console.error(err)
+    });
+
+  } catch (e) {
+    alert('❌ No se pudo guardar alguna firma.');
+  }
+}
 
   // ===================== LOGOUT =====================
   logout() {
