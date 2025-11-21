@@ -341,8 +341,8 @@ this.serviciosService.generarReporte(
   this.ubicacion, // <-- cambiar a la variable del input
   this.lecturas,
   this.observaciones,
-  this.fechaInicio,   // ⬅🔥 Nuevo
-  this.fechaFin       // ⬅🔥 Nuevo (puede ir vacío)
+  this.formatearFecha(this.fechaInicio),  // ✅ Formateada
+  this.formatearFecha(this.fechaFin)      // ✅ Formateada
 ).subscribe({
       next: res => {
         this.urlPdf = res.urlPdf;
@@ -444,6 +444,11 @@ limpiarFormulario() {
   // Reset verificación
   this.mostrarVerificacion = false;
 
+}
+formatearFecha(fecha: string): string {
+  if (!fecha) return "";
+  const [yyyy, mm, dd] = fecha.split("-");
+  return `${dd}/${mm}/${yyyy}`;
 }
 
 }
