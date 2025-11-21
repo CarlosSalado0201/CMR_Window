@@ -325,7 +325,7 @@ this.serviciosService.generarReporte(
   this.nombreSupervisor,
   this.firmaSupervisorFile,
   this.imagenesLecturas,
-  cliente.direccion,
+  this.ubicacion, // <-- cambiar a la variable del input
   this.lecturas,
   this.observaciones
 ).subscribe({
