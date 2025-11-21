@@ -189,6 +189,16 @@
       <p>Se han subido {{ imagenes.length }} imágenes del trabajo realizado.</p>
     </div>
 
+    <!-- 🔹 TOMA DE LECTURAS SOLO SI HAY TEXTO -->
+    <div *ngIf="lecturas && lecturas.trim() !== ''">
+      <h3>Toma de lecturas</h3>
+      <p>{{ lecturas }}</p>
+
+      <div *ngIf="imagenesLecturas && imagenesLecturas.length > 0">
+        <p>Se han subido {{ imagenesLecturas.length }} imágenes de lecturas.</p>
+      </div>
+    </div>
+
     <!-- Supervisor -->
     <label class="supervisor-label">Nombre del supervisor</label>
     <input type="text" class="supervisor-input" [(ngModel)]="nombreSupervisor" placeholder="Nombre completo" />
