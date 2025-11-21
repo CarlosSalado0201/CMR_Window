@@ -428,6 +428,8 @@ limpiarFormulario() {
   // Reset verificación
   this.verificado = false;
   this.mostrarVerificacion = false;
+  this.verificado = false;           // <--- esto bloquea el botón
+
 }
 
 }
