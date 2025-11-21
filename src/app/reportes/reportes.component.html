@@ -1,168 +1,157 @@
-  <!-- 🔻 BARRA SUPERIOR -->
-  <div class="toolbar">
-    <img src="assets/CMR.jpg" alt="Logo CMR" style="cursor:pointer" routerLink="/reportes" />
-    <button routerLink="/reportes">Generar Reportes</button>
-    <button (click)="logout()">Cerrar sesión</button>
-  </div>
-
-  <!-- 🔹 CONTENIDO PRINCIPAL -->
-  <div class="content">
-    <div class="report-form">
-      <h2>Generar Reporte</h2>
-<!-- Clientes -->
-<div class="selection-box">
-  <h4>Clientes</h4>
-  <select multiple [(ngModel)]="clientesSeleccionadosIds" name="clientesSeleccionadosIds">
-    <option *ngFor="let c of clientesDisponibles" [ngValue]="c.id">
-      {{ c.nombre }}
-    </option>
-  </select>
-  <button class="add-client-button" (click)="agregarClientesSeleccionados()">Añadir clientes</button>
-  <div class="clientes-seleccionados" *ngIf="clientesSeleccionados.length > 0">
-    <p><strong>Seleccionados:</strong></p>
-    <ul>
-      <li *ngFor="let c of clientesSeleccionados">
-        {{ c.nombre }}
-        <button class="remove-client-button" (click)="eliminarCliente(clientesSeleccionados.indexOf(c))">✕</button>
-      </li>
-    </ul>
-  </div>
-  <!-- Trabajadores -->
-<div class="selection-box">
-  <h4>Trabajadores</h4>
-
-  <!-- Usuario actual por defecto -->
-  <div class="usuario-actual-trabajador" *ngIf="usuarioActual">
-    <p><strong>Usuario generando el reporte:</strong> {{ usuarioActual.nombre }} ({{ usuarioActual.cargo }})</p>
-  </div>
-
-  <!-- Contenedor del select + botón -->
-  <div class="trabajadores-select-container">
-    <select multiple [(ngModel)]="trabajadoresSeleccionadosIds" name="trabajadoresSeleccionadosIds">
-      <option *ngFor="let t of usuariosDisponiblesFiltrados" [ngValue]="t.id">
-        {{ t.nombre }} ({{ t.cargo }})
-      </option>
-    </select>
-    <button class="add-worker-button" (click)="agregarTrabajadoresSeleccionados()">Añadir trabajadores</button>
-  </div>
-
-  <!-- Lista de trabajadores agregados -->
-  <div class="trabajadores-seleccionados" *ngIf="trabajadoresSeleccionados.length > 0">
-    <p><strong>Seleccionados:</strong></p>
-    <ul>
-      <li *ngFor="let t of trabajadoresSeleccionados">
-        {{ t.nombre }} — {{ t.cargo }}
-        <button class="remove-worker-button" (click)="eliminarTrabajador(trabajadoresSeleccionados.indexOf(t))">✕</button>
-      </li>
-    </ul>
-  </div>
+<!-- 🔻 BARRA SUPERIOR -->
+<div class="toolbar">
+  <img src="assets/CMR.jpg" alt="Logo CMR" style="cursor:pointer" routerLink="/reportes" />
+  <button routerLink="/reportes">Generar Reportes</button>
+  <button (click)="logout()">Cerrar sesión</button>
 </div>
 
+<!-- 🔹 CONTENIDO PRINCIPAL -->
+<div class="content">
+  <div class="report-form">
+    <h2>Generar Reporte</h2>
 
-<!-- Operación / Actividades -->
-<div class="selection-box">
-  <label>Operación</label>
-  <select [(ngModel)]="tipoOperacionSeleccionadaId" name="tipoOperacionSeleccionadaId" (change)="cargarActividades()">
-    <option [ngValue]="null" disabled selected>Selecciona tipo de operación</option>
-    <option *ngFor="let tipo of tiposOperacion" [ngValue]="tipo.idTipoOperacion">
-      {{ tipo.nombre }}
-    </option>
-  </select>
-
-  <h4>Actividades</h4>
-  <select class="select-actividades" multiple [(ngModel)]="actividadesSeleccionadasIds" name="actividadesSeleccionadasIds">
-    <option *ngFor="let a of actividadesDisponibles" [ngValue]="a.idActividad">
-      {{ a.descripcion }}
-    </option>
-  </select>
-  <button class="add-actividad-button" (click)="agregarActividadesSeleccionadas()">Añadir actividades</button>
-
-  <div class="actividades-seleccionadas" *ngIf="actividadesSeleccionadas.length > 0">
-    <p><strong>Seleccionadas:</strong></p>
-    <ul>
-      <li *ngFor="let a of actividadesSeleccionadas">
-        {{ a.descripcion }}
-        <button class="remove-client-button" (click)="eliminarActividad(actividadesSeleccionadas.indexOf(a))">✕</button>
-      </li>
-    </ul>
-  </div>
-</div>
-
-
-      
-      <!-- Ubicación y tipo de equipo -->
-      <div class="info-container">
-        <div class="info-field">
-          <label for="ubicacion">Ubicación</label>
-      <input type="text" [(ngModel)]="ubicacion" placeholder="Escribe la ubicación" />
-        </div>
-<div class="info-field">
-  <label for="equipo">Tipo de equipo / equipos</label>
-  <input type="text" id="equipo" [(ngModel)]="tipoEquipo" placeholder="Escribe el tipo de equipo..." />
-</div>
-
-      
-      <!-- Descripción -->
-      <label>Descripción / Trabajo realizado</label>
-      <textarea [(ngModel)]="descripcionTrabajo" name="descripcionTrabajo" rows="5" placeholder="Describe aquí las actividades realizadas..."></textarea>
-
-      <!-- Fotos de lo hecho -->
-      <label>Fotos del trabajo realizado</label>
-      <input type="file" multiple accept="image/*" (change)="onImagenesSeleccionadas($event)" />
-
-
-      <!-- Toma de lecturas -->
-      <label>Toma de lecturas</label>
-      <textarea [(ngModel)]="lecturas" rows="4" placeholder="Registrar lecturas..."></textarea>
-
-      <!-- Fotos de la toma de lecturas -->
-      <label>Fotos de toma de lecturas</label>
-      <input type="file" multiple accept="image/*" (change)="onLecturasSeleccionadas($event)" />
-
-      
-      <!-- Observaciones / Autorización -->
-      <label>Observaciones</label>
-      <textarea [(ngModel)]="observaciones" rows="3" placeholder="Observaciones adicionales..."></textarea>
-
-
-      <!-- Firma -->
-      <label>Firma</label>
-      <canvas
-        #canvas
-        width="600"
-        height="200"
-        style="border:1px solid #ccc; touch-action: none;"
-        (mousedown)="iniciarDibujo($event)"
-        (mousemove)="dibujar($event)"
-        (mouseup)="detenerDibujo()"
-        (mouseleave)="detenerDibujo()"
-        (touchstart)="iniciarDibujo($event)"
-        (touchmove)="dibujar($event)"
-        (touchend)="detenerDibujo()"
-      ></canvas>
-      <p class="firma-aviso">
-        ⚠️ <strong>Esta firma solo valida el registro o entrega del reporte técnico y no puede ser utilizada para otros fines que puedan perjudicar a la persona.</strong>
-      </p>
-      <div class="signature-buttons">
-        <button (click)="limpiarFirma()">Limpiar firma</button>
-        <button (click)="guardarFirma()">Guardar firma (previsualizar)</button>
+    <!-- Clientes -->
+    <div class="selection-box">
+      <h4>Clientes *</h4>
+      <select multiple [(ngModel)]="clientesSeleccionadosIds" name="clientesSeleccionadosIds" required>
+        <option *ngFor="let c of clientesDisponibles" [ngValue]="c.id">
+          {{ c.nombre }}
+        </option>
+      </select>
+      <button class="add-client-button" (click)="agregarClientesSeleccionados()">Añadir clientes</button>
+      <div class="clientes-seleccionados" *ngIf="clientesSeleccionados.length > 0">
+        <p><strong>Seleccionados:</strong></p>
+        <ul>
+          <li *ngFor="let c of clientesSeleccionados">
+            {{ c.nombre }}
+            <button class="remove-client-button" (click)="eliminarCliente(clientesSeleccionados.indexOf(c))">✕</button>
+          </li>
+        </ul>
       </div>
+    </div>
 
-
-      <!-- Botones finales -->
-      <div class="report-btns-container">
-        <button class="btn-verify" (click)="abrirVerificacion()">Verificación del cliente</button>
-        <button class="btn-generate" [disabled]="!verificado" (click)="generarReporte()">Generar reporte</button>
+    <!-- Trabajadores -->
+    <div class="selection-box">
+      <h4>Trabajadores</h4>
+      <div class="usuario-actual-trabajador" *ngIf="usuarioActual">
+        <p><strong>Responsable:</strong> {{ usuarioActual.nombre }} ({{ usuarioActual.cargo }})</p>
       </div>
+      <div class="trabajadores-select-container">
+        <select multiple [(ngModel)]="trabajadoresSeleccionadosIds" name="trabajadoresSeleccionadosIds">
+          <option *ngFor="let t of usuariosDisponiblesFiltrados" [ngValue]="t.id">
+            {{ t.nombre }} ({{ t.cargo }})
+          </option>
+        </select>
+        <button class="add-worker-button" (click)="agregarTrabajadoresSeleccionados()">Añadir trabajadores</button>
+      </div>
+      <div class="trabajadores-seleccionados" *ngIf="trabajadoresSeleccionados.length > 0">
+        <p><strong>Seleccionados:</strong></p>
+        <ul>
+          <li *ngFor="let t of trabajadoresSeleccionados">
+            {{ t.nombre }} — {{ t.cargo }}
+            <button class="remove-worker-button" (click)="eliminarTrabajador(trabajadoresSeleccionados.indexOf(t))">✕</button>
+          </li>
+        </ul>
+      </div>
+    </div>
 
-      <!-- Último PDF generado -->
-      <div class="pdf-link-layer" *ngIf="urlPdf">
-        <p>✅ Último reporte generado:</p>
-        <input type="text" [value]="urlPdf" readonly #pdfLink />
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button (click)="copiarEnlace(pdfLink)">Copiar enlace</button>
-          <a [href]="urlPdf" target="_blank">Abrir PDF</a>
-        </div>
+    <!-- Operación / Actividades -->
+    <div class="selection-box">
+      <label>Operación</label>
+      <select [(ngModel)]="tipoOperacionSeleccionadaId" name="tipoOperacionSeleccionadaId" (change)="cargarActividades()">
+        <option [ngValue]="null" disabled selected>Selecciona tipo de operación</option>
+        <option *ngFor="let tipo of tiposOperacion" [ngValue]="tipo.idTipoOperacion">
+          {{ tipo.nombre }}
+        </option>
+      </select>
+
+      <h4>Actividades</h4>
+      <select class="select-actividades" multiple [(ngModel)]="actividadesSeleccionadasIds" name="actividadesSeleccionadasIds">
+        <option *ngFor="let a of actividadesDisponibles" [ngValue]="a.idActividad">
+          {{ a.descripcion }}
+        </option>
+      </select>
+      <button class="add-actividad-button" (click)="agregarActividadesSeleccionadas()">Añadir actividades</button>
+
+      <div class="actividades-seleccionadas" *ngIf="actividadesSeleccionadas.length > 0">
+        <p><strong>Seleccionadas:</strong></p>
+        <ul>
+          <li *ngFor="let a of actividadesSeleccionadas">
+            {{ a.descripcion }}
+            <button class="remove-client-button" (click)="eliminarActividad(actividadesSeleccionadas.indexOf(a))">✕</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Ubicación y tipo de equipo -->
+    <div class="info-container">
+      <div class="info-field">
+        <label for="ubicacion">Ubicación del equipo *</label>
+        <input type="text" [(ngModel)]="ubicacion" placeholder="Escribe la ubicación" required />
+      </div>
+      <div class="info-field">
+        <label for="equipo">Tipo de equipo / equipos *</label>
+        <input type="text" id="equipo" [(ngModel)]="tipoEquipo" placeholder="Escribe el tipo de equipo..." required />
+      </div>
+    </div>
+
+    <!-- Descripción -->
+    <label>Descripción / Trabajo realizado *</label>
+    <textarea [(ngModel)]="descripcionTrabajo" name="descripcionTrabajo" rows="5" placeholder="Describe aquí las actividades realizadas..." required></textarea>
+
+    <!-- Fotos de lo hecho -->
+    <label>Fotos del trabajo realizado *</label>
+    <input type="file" multiple accept="image/*" (change)="onImagenesSeleccionadas($event)" required />
+
+    <!-- Toma de lecturas -->
+    <label>Toma de lecturas</label>
+    <textarea [(ngModel)]="lecturas" rows="4" placeholder="Registrar lecturas..."></textarea>
+
+    <!-- Fotos de la toma de lecturas -->
+    <label>Fotos de toma de lecturas</label>
+    <input type="file" multiple accept="image/*" (change)="onLecturasSeleccionadas($event)" />
+
+    <!-- Observaciones / Autorización -->
+    <label>Observaciones</label>
+    <textarea [(ngModel)]="observaciones" rows="3" placeholder="Observaciones adicionales..."></textarea>
+
+    <!-- Firma -->
+    <label>Firma *</label>
+    <canvas
+      #canvas
+      width="600"
+      height="200"
+      style="border:1px solid #ccc; touch-action: none;"
+      (mousedown)="iniciarDibujo($event)"
+      (mousemove)="dibujar($event)"
+      (mouseup)="detenerDibujo()"
+      (mouseleave)="detenerDibujo()"
+      (touchstart)="iniciarDibujo($event)"
+      (touchmove)="dibujar($event)"
+      (touchend)="detenerDibujo()"
+    ></canvas>
+    <p class="firma-aviso">
+      ⚠️ <strong>Esta firma solo valida el registro o entrega del reporte técnico y no puede ser utilizada para otros fines que puedan perjudicar a la persona.</strong>
+    </p>
+    <div class="signature-buttons">
+      <button (click)="limpiarFirma()">Limpiar firma</button>
+      <button (click)="guardarFirma()">Guardar firma (previsualizar)</button>
+    </div>
+
+    <!-- Botones finales -->
+    <div class="report-btns-container">
+      <button class="btn-verify" (click)="abrirVerificacion()">Verificación del cliente</button>
+      <button class="btn-generate" [disabled]="!verificado" (click)="generarReporte()">Generar reporte</button>
+    </div>
+
+    <!-- Último PDF generado -->
+    <div class="pdf-link-layer" *ngIf="urlPdf">
+      <p>✅ Último reporte generado:</p>
+      <input type="text" [value]="urlPdf" readonly #pdfLink />
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button (click)="copiarEnlace(pdfLink)">Copiar enlace</button>
+        <a [href]="urlPdf" target="_blank">Abrir PDF</a>
       </div>
     </div>
 
@@ -185,7 +174,7 @@
           <p><em>Encargado de reporte no asignado</em></p>
         </ng-template>
 
-        <h3>Actividades</h3>
+        <h3>Descipcion del trabajo</h3>
         <ul>
           <li *ngIf="descripcionTrabajo">{{ descripcionTrabajo }}</li>
           <li *ngFor="let a of actividadesSeleccionadas">{{ a.descripcion }}</li>
@@ -228,4 +217,6 @@
           </div>
         </div>
       </div>
+    </div>
   </div>
+</div>
