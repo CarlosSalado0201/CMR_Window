@@ -11,6 +11,7 @@ import { Cliente } from 'src/app/Models/Cliente';
   styleUrls: ['./reportes.component.css']
 })
 export class ReportesComponent implements AfterViewInit, OnInit {
+  ubicacion: string = ''; // <-- Declarar la variable para el input de ubicación
 
   urlPdf: string | null = null;
   pdfLink: string = '';
