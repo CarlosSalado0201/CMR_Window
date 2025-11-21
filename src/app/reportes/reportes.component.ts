@@ -397,17 +397,37 @@ onLecturasSeleccionadas(event: any) {
   }
 
   // ===================== LIMPIAR FORMULARIO =====================
-  limpiarFormulario() {
-    this.imagenes = [];
-    this.imagenesLecturas = [];
-    this.descripcionTrabajo = '';
-    this.lecturas = '';
-    this.observaciones = '';
-    this.actividadesSeleccionadas = [];
-    this.trabajadoresSeleccionados = [];
-    this.clientesSeleccionados = [];
-    this.firmaFile = null;
-    this.firmaSupervisorFile = null;
-    this.firmaSupervisor = null;
-  }
+limpiarFormulario() {
+  // Inputs de texto y textarea
+  this.ubicacion = '';
+  this.tipoEquipo = '';
+  this.descripcionTrabajo = '';
+  this.lecturas = '';
+  this.observaciones = '';
+  this.nombreSupervisor = '';
+
+  // Selecciones múltiples
+  this.clientesSeleccionados = [];
+  this.clientesSeleccionadosIds = [];
+
+  this.trabajadoresSeleccionados = [];
+  this.trabajadoresSeleccionadosIds = [];
+
+  this.actividadesSeleccionadas = [];
+  this.actividadesSeleccionadasIds = [];
+  this.tipoOperacionSeleccionadaId = null;
+
+  // Archivos
+  this.imagenes = [];
+  this.imagenesLecturas = [];
+
+  // Firmas
+  this.limpiarFirma();
+  this.limpiarFirmaSupervisor();
+
+  // Reset verificación
+  this.verificado = false;
+  this.mostrarVerificacion = false;
+}
+
 }
