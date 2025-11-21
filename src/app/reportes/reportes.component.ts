@@ -305,11 +305,12 @@ async guardarFirmaSupervisor(): Promise<void> {
       cargo: t.cargo
     }));
 
-    const cliente = this.clientesDisponibles[0];
-    if (!cliente) {
-      alert('⚠️ Seleccione al menos un cliente.');
-      return;
-    }
+ const clientes: Cliente[] = this.clientesSeleccionados;
+if (clientes.length === 0) {
+  alert('⚠️ Seleccione al menos un cliente.');
+  return;
+}
+
 
     const actividadesIds = this.actividadesSeleccionadas.map(a => a.idActividad);
 
@@ -317,7 +318,7 @@ async guardarFirmaSupervisor(): Promise<void> {
 this.serviciosService.generarReporte(
   encargado,
   trabajadores,
-  cliente,
+  clientes,
   this.descripcionTrabajo,
   this.tipoEquipo,        // ✅ NUEVO: tipo de equipo
   this.imagenes,
