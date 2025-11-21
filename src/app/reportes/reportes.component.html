@@ -9,6 +9,15 @@
 <div class="content">
   <div class="report-form">
     <h2>Generar Reporte</h2>
+<div class="input-group">
+  <label for="fechaInicio">Fecha inicio:</label>
+  <input type="date" id="fechaInicio" [(ngModel)]="fechaInicio" name="fechaInicio" class="input-rojo" required>
+</div>
+
+<div class="input-group">
+  <label for="fechaFin">Fecha fin:</label>
+  <input type="date" id="fechaFin" [(ngModel)]="fechaFin" name="fechaFin" class="input-rojo">
+</div>
 
     <!-- Clientes -->
     <div class="selection-box">

@@ -438,7 +438,10 @@ generarReporte(
   imagenesLecturas: File[],
   ubicacion: string,
   lecturas: string,
-  observaciones: string
+  observaciones: string,
+  fechaInicio: string,
+  fechaFin: string
+
 ): Observable<any> {
 
   const url = `${this.apiUrl}/reportes/generar`;
@@ -449,13 +452,14 @@ generarReporte(
 formData.append('encargado', JSON.stringify(encargado));
 formData.append('trabajadores', JSON.stringify(trabajadores));
 formData.append('clientes', JSON.stringify(clientes));
-
   formData.append('descripcion', descripcion);
 
     formData.append('tipoEquipo', tipoEquipo);  // ✅ Aquí se envía
   formData.append('ubicacion', ubicacion);
   formData.append('lecturas', lecturas);
   formData.append('observaciones', observaciones);
+formData.append('fechaInicio', fechaInicio);
+formData.append('fechaFin', fechaFin);
 
   // -------- actividades --------
   actividades.forEach(a => formData.append('actividades', a.toString()));

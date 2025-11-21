@@ -15,6 +15,8 @@ export class ReportesComponent implements AfterViewInit, OnInit {
 
   urlPdf: string | null = null;
   pdfLink: string = '';
+fechaInicio: string = '';
+fechaFin: string = '';
 
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
   private ctx!: CanvasRenderingContext2D;
@@ -293,6 +295,15 @@ async guardarFirmaSupervisor(): Promise<void> {
       alert('⚠️ Complete todos los campos requeridos y firme correctamente.');
       return;
     }
+ if (this.actividadesSeleccionadas.length === 0) {
+      alert('⚠️ Debe seleccionar al menos una actividad.');
+      return;
+    }
+if (!this.fechaInicio) {
+  alert('Debe seleccionar la fecha de inicio.');
+  return;
+}
+
 
     // ===================== PREPARAR DATOS =====================
     const encargado = {
@@ -329,7 +340,9 @@ this.serviciosService.generarReporte(
   this.imagenesLecturas,
   this.ubicacion, // <-- cambiar a la variable del input
   this.lecturas,
-  this.observaciones
+  this.observaciones,
+  this.fechaInicio,   // ⬅🔥 Nuevo
+  this.fechaFin       // ⬅🔥 Nuevo (puede ir vacío)
 ).subscribe({
       next: res => {
         this.urlPdf = res.urlPdf;

@@ -515,3 +515,36 @@ canvas {
 }
 
 
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+/* ESTILO INPUT ROJO */
+.input-rojo {
+  padding: 10px 12px;
+  border: 2px solid #c62828; /* rojo */
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  background: #fff;
+  color: #333;
+  transition: 0.25s ease-in-out;
+}
+
+.input-rojo:hover {
+  border-color: #a30000; /* rojo más fuerte */
+}
+
+.input-rojo:focus {
+  border-color: #b30000;
+  box-shadow: 0 0 5px rgba(179, 0, 0, 0.4);
+}
+
+/* LABEL */
+.input-group label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #b30000; /* mismo rojo */
+}
