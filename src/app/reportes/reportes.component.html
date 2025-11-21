@@ -173,7 +173,6 @@
       <p><em>Encargado de reporte no asignado</em></p>
     </ng-template>
 
-    <!-- 🔹 NUEVOS CAMPOS DE VERIFICACIÓN -->
     <h3>Detalles del equipo</h3>
     <p><strong>Ubicación del equipo:</strong> {{ ubicacion || 'No especificado' }}</p>
     <p><strong>Tipo de equipo:</strong> {{ tipoEquipo || 'No especificado' }}</p>
@@ -189,14 +188,20 @@
       <p>Se han subido {{ imagenes.length }} imágenes del trabajo realizado.</p>
     </div>
 
-    <!-- 🔹 TOMA DE LECTURAS SOLO SI HAY TEXTO -->
-    <div *ngIf="lecturas && lecturas.trim() !== ''">
+    <!-- 🔹 TOMA DE LECTURAS -->
+    <div *ngIf="lecturas?.trim()">
       <h3>Toma de lecturas</h3>
       <p>{{ lecturas }}</p>
 
       <div *ngIf="imagenesLecturas && imagenesLecturas.length > 0">
         <p>Se han subido {{ imagenesLecturas.length }} imágenes de lecturas.</p>
       </div>
+    </div>
+
+    <!-- 🔹 OBSERVACIONES -->
+    <div *ngIf="observaciones?.trim()">
+      <h3>Observaciones</h3>
+      <p>{{ observaciones }}</p>
     </div>
 
     <!-- Supervisor -->
