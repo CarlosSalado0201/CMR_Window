@@ -448,7 +448,8 @@ generarReporte(
   // -------- JSON --------
 formData.append('encargado', JSON.stringify(encargado));
 formData.append('trabajadores', JSON.stringify(trabajadores));
-clientes.forEach(c => formData.append('clientes', JSON.stringify(c)));
+formData.append('clientes', JSON.stringify(clientes));
+
 
   formData.append('descripcion', descripcion);
 
