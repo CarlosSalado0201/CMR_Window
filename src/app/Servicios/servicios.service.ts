@@ -450,7 +450,6 @@ formData.append('encargado', JSON.stringify(encargado));
 formData.append('trabajadores', JSON.stringify(trabajadores));
 formData.append('clientes', JSON.stringify(clientes));
 
-
   formData.append('descripcion', descripcion);
 
     formData.append('tipoEquipo', tipoEquipo);  // ✅ Aquí se envía
