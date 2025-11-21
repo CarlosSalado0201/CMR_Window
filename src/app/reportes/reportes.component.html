@@ -154,68 +154,70 @@
         <a [href]="urlPdf" target="_blank">Abrir PDF</a>
       </div>
     </div>
+<!-- 🔹 PANEL DE VERIFICACIÓN -->
+<div class="verificacion-panel" *ngIf="mostrarVerificacion">
+  <div class="panel-content">
+    <h2>Verificación del Cliente</h2>
 
-    <!-- 🔹 PANEL DE VERIFICACIÓN -->
-    <div class="verificacion-panel" *ngIf="mostrarVerificacion">
-      <div class="panel-content">
-        <h2>Verificación del Cliente</h2>
+    <h3>Trabajadores</h3>
+    <ul>
+      <li *ngFor="let t of trabajadoresSeleccionados">
+        <strong>{{ t.nombre }}</strong> — {{ t.cargo }}
+      </li>
+    </ul>
 
-        <h3>Trabajadores</h3>
-        <ul>
-          <li *ngFor="let t of trabajadoresSeleccionados">
-            <strong>{{ t.nombre }}</strong> — {{ t.cargo }}
-          </li>
-        </ul>
+    <p *ngIf="usuarioActual; else sinEncargado">
+      <strong>Encargado del reporte:</strong> {{ usuarioActual.nombre }} ({{ usuarioActual.cargo }})
+    </p>
+    <ng-template #sinEncargado>
+      <p><em>Encargado de reporte no asignado</em></p>
+    </ng-template>
 
-        <p *ngIf="usuarioActual; else sinEncargado">
-          <strong>Encargado del reporte:</strong> {{ usuarioActual.nombre }} ({{ usuarioActual.cargo }})
-        </p>
-        <ng-template #sinEncargado>
-          <p><em>Encargado de reporte no asignado</em></p>
-        </ng-template>
+    <!-- 🔹 NUEVOS CAMPOS DE VERIFICACIÓN -->
+    <h3>Detalles del equipo</h3>
+    <p><strong>Ubicación del equipo:</strong> {{ ubicacion || 'No especificado' }}</p>
+    <p><strong>Tipo de equipo:</strong> {{ tipoEquipo || 'No especificado' }}</p>
+    <p><strong>Descripción del trabajo:</strong> {{ descripcionTrabajo || 'No especificado' }}</p>
 
-        <h3>Descipcion del trabajo</h3>
-        <ul>
-          <li *ngIf="descripcionTrabajo">{{ descripcionTrabajo }}</li>
-          <li *ngFor="let a of actividadesSeleccionadas">{{ a.descripcion }}</li>
-        </ul>
+    <h3>Actividades realizadas</h3>
+    <ul>
+      <li *ngFor="let a of actividadesSeleccionadas">{{ a.descripcion }}</li>
+    </ul>
 
-        <div *ngIf="imagenes && imagenes.length > 0">
-          <h3>Imágenes subidas</h3>
-          <p>Se han subido {{ imagenes.length }} imágenes del trabajo realizado.</p>
-        </div>
+    <div *ngIf="imagenes && imagenes.length > 0">
+      <h3>Imágenes subidas</h3>
+      <p>Se han subido {{ imagenes.length }} imágenes del trabajo realizado.</p>
+    </div>
 
-        <!-- Supervisor -->
-        <label class="supervisor-label">Nombre del supervisor</label>
-        <input type="text" class="supervisor-input" [(ngModel)]="nombreSupervisor" placeholder="Nombre completo" />
-        <div class="supervisor-section">
-          <label><strong>Firma del supervisor / responsable</strong></label>
-          <canvas
-            #canvasSupervisor
-            width="600"
-            height="200"
-            style="border:1px solid #ccc; touch-action: none;"
-            (mousedown)="iniciarDibujoSupervisor($event)"
-            (mousemove)="dibujarSupervisor($event)"
-            (mouseup)="detenerDibujoSupervisor()"
-            (mouseleave)="detenerDibujoSupervisor()"
-            (touchstart)="iniciarDibujoSupervisor($event)"
-            (touchmove)="dibujarSupervisor($event)"
-            (touchend)="detenerDibujoSupervisor()"
-          ></canvas>
-          <p class="firma-aviso">
-            ⚠️ <strong>Esta firma solo valida el registro de un reporte técnico</strong>
-          </p>
-          <div class="signature-buttons">
-            <button type="button" (click)="limpiarFirmaSupervisor()">Limpiar</button>
-            <button type="button" (click)="guardarFirmaSupervisor()">Guardar firma supervisor</button>
-          </div>
+    <!-- Supervisor -->
+    <label class="supervisor-label">Nombre del supervisor</label>
+    <input type="text" class="supervisor-input" [(ngModel)]="nombreSupervisor" placeholder="Nombre completo" />
+    <div class="supervisor-section">
+      <label><strong>Firma del supervisor / responsable</strong></label>
+      <canvas
+        #canvasSupervisor
+        width="600"
+        height="200"
+        style="border:1px solid #ccc; touch-action: none;"
+        (mousedown)="iniciarDibujoSupervisor($event)"
+        (mousemove)="dibujarSupervisor($event)"
+        (mouseup)="detenerDibujoSupervisor()"
+        (mouseleave)="detenerDibujoSupervisor()"
+        (touchstart)="iniciarDibujoSupervisor($event)"
+        (touchmove)="dibujarSupervisor($event)"
+        (touchend)="detenerDibujoSupervisor()"
+      ></canvas>
+      <p class="firma-aviso">
+        ⚠️ <strong>Esta firma solo valida el registro de un reporte técnico</strong>
+      </p>
+      <div class="signature-buttons">
+        <button type="button" (click)="limpiarFirmaSupervisor()">Limpiar</button>
+        <button type="button" (click)="guardarFirmaSupervisor()">Guardar firma supervisor</button>
+      </div>
 
-          <div class="panel-actions">
-            <button (click)="aprobarVerificacion()">Supervisado o aprobado</button>
-            <button class="cancel" (click)="cerrarVerificacion()">Cancelar</button>
-          </div>
-        </div>
+      <div class="panel-actions">
+        <button (click)="aprobarVerificacion()">Supervisado o aprobado</button>
+        <button class="cancel" (click)="cerrarVerificacion()">Cancelar</button>
       </div>
     </div>
   </div>
