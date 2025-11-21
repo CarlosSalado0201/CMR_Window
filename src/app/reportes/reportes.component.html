@@ -65,7 +65,7 @@
         </option>
       </select>
 
-      <h4>Actividades</h4>
+      <h4>Trabajo realizado</h4>
       <select class="select-actividades" multiple [(ngModel)]="actividadesSeleccionadasIds" name="actividadesSeleccionadasIds">
         <option *ngFor="let a of actividadesDisponibles" [ngValue]="a.idActividad">
           {{ a.descripcion }}
