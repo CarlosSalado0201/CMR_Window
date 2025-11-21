@@ -398,6 +398,7 @@ onLecturasSeleccionadas(event: any) {
 
   // ===================== LIMPIAR FORMULARIO =====================
 limpiarFormulario() {
+  
   // Inputs de texto y textarea
   this.ubicacion = '';
   this.tipoEquipo = '';
@@ -420,15 +421,14 @@ limpiarFormulario() {
   // Archivos
   this.imagenes = [];
   this.imagenesLecturas = [];
+  this.verificado = false;
 
   // Firmas
   this.limpiarFirma();
   this.limpiarFirmaSupervisor();
 
   // Reset verificación
-  this.verificado = false;
   this.mostrarVerificacion = false;
-  this.verificado = false;           // <--- esto bloquea el botón
 
 }
 
