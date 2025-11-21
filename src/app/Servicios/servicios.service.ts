@@ -427,7 +427,7 @@
 generarReporte(
   encargado: any,
   trabajadores: any[],
-  cliente: any,
+  clientes: any[], // <-- cambiar
   descripcion: string,
     tipoEquipo: string,          // ✅ Nuevo parámetro
   imagenesDescripcion: File[],
@@ -448,7 +448,7 @@ generarReporte(
   // -------- JSON --------
   formData.append('encargado', JSON.stringify(encargado));
   formData.append('trabajadores', JSON.stringify(trabajadores));
-  formData.append('cliente', JSON.stringify(cliente));
+clientes.forEach(c => formData.append('clientes', JSON.stringify(c)));
   formData.append('descripcion', descripcion);
 
     formData.append('tipoEquipo', tipoEquipo);  // ✅ Aquí se envía
