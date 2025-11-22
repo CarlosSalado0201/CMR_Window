@@ -425,23 +425,7 @@
 // 📄 GENERAR REPORTE (PDF)
 // ==========================================================
 generarReporte(
-  encargado: any,
-  trabajadores: any[],
-  clientes: any[], // <-- cambiar
-  descripcion: string,
-    tipoEquipo: string,          // ✅ Nuevo parámetro
-  imagenesDescripcion: File[],
-  firma: File | null,
-  actividades: number[],
-  nombreSupervisor: string,
-  firmaSupervisor: File | null,
-  imagenesLecturas: File[],
-  ubicacion: string,
-  lecturas: string,
-  observaciones: string,
-  fechaInicio: string,
-  fechaFin: string
-
+encargado: any, trabajadores: any[], clientes: any[], descripcion: string, tipoEquipo: string, imagenesDescripcion: File[], firma: File | null, actividades: number[], nombreSupervisor: string, firmaSupervisor: File | null, imagenesLecturas: File[], ubicacion: string, lecturas: string, observaciones: string, fechaInicio: string, fechaFin: string, idCarpeta: number | null
 ): Observable<any> {
 
   const url = `${this.apiUrl}/reportes/generar`;
@@ -491,6 +475,18 @@ formData.append('fechaFin', fechaFin);
   }
 
   return this.http.post(url, formData, { withCredentials: true });
+}
+
+// ---------------- CARPETAS -----------------
+private URLCarpetas = 'https://proyecto-cmr.onrender.com/api/carpeta';
+
+obtenerCarpetas(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.URLCarpetas}/listar`).pipe(
+    catchError(error => {
+      console.error('Error al obtener carpetas:', error);
+      return of([]);
+    })
+  );
 }
 
     }

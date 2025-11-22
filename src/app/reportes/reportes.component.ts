@@ -51,6 +51,9 @@ tipoEquipo = '';
   actividadesDisponibles: any[] = [];
   actividadesSeleccionadas: any[] = [];
   actividadesSeleccionadasIds: number[] = [];
+idCarpeta: number | null = null;
+carpetaSeleccionada: string = "Seleccionar carpeta";
+mostrarListaCarpetas: boolean = false;
 
   mostrarVerificacion = false;
   verificado = false;
@@ -66,6 +69,7 @@ tipoEquipo = '';
     this.cargarUsuariosDisponibles();
     this.cargarClientes();
     this.cargarTiposOperacion();
+        this.cargarCarpetas();
   }
 
   ngAfterViewInit(): void {
@@ -342,7 +346,8 @@ this.serviciosService.generarReporte(
   this.lecturas,
   this.observaciones,
   this.formatearFecha(this.fechaInicio),  // ✅ Formateada
-  this.formatearFecha(this.fechaFin)      // ✅ Formateada
+  this.formatearFecha(this.fechaFin),      // ✅ Formateada
+  this.idCarpeta
 ).subscribe({
       next: res => {
         this.urlPdf = res.urlPdf;
@@ -450,5 +455,29 @@ formatearFecha(fecha: string): string {
   const [yyyy, mm, dd] = fecha.split("-");
   return `${dd}/${mm}/${yyyy}`;
 }
+  // ====== CARPETAS ======
+  carpetas: any[] = [];
+
+  cargarCarpetas() {
+    this.serviciosService.obtenerCarpetas().subscribe({
+      next: (data) => {
+        this.carpetas = data;
+      },
+      error: () => console.error("Error al cargar carpetas")
+    });
+  }
+
+  toggleCarpetas() {
+    this.mostrarListaCarpetas = !this.mostrarListaCarpetas;
+  }
+
+  seleccionarCarpeta(carpeta: any) {
+  this.idCarpeta = carpeta.idCarpeta; 
+  this.carpetaSeleccionada = carpeta.nombre; // <-- PARA MOSTRAR EN HTML
+  this.mostrarListaCarpetas = false;         // <-- PARA CERRAR EL MENÚ
+  console.log("Carpeta seleccionada:", this.idCarpeta);
+}
+
+
 
 }

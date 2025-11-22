@@ -548,3 +548,64 @@ canvas {
   margin-bottom: 6px;
   color: #b30000; /* mismo rojo */
 }
+
+
+
+
+/* 🔻 Caja principal */
+.carpeta-box {
+  margin-top: 15px;
+}
+
+/* 🔻 Texto del label */
+.carpeta-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* 🔻 Caja roja */
+.carpeta-display {
+  background: #b30000;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.2s ease;
+  border: 2px solid #750000;
+}
+
+.carpeta-display:hover {
+  background: #cc0000;
+}
+
+/* 🔻 Flechita */
+.carpeta-display .arrow {
+  font-size: 18px;
+}
+
+/* 🔻 Lista desplegable */
+.carpeta-list {
+  background: white;
+  border: 2px solid #b30000;
+  border-radius: 8px;
+  margin-top: 5px;
+  padding: 0;
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.carpeta-list li {
+  padding: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.carpeta-list li:hover {
+  background: #ffe5e5;
+}

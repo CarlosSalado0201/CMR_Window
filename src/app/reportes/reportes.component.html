@@ -147,6 +147,24 @@
       <button (click)="limpiarFirma()">Limpiar firma</button>
       <button (click)="guardarFirma()">Guardar firma (previsualizar)</button>
     </div>
+<!-- 🔻 SELECCIÓN DE CARPETA -->
+<div class="selection-box carpeta-box">
+  <label class="carpeta-label">Carpeta del reporte *</label>
+
+  <!-- Cuadro rojo que se puede presionar -->
+  <div class="carpeta-display" (click)="toggleCarpetas()">
+    {{ carpetaSeleccionada || 'Seleccionar carpeta...' }}
+    <span class="arrow">&#9662;</span>
+  </div>
+
+  <!-- Lista desplegable -->
+  <ul class="carpeta-list" *ngIf="mostrarListaCarpetas">
+    <li *ngFor="let c of carpetas" (click)="seleccionarCarpeta(c)">
+      {{ c.nombre }}
+    </li>
+  </ul>
+</div>
+
 
     <!-- Botones finales -->
     <div class="report-btns-container">

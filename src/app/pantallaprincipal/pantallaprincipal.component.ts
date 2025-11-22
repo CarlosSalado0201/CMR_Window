@@ -26,5 +26,6 @@ export class PantallaPrincipalComponent {
       error: () => console.error('Error al cerrar sesión')
     });
   }
+  
 }
 
