@@ -151,19 +151,14 @@
 <div class="selection-box carpeta-box">
   <label class="carpeta-label">Carpeta del reporte *</label>
 
-  <!-- Cuadro rojo que se puede presionar -->
-  <div class="carpeta-display" (click)="toggleCarpetas()">
-    {{ carpetaSeleccionada || 'Seleccionar carpeta...' }}
-    <span class="arrow">&#9662;</span>
-  </div>
-
-  <!-- Lista desplegable -->
-  <ul class="carpeta-list" *ngIf="mostrarListaCarpetas">
-    <li *ngFor="let c of carpetas" (click)="seleccionarCarpeta(c)">
-      {{ c.nombre }}
-    </li>
-  </ul>
+<div class="carpeta-display" (click)="toggleCarpetas()">
+  {{ carpetaSeleccionada || 'Seleccionar carpeta...' }}
 </div>
+<ul class="carpeta-list" *ngIf="mostrarListaCarpetas">
+  <li *ngFor="let c of carpetas" (click)="seleccionarCarpeta(c)">
+    {{ c.nombre }}
+  </li>
+</ul>
 
 
     <!-- Botones finales -->
