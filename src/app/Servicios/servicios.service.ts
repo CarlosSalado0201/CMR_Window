@@ -444,8 +444,7 @@ formData.append('clientes', JSON.stringify(clientes));
   formData.append('observaciones', observaciones);
 formData.append('fechaInicio', fechaInicio);
 formData.append('fechaFin', fechaFin);
-
-  // -------- actividades --------
+formData.append('idCarpeta', idCarpeta!.toString());
   actividades.forEach(a => formData.append('actividades', a.toString()));
 
   // -------- firma encargado --------
