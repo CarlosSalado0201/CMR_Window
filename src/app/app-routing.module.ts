@@ -11,6 +11,7 @@ import { PantallaReportesComponent } from './pantalla-reportes/pantalla-reportes
 import { ReportesComponent } from './reportes/reportes.component';
 import { AuthGuard } from './guards/guard';
 import { HistorialReportesComponent } from './historial-reportes/historial-reportes.component';
+import { CartasComponent } from './cartas/cartas.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'reportes', component: PantallaReportesComponent, canActivate: [AuthGuard] },
   { path: 'generar', component: ReportesComponent,canActivate: [AuthGuard]},
   { path: 'historial', component: HistorialReportesComponent, canActivate: [AuthGuard] },
+  { path: 'generar-carta', component: CartasComponent },
 
 ];
 

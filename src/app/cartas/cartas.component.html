@@ -1,0 +1,98 @@
+
+<!-- 🔻 BARRA SUPERIOR -->
+<div class="toolbar">
+  <img src="assets/CMR.jpg" alt="Logo CMR" style="cursor:pointer" routerLink="/reportes" />
+  <div class="toolbar-buttons">
+    <button routerLink="/generar">Generar Reportes</button>
+    <button routerLink="/generar-carta">Generar carta</button>
+    <button (click)="logout()">Cerrar sesión</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="gif-container">
+    <img src="assets/animacion.gif" alt="GIF animado">
+  </div>
+</div>
+
+<div class="container">
+  <!-- Botones principales -->
+  <button (click)="mostrarFormulario('entrega')">CARTA ENTREGA</button>
+  <button (click)="mostrarFormulario('garantia')">CARTA GARANTÍA</button>
+  <button (click)="mostrarFormulario('conjunto')">CARTAS EN CONJUNTO</button>
+
+  <!-- Formulario CARTA ENTREGA -->
+  <div *ngIf="formularioVisible === 'entrega'" class="formulario">
+    <div class="pregunta">
+      <label>Pregunta 1:</label>
+      <p class="texto-instruccion">
+        Por medio del presente se hace la entrega recepción de los trabajos realizado en:
+      </p>
+      <input type="text" [(ngModel)]="respuesta1" placeholder="Escribe tu comentario">
+    </div>
+    <div class="pregunta">
+      <label>Pregunta 2:</label>
+      <p class="texto-instruccion">
+        HACEMOS ENTREGA AL DEPARTAMENTO DE MANTENIMIENTO Y NOS RECIBEN EN CONFORMIDAD A LAS CONDICIONES ESTABLECIDAS POR AMBAS PARTES.
+      </p>
+      <input type="text" [(ngModel)]="respuesta2" placeholder="Escribe tu comentario">
+    </div>
+    <button (click)="guardar('entrega')">Guardar CARTA ENTREGA</button>
+  </div>
+
+  <!-- Formulario CARTA GARANTÍA -->
+  <div *ngIf="formularioVisible === 'garantia'" class="formulario">
+    <div class="pregunta">
+      <label>Pregunta 1:</label>
+      <p class="texto-instruccion">
+        Por medio del presente hacemos constar que se realizó según el presupuesto
+      </p>
+      <input type="text" [(ngModel)]="respuesta1" placeholder="Escribe tu comentario">
+    </div>
+    <div class="pregunta">
+      <label>Pregunta 2:</label>
+      <p class="texto-instruccion">
+        Tendrán una garantía de 1 año, a partir del término del trabajo así mismo queda de manifiesto que los equipos deben tener su servicio de mantenimiento ya que es de vital importancia para que la garantía sea válida y solo en caso de que sufra impactos ajenos al trabajo realizado queda invalidada la garantía. En partes eléctricas no hay garantía.
+      </p>
+      <input type="text" [(ngModel)]="respuesta2" placeholder="Escribe tu comentario">
+    </div>
+    <button (click)="guardar('garantia')">Guardar CARTA GARANTÍA</button>
+  </div>
+
+  <!-- Formulario CARTAS EN CONJUNTO -->
+  <div *ngIf="formularioVisible === 'conjunto'" class="formulario">
+    <h3>CARTA ENTREGA</h3>
+    <div class="pregunta">
+      <label>Pregunta 1:</label>
+      <p class="texto-instruccion">
+        Por medio del presente se hace la entrega recepción de los trabajos realizados en
+      </p>
+      <input type="text" [(ngModel)]="respuesta1" placeholder="Escribe tu comentario">
+    </div>
+    <div class="pregunta">
+      <label>Pregunta 2:</label>
+      <p class="texto-instruccion">
+        HACEMOS ENTREGA AL DEPARTAMENTO DE MANTENIMIENTO Y NOS RECIBEN EN CONFORMIDAD A LAS CONDICIONES ESTABLECIDAS POR AMBAS PARTES.
+      </p>
+      <input type="text" [(ngModel)]="respuesta2" placeholder="Escribe tu comentario">
+    </div>
+
+    <h3>CARTA GARANTÍA</h3>
+    <div class="pregunta">
+      <label>Pregunta 1:</label>
+      <p class="texto-instruccion">
+        Por medio del presente hacemos constar que se realizó según el presupuesto
+      </p>
+      <input type="text" [(ngModel)]="respuesta3" placeholder="Escribe tu comentario">
+    </div>
+    <div class="pregunta">
+      <label>Pregunta 2:</label>
+      <p class="texto-instruccion">
+        Tendrán una garantía de 1 año, a partir del término del trabajo así mismo queda de manifiesto que los equipos deben tener su servicio de mantenimiento ya que es de vital importancia para que la garantía sea válida y solo en caso de que sufra impactos ajenos al trabajo realizado queda invalidada la garantía. En partes eléctricas no hay garantía.
+      </p>
+      <input type="text" [(ngModel)]="respuesta4" placeholder="Escribe tu comentario">
+    </div>
+
+    <button (click)="guardar('conjunto')">Guardar CARTAS EN CONJUNTO</button>
+  </div>
+</div>

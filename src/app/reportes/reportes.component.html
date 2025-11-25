@@ -1,9 +1,21 @@
 <!-- 🔻 BARRA SUPERIOR -->
+
+<!-- 🔻 BARRA SUPERIOR -->
 <div class="toolbar">
   <img src="assets/CMR.jpg" alt="Logo CMR" style="cursor:pointer" routerLink="/reportes" />
-  <button routerLink="/reportes">Generar Reportes</button>
-  <button (click)="logout()">Cerrar sesión</button>
+  <div class="toolbar-buttons">
+    <button routerLink="/generar">Generar Reportes</button>
+    <button routerLink="/generar-carta">Generar carta</button>
+    <button (click)="logout()">Cerrar sesión</button>
+  </div>
 </div>
+
+<div class="content">
+  <div class="gif-container">
+    <img src="assets/animacion.gif" alt="GIF animado">
+  </div>
+</div>
+
 <div class="content">
 <!-- 🔹 CONTENIDO PRINCIPAL -->
   <div *ngIf="vistaActual === 'form'" class="report-form">
