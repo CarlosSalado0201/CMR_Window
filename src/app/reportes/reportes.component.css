@@ -386,17 +386,7 @@ canvas {
 /* ==============================
    RESPONSIVO
    ============================== */
-@media (max-width: 950px) {
-  .form-wrapper {
-    flex-direction: column;
-    align-items: center;
-  }
 
-  .clientes-section {
-    width: 100%;
-    max-width: 500px;
-  }
-}
 
 /* ==============================
    ANIMACIONES
@@ -608,4 +598,143 @@ canvas {
 
 .carpeta-list li:hover {
   background: #ffe5e5;
+}
+/* ===== Layout fluido real ===== */
+.form-wrapper {
+  max-width: clamp(900px, 80vw, 1600px);
+  gap: clamp(20px, 3vw, 60px);
+}
+
+.report-form {
+  width: clamp(300px, 55vw, 900px);
+}
+
+.clientes-section,
+.trabajadores-section,
+.actividades-section {
+  width: clamp(260px, 30vw, 420px);
+}
+@media (max-width: 1300px) {
+  .form-wrapper {
+    flex-direction: column;
+    align-items: center;
+    max-width: 95vw;
+  }
+
+  .report-form {
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .clientes-section,
+  .trabajadores-section,
+  .actividades-section {
+    width: 100%;
+    max-width: 600px;
+  }
+}
+@media (min-width: 1600px) {
+  .form-wrapper {
+    max-width: 1500px;
+  }
+  .report-form {
+    max-width: 950px;
+  }
+}
+/* ==============================
+   MODO MÓVIL REAL
+   ============================== */
+@media (max-width: 600px) {
+
+  /* Toolbar más chica */
+  .toolbar {
+    height: 70px;
+    padding: 0 12px;
+  }
+
+  .toolbar img {
+    height: 55px;
+    margin-right: 10px;
+  }
+
+  .toolbar button {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    max-width: 90px;
+  }
+
+  /* Espacio del contenido */
+  .content {
+    margin-top: 90px;
+    padding: 0 12px;
+  }
+
+  /* Layout vertical total */
+  .form-wrapper {
+    flex-direction: column !important;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Formularios más compactos */
+  .report-form {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px !important;
+  }
+
+  .clientes-section,
+  .trabajadores-section,
+  .actividades-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px !important;
+  }
+
+  /* Inputs más cómodos en celular */
+  .report-form input,
+  .report-form select,
+  .report-form textarea {
+    font-size: 15px;
+    padding: 12px;
+  }
+
+  /* Listas y selects */
+  select {
+    min-height: 100px;
+  }
+
+  /* Botones más grandes y legibles */
+  button,
+  .submit-button,
+  .btn-generate,
+  .btn-verify {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .add-client-button,
+  .add-worker-button,
+  .add-actividad-button {
+    width: 100%;
+  }
+
+  /* PDF Layer */
+  .pdf-link-layer {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px;
+  }
+
+  /* Panel de verificación */
+  .panel-content {
+    width: 92% !important;
+    padding: 18px !important;
+    max-height: 85vh !important;
+  }
 }
