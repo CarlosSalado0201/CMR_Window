@@ -281,60 +281,6 @@ button:hover, .submit-button:hover, .pdf-link-layer button:hover, .pdf-link-laye
    MODAL DE VERIFICACIÓN
    ============================== */
 
-.panel-content {
-  background: linear-gradient(145deg, #ffffff, #fff0f2);
-  padding: 30px;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 650px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-  animation: slideIn 0.3s ease-out;
-}
-
-.panel-content h2 {
-  color: #dc3545;
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.panel-content h3 {
-  color: #444;
-  margin-top: 10px;
-  margin-bottom: 6px;
-}
-
-.panel-actions {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.panel-actions button {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.panel-actions button:hover {
-  background-color: #b02a37;
-}
-
-.panel-actions .cancel {
-  background-color: #999;
-}
-
-.panel-actions .cancel:hover {
-  background-color: #777;
-}
-
 /* ==============================
    CANVAS DE FIRMAS
    ============================== */
@@ -718,13 +664,6 @@ canvas {
     padding: 16px;
   }
 
-  /* Panel de verificación */
-  .panel-content {
-    width: 92% !important;
-    padding: 18px !important;
-    max-height: 85vh !important;
-  }
-}
 /* ==============================
    CANVAS RESPONSIVE PARA CELULAR
    ============================== */
@@ -819,30 +758,6 @@ canvas,
     height: auto !important;
   }
 }
-.verificacion-panel {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.45); /* fondo oscuro suave */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999; /* arriba de todo */
-  padding: 20px;
-  overflow-y: auto; /* permite scroll si es necesario */
-}
-
-.panel-verificacion {
-  background: #fff;
-  padding: 25px;
-  border-radius: 12px;
-  max-width: 700px;
-  width: 100%;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
-  animation: fadeIn 0.2s ease-out;
-}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
@@ -856,4 +771,111 @@ canvas,
   border-radius: 8px;
   aspect-ratio: 3 / 1;
   touch-action: none;
+}
+/* ==========================
+   MODAL / PANEL DE VERIFICACIÓN
+   ========================== */
+.verificacion-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 10px; /* evita scroll externo */
+}
+
+.panel-verificacion {
+  background: linear-gradient(145deg, #ffffff, #fff0f2);
+  padding: 20px 25px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 650px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  animation: slideIn 0.25s ease-out;
+}
+
+.panel-verificacion h2 {
+  color: #dc3545;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.panel-verificacion h3 {
+  color: #444;
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+.panel-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.panel-actions button {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.panel-actions button:hover {
+  background-color: #b02a37;
+}
+
+.panel-actions .cancel {
+  background-color: #999;
+}
+
+.panel-actions .cancel:hover {
+  background-color: #777;
+}
+
+/* Animación */
+@keyframes slideIn {
+  from { transform: translateY(-15px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ==========================
+   CANVAS DENTRO DEL MODAL
+   ========================== */
+.panel-verificacion canvas,
+.panel-verificacion .canvas-firma {
+  width: 100% !important;
+  max-width: 100%;
+  height: auto !important;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  aspect-ratio: 3 / 1;
+  touch-action: none;
+  display: block;
+  margin: 10px 0;
+}
+
+/* Ajuste para móviles */
+@media (max-width: 600px) {
+  .panel-verificacion {
+    width: 95%;
+    padding: 15px;
+    max-height: 85vh;
+  }
+
+  .panel-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
