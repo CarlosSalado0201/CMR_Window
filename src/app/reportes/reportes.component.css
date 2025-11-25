@@ -775,19 +775,20 @@ canvas,
 /* ==========================
    MODAL / PANEL DE VERIFICACIÓN
    ========================== */
+
+/* Después: flujo normal */
 .panel-verificacion {
-  position: fixed;       /* Fijo sobre toda la ventana */
-  top: 100px;            /* Justo debajo de tu toolbar de 100px */
-  left: 0;
-  right: 0;
-  bottom: 0;             /* Ocupa todo el espacio disponible */
-  background: linear-gradient(145deg, #ffffff, #fff0f2);
-  padding: 20px;
-  overflow-y: auto;      /* Scroll solo si contenido excede */
-  z-index: 2000;         /* Por encima de todo */
-  box-shadow: none;
-  animation: slideIn 0.25s ease-out;
+  position: relative;  /* importante */
+  max-width: 900px;
+  width: 100%;
+  margin: 40px auto; /* centrado con espacio arriba */
+  padding: 30px;
+  border-radius: 12px;
+  background: #fff0f2;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  overflow: visible;
 }
+
 
 /* Para mobile (toolbar más chica) */
 @media (max-width: 600px) {

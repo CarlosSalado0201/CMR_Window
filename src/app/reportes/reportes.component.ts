@@ -54,6 +54,7 @@ tipoEquipo = '';
 idCarpeta: number | null = null;
 carpetaSeleccionada: string = "Seleccionar carpeta";
 mostrarListaCarpetas: boolean = false;
+vistaActual: 'form' | 'verificacion' = 'form';
 
   mostrarVerificacion = false;
   verificado = false;
@@ -420,10 +421,7 @@ onLecturasSeleccionadas(event: any) {
 
   }
 
-  aprobarVerificacion() {
-    alert("Verificación aprobada");
-    this.cerrarVerificacion();
-  }
+
 
   // ===================== COPIAR ENLACE =====================
   copiarEnlace(elemento: HTMLInputElement) {
@@ -431,6 +429,45 @@ onLecturasSeleccionadas(event: any) {
       .then(() => alert("📋 Enlace copiado."))
       .catch(() => alert("❌ No se pudo copiar."));
   }
+// Cambiar a la vista de verificación
+siguienteVerificacion() {
+  if (!this.descripcionTrabajo || !this.ubicacion || !this.tipoEquipo) {
+    alert('⚠️ Complete todos los campos requeridos antes de continuar.');
+    return;
+  }
+
+  if (this.actividadesSeleccionadas.length === 0) {
+    alert('⚠️ Debe seleccionar al menos una actividad.');
+    return;
+  }
+
+  if (this.clientesSeleccionados.length === 0) {
+    alert('⚠️ Seleccione al menos un cliente.');
+    return;
+  }
+
+  this.vistaActual = 'verificacion';
+}
+
+// Volver al formulario
+volverFormulario() {
+  this.vistaActual = 'form';
+}
+
+// Aprobar verificación del supervisor
+aprobarVerificacion() {
+  if (!this.nombreSupervisor.trim() || !this.firmaSupervisorFile) {
+    alert('⚠️ Debe ingresar el nombre del supervisor y firmar.');
+    return;
+  }
+
+  this.verificado = true;
+  alert('✅ Verificación aprobada. Ahora puede generar el PDF.');
+}
+get enVerificacion(): boolean {
+  return this.vistaActual === 'verificacion';
+}
+
 
   // ===================== LIMPIAR FORMULARIO =====================
 limpiarFormulario() {
