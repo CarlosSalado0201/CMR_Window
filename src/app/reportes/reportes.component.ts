@@ -405,13 +405,18 @@ onLecturasSeleccionadas(event: any) {
   // ===================== VERIFICACIÓN =====================
   abrirVerificacion() {
     this.mostrarVerificacion = true;
-      document.body.style.overflow = 'hidden'; // ❌ Bloquea scroll al abrir
-
+  
+  // Calcular el ancho del scrollbar
+  const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+  // Bloquear scroll y compensar ancho
+  document.body.style.overflow = 'hidden';
+  document.body.style.paddingRight = scrollBarWidth + 'px';
   }
 
   cerrarVerificacion() {
     this.mostrarVerificacion = false;
-      document.body.style.overflow = 'auto';   // ✅ Restaura scroll al cerrar
+      document.body.style.overflow = 'auto';
+  document.body.style.paddingRight = '0';
 
   }
 
