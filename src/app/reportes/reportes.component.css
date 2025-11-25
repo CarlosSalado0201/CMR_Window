@@ -1049,3 +1049,13 @@ canvas,
     height: 180px;
   }
 }
+/* Hover normal */
+.report-btns-container button:hover:not(:disabled) {
+  background-color: #cc0000;
+}
+
+/* Botón deshabilitado */
+.btn-generate:disabled {
+  background-color: #aaa; /* gris para mostrar que está bloqueado */
+  cursor: not-allowed;
+}
