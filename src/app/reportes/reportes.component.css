@@ -781,7 +781,7 @@ canvas,
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.45); /* Fondo semitransparente */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -800,6 +800,7 @@ canvas,
   box-shadow: 0 6px 20px rgba(0,0,0,0.3);
   animation: slideIn 0.25s ease-out;
 }
+
 
 .panel-verificacion h2 {
   color: #dc3545;
@@ -879,3 +880,16 @@ canvas,
     gap: 10px;
   }
 }
+@media (max-width: 600px) {
+  .panel-verificacion {
+    width: 95%;
+    padding: 15px;
+    max-height: 85vh;
+  }
+
+  .panel-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+

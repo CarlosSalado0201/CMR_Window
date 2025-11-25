@@ -405,10 +405,14 @@ onLecturasSeleccionadas(event: any) {
   // ===================== VERIFICACIÓN =====================
   abrirVerificacion() {
     this.mostrarVerificacion = true;
+      document.body.style.overflow = 'hidden'; // ❌ Bloquea scroll al abrir
+
   }
 
   cerrarVerificacion() {
     this.mostrarVerificacion = false;
+      document.body.style.overflow = 'auto';   // ✅ Restaura scroll al cerrar
+
   }
 
   aprobarVerificacion() {
