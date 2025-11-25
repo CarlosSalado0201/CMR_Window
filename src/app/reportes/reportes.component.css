@@ -756,3 +756,24 @@ canvas {
     width: 100% !important;
   }
 }
+.canvas-firma {
+  border: 1px solid #ccc;
+  touch-action: none;
+  width: 100%;          /* Se ajusta al ancho disponible */
+  max-width: 600px;     /* No crece más de 600 */
+  height: auto;         /* Mantiene proporción */
+  display: block;
+  margin: 10px auto;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* En celulares se adapta totalmente */
+@media (max-width: 600px) {
+  .canvas-firma {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}

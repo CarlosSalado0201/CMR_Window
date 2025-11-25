@@ -127,19 +127,21 @@
 
     <!-- Firma -->
     <label>Firma *</label>
-    <canvas
-      #canvas
-      width="600"
-      height="200"
-      style="border:1px solid #ccc; touch-action: none;"
-      (mousedown)="iniciarDibujo($event)"
-      (mousemove)="dibujar($event)"
-      (mouseup)="detenerDibujo()"
-      (mouseleave)="detenerDibujo()"
-      (touchstart)="iniciarDibujo($event)"
-      (touchmove)="dibujar($event)"
-      (touchend)="detenerDibujo()"
-    ></canvas>
+   
+<!-- Canvas Técnico -->
+<canvas
+  #canvas
+  width="600"
+  height="200"
+  class="canvas-firma"
+  (mousedown)="iniciarDibujo($event)"
+  (mousemove)="dibujar($event)"
+  (mouseup)="detenerDibujo()"
+  (mouseleave)="detenerDibujo()"
+  (touchstart)="iniciarDibujo($event)"
+  (touchmove)="dibujar($event)"
+  (touchend)="detenerDibujo()"
+></canvas>
     <p class="firma-aviso">
       ⚠️ <strong>Esta firma solo valida el registro o entrega del reporte técnico y no puede ser utilizada para otros fines que puedan perjudicar a la persona.</strong>
     </p>
@@ -232,18 +234,19 @@
     <div class="supervisor-section">
       <label><strong>Firma del supervisor / responsable</strong></label>
       <canvas
-        #canvasSupervisor
-        width="600"
-        height="200"
-        style="border:1px solid #ccc; touch-action: none;"
-        (mousedown)="iniciarDibujoSupervisor($event)"
-        (mousemove)="dibujarSupervisor($event)"
-        (mouseup)="detenerDibujoSupervisor()"
-        (mouseleave)="detenerDibujoSupervisor()"
-        (touchstart)="iniciarDibujoSupervisor($event)"
-        (touchmove)="dibujarSupervisor($event)"
-        (touchend)="detenerDibujoSupervisor()"
-      ></canvas>
+  #canvasSupervisor
+  width="600"
+  height="200"
+  class="canvas-firma"
+  (mousedown)="iniciarDibujoSupervisor($event)"
+  (mousemove)="dibujarSupervisor($event)"
+  (mouseup)="detenerDibujoSupervisor()"
+  (mouseleave)="detenerDibujoSupervisor()"
+  (touchstart)="iniciarDibujoSupervisor($event)"
+  (touchmove)="dibujarSupervisor($event)"
+  (touchend)="detenerDibujoSupervisor()"
+></canvas>
+
       <p class="firma-aviso">
         ⚠️ <strong>Esta firma solo valida el registro de un reporte técnico</strong>
       </p>
