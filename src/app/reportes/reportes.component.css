@@ -775,20 +775,33 @@ canvas,
 /* ==========================
    MODAL / PANEL DE VERIFICACIÓN
    ========================== */
-
-
 .panel-verificacion {
+  position: fixed;       /* Fijo sobre toda la ventana */
+  top: 100px;            /* Justo debajo de tu toolbar de 100px */
+  left: 0;
+  right: 0;
+  bottom: 0;             /* Ocupa todo el espacio disponible */
   background: linear-gradient(145deg, #ffffff, #fff0f2);
-  padding: 20px;      /* opcional: reduce si quieres full */
-  border-radius: 0;   /* opcional: quita redondeo para fullscreen */
-  width: 100%;
-  height: 100%;       /* FULLSCREEN */
-  max-width: 100%;    /* quita limitación */
-  max-height: 100%;   /* quita limitación */
-  overflow-y: auto;   /* permite scroll si contenido es más grande */
-  box-shadow: none;   /* opcional: quita sombra si es fullscreen */
+  padding: 20px;
+  overflow-y: auto;      /* Scroll solo si contenido excede */
+  z-index: 2000;         /* Por encima de todo */
+  box-shadow: none;
   animation: slideIn 0.25s ease-out;
 }
+
+/* Para mobile (toolbar más chica) */
+@media (max-width: 600px) {
+  .panel-verificacion {
+    top: 70px;          /* Altura de toolbar en móvil */
+    padding: 15px;
+    max-height: calc(100vh - 70px);  /* Ajusta altura máxima */
+    width: 95%;
+    left: 2.5%;
+    right: 2.5%;
+    border-radius: 8px;
+  }
+}
+
 
 
 
@@ -859,11 +872,7 @@ canvas,
 
 /* Ajuste para móviles */
 @media (max-width: 600px) {
-  .panel-verificacion {
-    width: 95%;
-    padding: 15px;
-    max-height: 85vh;
-  }
+
 
   .panel-actions {
     flex-direction: column;
@@ -871,15 +880,19 @@ canvas,
   }
 }
 @media (max-width: 600px) {
-  .panel-verificacion {
-    width: 95%;
-    padding: 15px;
-    max-height: 85vh;
-  }
-
+  
   .panel-actions {
     flex-direction: column;
     gap: 10px;
+  }
+  .panel-verificacion {
+    top: 70px;          /* Altura de toolbar en móvil */
+    padding: 15px;
+    max-height: calc(100vh - 70px);  /* Ajusta altura máxima */
+    width: 95%;
+    left: 2.5%;
+    right: 2.5%;
+    border-radius: 8px;
   }
 }
 
