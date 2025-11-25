@@ -897,10 +897,10 @@ canvas,
   }
 }
 
-/* Contenedor general de verificación */
+/* === BASE ROJO Y BLANCO === */
 .verificacion {
-  background-color: #f9f9f9;
-  border: 1px solid #dcdcdc;
+  background-color: #fff; /* fondo blanco */
+  border: 2px solid #e74c3c; /* borde rojo */
   border-radius: 12px;
   padding: 25px;
   max-width: 900px;
@@ -912,23 +912,23 @@ canvas,
 
 /* Titulares */
 .verificacion h2 {
-  color: #2c3e50;
+  color: #e74c3c; /* rojo */
   margin-bottom: 20px;
   font-size: 28px;
-  border-bottom: 2px solid #2980b9;
+  border-bottom: 2px solid #e74c3c;
   padding-bottom: 6px;
 }
 
 .verificacion h3 {
-  color: #34495e;
+  color: #c0392b; /* rojo oscuro */
   margin-top: 20px;
   margin-bottom: 10px;
   font-size: 20px;
-  border-bottom: 1px dashed #bdc3c7;
+  border-bottom: 1px dashed #e74c3c;
   padding-bottom: 4px;
 }
 
-/* Listas de trabajadores, actividades, etc */
+/* Listas */
 .verificacion ul {
   list-style-type: disc;
   padding-left: 25px;
@@ -945,7 +945,7 @@ canvas,
   width: 100%;
   padding: 8px 12px;
   margin: 8px 0 16px 0;
-  border: 1px solid #ccc;
+  border: 1px solid #e74c3c; /* borde rojo */
   border-radius: 6px;
   font-size: 16px;
   box-sizing: border-box;
@@ -953,7 +953,7 @@ canvas,
 
 /* Canvas de firma */
 .canvas-firma {
-  border: 1px solid #aaa;
+  border: 2px solid #e74c3c;
   border-radius: 8px;
   margin-bottom: 10px;
   background-color: #fff;
@@ -973,8 +973,8 @@ canvas,
 
 .signature-buttons button,
 .report-btns-container button {
-  background-color: #2980b9;
-  color: #fff;
+  background-color: #e74c3c; /* rojo */
+  color: #fff; /* texto blanco */
   border: none;
   padding: 8px 18px;
   border-radius: 6px;
@@ -984,11 +984,11 @@ canvas,
 
 .signature-buttons button:hover,
 .report-btns-container button:hover {
-  background-color: #1c5980;
+  background-color: #c0392b; /* rojo más oscuro */
 }
 
 .btn-generate:disabled {
-  background-color: #7f8c8d;
+  background-color: #aaa;
   cursor: not-allowed;
 }
 
@@ -996,22 +996,24 @@ canvas,
 .pdf-link-layer {
   margin-top: 20px;
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #e74c3c;
   border-radius: 8px;
-  background-color: #f1f1f1;
+  background-color: #fff;
 }
 
 .pdf-link-layer input[type="text"] {
   width: 100%;
   padding: 6px 10px;
   border-radius: 6px;
-  border: 1px solid #bbb;
+  border: 1px solid #e74c3c;
   margin-bottom: 8px;
 }
 
 .pdf-link-layer a,
 .pdf-link-layer button {
   text-decoration: none;
+  color: #e74c3c;
+  font-weight: bold;
 }
 
 /* === RESPONSIVE MÓVIL === */
