@@ -150,21 +150,29 @@ async guardarFirmaSupervisor(): Promise<void> {
 
   
 
+private obtenerPosicion(event: MouseEvent | TouchEvent, canvas: HTMLCanvasElement) {
+  const rect = canvas.getBoundingClientRect();
 
-  private obtenerPosicion(event: MouseEvent | TouchEvent, canvas: HTMLCanvasElement) {
-    const rect = canvas.getBoundingClientRect();
-    let clientX = 0, clientY = 0;
+  let clientX = 0;
+  let clientY = 0;
 
-    if ((event as MouseEvent).clientX !== undefined) {
-      clientX = (event as MouseEvent).clientX;
-      clientY = (event as MouseEvent).clientY;
-    } else if ((event as TouchEvent).touches?.length) {
-      clientX = (event as TouchEvent).touches[0].clientX;
-      clientY = (event as TouchEvent).touches[0].clientY;
-    }
-
-    return { x: clientX - rect.left, y: clientY - rect.top };
+  if (event instanceof MouseEvent) {
+    clientX = event.clientX;
+    clientY = event.clientY;
+  } else if (event.touches && event.touches.length > 0) {
+    clientX = event.touches[0].clientX;
+    clientY = event.touches[0].clientY;
   }
+
+  // Ajuste por escalado real del canvas
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+
+  return {
+    x: (clientX - rect.left) * scaleX,
+    y: (clientY - rect.top) * scaleY
+  };
+}
 
   // ===================== FIRMA SUPERVISOR =====================
   iniciarDibujoSupervisor(event: MouseEvent | TouchEvent) {
