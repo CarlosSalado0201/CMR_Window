@@ -738,3 +738,21 @@ canvas {
     max-height: 85vh !important;
   }
 }
+/* ==============================
+   CANVAS RESPONSIVE PARA CELULAR
+   ============================== */
+@media (max-width: 600px) {
+  canvas {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100%;
+    display: block;
+    margin: 10px 0;
+  }
+
+  /* Si el canvas está dentro de un contenedor */
+  .firma-container, 
+  .canvas-wrapper {
+    width: 100% !important;
+  }
+}
