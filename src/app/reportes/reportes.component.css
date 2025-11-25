@@ -777,3 +777,58 @@ canvas {
     height: auto !important;
   }
 }
+/* ===== Ajuste perfecto del canvas en celulares ===== */
+.canvas-firma,
+canvas {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Mantener proporción correcta */
+.canvas-firma {
+  aspect-ratio: 3 / 1; /* Puedes ajustarlo según tu firma */
+}
+
+/* En caso de que el contenedor limite el tamaño */
+.firma-container,
+.canvas-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+/* ===== Ajuste perfecto del canvas ===== */
+canvas,
+.canvas-firma {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+  margin: 10px auto;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* Mantener proporción correcta */
+.canvas-firma {
+  aspect-ratio: 3 / 1; /* Ajusta si tu firma necesita más alto */
+  touch-action: none;  /* NECESARIO para escribir bien en cel */
+  border: 1px solid #ccc;
+}
+
+/* Si el canvas está dentro de contenedor, que también sea fluido */
+.firma-container,
+.canvas-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* ===== Ajuste extra para celulares ===== */
+@media (max-width: 600px) {
+  canvas,
+  .canvas-firma {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
