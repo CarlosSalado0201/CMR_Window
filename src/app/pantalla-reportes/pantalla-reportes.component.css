@@ -90,38 +90,27 @@
   max-width: 80%;
   height: auto;
 }
+/* Contenedor de botones de la toolbar */
+.toolbar-buttons {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;      /* permite scroll horizontal si no caben */
+  -webkit-overflow-scrolling: touch; /* suaviza el scroll en iOS */
+}
 
-/* ===== Responsive Móvil ===== */
+.toolbar-buttons::-webkit-scrollbar {
+  display: none; /* oculta scrollbar */
+}
+
+/* Botones individuales */
+.toolbar-buttons button {
+  flex: 0 0 auto; /* no se encogen ni expanden, mantienen su tamaño */
+}
+
+/* Responsive Móvil */
 @media (max-width: 768px) {
-  .toolbar {
-    flex-direction: column;
-    height: auto;
-    padding: 10px;
-    align-items: center;
-  }
-
-  .toolbar img {
-    height: 60px;
-    margin: 0 0 10px 0;
-  }
-
-  .toolbar button {
-    margin: 5px 5px 0 5px;
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    max-width: 100%;
-  }
-
-  .content {
-    margin-top: 160px; /* Deja espacio por la barra más alta */
-    padding: 0 12px;
-  }
-
-  .gif-container {
-    height: calc(100vh - 160px);
-  }
-
-  .gif-container img {
-    max-width: 95%;
+  .toolbar-buttons {
+    width: 100%;
+    justify-content: flex-start; /* alineados a la izquierda */
   }
 }
