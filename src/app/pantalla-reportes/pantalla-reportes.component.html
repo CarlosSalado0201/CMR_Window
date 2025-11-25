@@ -73,10 +73,13 @@
 <!-- 🔻 BARRA SUPERIOR -->
 <div class="toolbar">
   <img src="assets/CMR.jpg" alt="Logo CMR" style="cursor:pointer" routerLink="/reportes" />
+  <div class="toolbar-buttons">
     <button routerLink="/generar">Generar Reportes</button>
-      <button routerLink="/generar-carta">Generar carta</button> <!-- solo uno -->
-  <button (click)="logout()">Cerrar sesión</button>
+    <button routerLink="/generar-carta">Generar carta</button>
+    <button (click)="logout()">Cerrar sesión</button>
+  </div>
 </div>
+
 <div class="content">
   <div class="gif-container">
     <img src="assets/animacion.gif" alt="GIF animado">
