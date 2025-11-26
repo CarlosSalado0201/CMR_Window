@@ -7,6 +7,7 @@
   import { Materiales } from '../Models/Materiales';
   import { Cliente } from '../Models/Cliente';
   import { Actividad } from '../Models/Actividad';
+import { CartaPayload } from '../Models/ModalCartaComponent';
 
   @Injectable({
     providedIn: 'root' // Este servicio estará disponible globalmente en toda la app
@@ -487,7 +488,16 @@ obtenerCarpetas(): Observable<any[]> {
     })
   );
 }
+  private URLCartas = 'https://proyecto-cmr.onrender.com/api/carta'; // Ajusta según tu backend
 
+  generarCarta(payload: CartaPayload): Observable<string | null> {
+    return this.http.post<string>(`${this.URLCartas}/generar`, payload).pipe(
+      catchError(err => {
+        console.error('Error al generar carta:', err);
+        return of(null);
+      })
+    );
+  }
     }
 
 
