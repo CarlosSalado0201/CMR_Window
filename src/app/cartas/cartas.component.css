@@ -25,20 +25,27 @@
   z-index: 1000;
 }
 
-
 .toolbar img {
   height: 80px;
   width: auto;
   user-select: none;
 }
-.toolbar-buttons {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
 
+.toolbar button {
+  background-color: white;
+  color: #dc3545;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  white-space: normal;
+  max-width: 120px;
+  line-height: 1.2;
+  margin-right: 10px;
+}
 
 .toolbar-buttons::-webkit-scrollbar {
   display: none;
