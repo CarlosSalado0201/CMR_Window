@@ -1,4 +1,3 @@
-
 <!-- 🔻 BARRA SUPERIOR -->
 <div class="toolbar">
   <img src="assets/CMR.jpg" alt="Logo CMR" style="cursor:pointer" routerLink="/reportes" />
@@ -9,85 +8,118 @@
   </div>
 </div>
 
+<!-- ✅ CONTENIDO PRINCIPAL -->
+<div class="content">
 
-<div class="container">
-  <!-- Botones principales -->
-  <button (click)="mostrarFormulario('entrega')">CARTA ENTREGA</button>
-  <button (click)="mostrarFormulario('garantia')">CARTA GARANTÍA</button>
-  <button (click)="mostrarFormulario('conjunto')">CARTAS EN CONJUNTO</button>
+  <!-- ✅ Botones principales con estilo -->
+  <div>
+    <button class="btn-generate" (click)="mostrarFormulario('entrega')">CARTA ENTREGA</button>
+    <button class="btn-generate" (click)="mostrarFormulario('garantia')">CARTA GARANTÍA</button>
+    <button class="btn-generate" (click)="mostrarFormulario('conjunto')">CARTAS EN CONJUNTO</button>
+  </div>
 
-  <!-- Formulario CARTA ENTREGA -->
-  <div *ngIf="formularioVisible === 'entrega'" class="formulario">
-    <div class="pregunta">
+  <!-- =========================
+       FORMULARIO CARTA ENTREGA
+       ========================= -->
+  <div *ngIf="formularioVisible === 'entrega'" class="report-form">
+    <h2>CARTA ENTREGA</h2>
+
+    <div class="input-group">
       <label>Pregunta 1:</label>
       <p class="texto-instruccion">
         Por medio del presente se hace la entrega recepción de los trabajos realizado en:
       </p>
-      <input type="text" [(ngModel)]="respuesta1" placeholder="Escribe tu comentario">
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta1" placeholder="Escribe tu comentario">
     </div>
-    <div class="pregunta">
+
+    <div class="input-group">
       <label>Pregunta 2:</label>
       <p class="texto-instruccion">
         HACEMOS ENTREGA AL DEPARTAMENTO DE MANTENIMIENTO Y NOS RECIBEN EN CONFORMIDAD A LAS CONDICIONES ESTABLECIDAS POR AMBAS PARTES.
       </p>
-      <input type="text" [(ngModel)]="respuesta2" placeholder="Escribe tu comentario">
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta2" placeholder="Escribe tu comentario">
     </div>
-    <button (click)="guardar('entrega')">Guardar CARTA ENTREGA</button>
+
+    <div class="panel-actions">
+      <button class="btn-generate" (click)="guardar('entrega')">Guardar CARTA ENTREGA</button>
+      <button class="cancel" (click)="formularioVisible = null">Cancelar</button>
+    </div>
   </div>
 
-  <!-- Formulario CARTA GARANTÍA -->
-  <div *ngIf="formularioVisible === 'garantia'" class="formulario">
-    <div class="pregunta">
+  <!-- =========================
+       FORMULARIO CARTA GARANTÍA
+       ========================= -->
+  <div *ngIf="formularioVisible === 'garantia'" class="report-form">
+    <h2>CARTA GARANTÍA</h2>
+
+    <div class="input-group">
       <label>Pregunta 1:</label>
       <p class="texto-instruccion">
         Por medio del presente hacemos constar que se realizó según el presupuesto
       </p>
-      <input type="text" [(ngModel)]="respuesta1" placeholder="Escribe tu comentario">
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta1" placeholder="Escribe tu comentario">
     </div>
-    <div class="pregunta">
+
+    <div class="input-group">
       <label>Pregunta 2:</label>
       <p class="texto-instruccion">
         Tendrán una garantía de 1 año, a partir del término del trabajo así mismo queda de manifiesto que los equipos deben tener su servicio de mantenimiento ya que es de vital importancia para que la garantía sea válida y solo en caso de que sufra impactos ajenos al trabajo realizado queda invalidada la garantía. En partes eléctricas no hay garantía.
       </p>
-      <input type="text" [(ngModel)]="respuesta2" placeholder="Escribe tu comentario">
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta2" placeholder="Escribe tu comentario">
     </div>
-    <button (click)="guardar('garantia')">Guardar CARTA GARANTÍA</button>
+
+    <div class="panel-actions">
+      <button class="btn-generate" (click)="guardar('garantia')">Guardar CARTA GARANTÍA</button>
+      <button class="cancel" (click)="formularioVisible = null">Cancelar</button>
+    </div>
   </div>
 
-  <!-- Formulario CARTAS EN CONJUNTO -->
-  <div *ngIf="formularioVisible === 'conjunto'" class="formulario">
-    <h3>CARTA ENTREGA</h3>
-    <div class="pregunta">
+  <!-- =========================
+       FORMULARIO CARTAS CONJUNTO
+       ========================= -->
+  <div *ngIf="formularioVisible === 'conjunto'" class="report-form">
+    <h2>CARTAS EN CONJUNTO</h2>
+
+    <h3 style="margin-top: 10px;">CARTA ENTREGA</h3>
+
+    <div class="input-group">
       <label>Pregunta 1:</label>
       <p class="texto-instruccion">
         Por medio del presente se hace la entrega recepción de los trabajos realizados en
       </p>
-      <input type="text" [(ngModel)]="respuesta1" placeholder="Escribe tu comentario">
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta1" placeholder="Escribe tu comentario">
     </div>
-    <div class="pregunta">
+
+    <div class="input-group">
       <label>Pregunta 2:</label>
       <p class="texto-instruccion">
         HACEMOS ENTREGA AL DEPARTAMENTO DE MANTENIMIENTO Y NOS RECIBEN EN CONFORMIDAD A LAS CONDICIONES ESTABLECIDAS POR AMBAS PARTES.
       </p>
-      <input type="text" [(ngModel)]="respuesta2" placeholder="Escribe tu comentario">
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta2" placeholder="Escribe tu comentario">
     </div>
 
-    <h3>CARTA GARANTÍA</h3>
-    <div class="pregunta">
+    <h3 style="margin-top: 20px;">CARTA GARANTÍA</h3>
+
+    <div class="input-group">
       <label>Pregunta 1:</label>
       <p class="texto-instruccion">
         Por medio del presente hacemos constar que se realizó según el presupuesto
       </p>
-      <input type="text" [(ngModel)]="respuesta3" placeholder="Escribe tu comentario">
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta3" placeholder="Escribe tu comentario">
     </div>
-    <div class="pregunta">
+
+    <div class="input-group">
       <label>Pregunta 2:</label>
       <p class="texto-instruccion">
         Tendrán una garantía de 1 año, a partir del término del trabajo así mismo queda de manifiesto que los equipos deben tener su servicio de mantenimiento ya que es de vital importancia para que la garantía sea válida y solo en caso de que sufra impactos ajenos al trabajo realizado queda invalidada la garantía. En partes eléctricas no hay garantía.
       </p>
-      <input type="text" [(ngModel)]="respuesta4" placeholder="Escribe tu comentario">
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta4" placeholder="Escribe tu comentario">
     </div>
 
-    <button (click)="guardar('conjunto')">Guardar CARTAS EN CONJUNTO</button>
+    <div class="panel-actions">
+      <button class="btn-generate" (click)="guardar('conjunto')">Guardar CARTAS EN CONJUNTO</button>
+      <button class="cancel" (click)="formularioVisible = null">Cancelar</button>
+    </div>
   </div>
+
 </div>
