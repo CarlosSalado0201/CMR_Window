@@ -23,24 +23,22 @@
   padding: 0 24px;
   box-sizing: border-box;
   z-index: 1000;
-  justify-content: space-between;
-  gap: 16px;
 }
+
 
 .toolbar img {
   height: 80px;
   width: auto;
   user-select: none;
 }
-
 .toolbar-buttons {
   display: flex;
   align-items: center;
   gap: 10px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  margin-left: auto;
 }
+
 
 .toolbar-buttons::-webkit-scrollbar {
   display: none;
