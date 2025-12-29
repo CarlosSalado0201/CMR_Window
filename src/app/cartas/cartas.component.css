@@ -231,3 +231,53 @@ button {
     font-size: 1rem;
   }
 }
+
+/* ===== FIX TOOLBAR (pegar al final) ===== */
+.toolbar {
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.toolbar-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* Evita que el button global afecte la toolbar */
+.toolbar button {
+  margin: 0 !important;
+  padding: 10px 16px !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+}
+
+/* Ajuste responsive para que no se rompa */
+@media (max-width: 600px) {
+  .toolbar {
+    height: auto;
+    padding: 10px 12px;
+    flex-wrap: wrap;
+  }
+
+  .toolbar img {
+    height: 60px;
+    margin-right: 0;
+  }
+
+  .toolbar-buttons {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .toolbar button {
+    flex: 1 1 auto;
+    width: auto;
+    font-size: 0.95rem;
+    padding: 10px 12px !important;
+  }
+}
