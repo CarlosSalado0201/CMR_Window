@@ -281,3 +281,117 @@ button {
     padding: 10px 12px !important;
   }
 }
+:host {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== TOOLBAR ===== */
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  background-color: #dc3545;
+  color: white;
+  font-weight: 600;
+  padding: 0 24px;
+  box-sizing: border-box;
+  z-index: 1000;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.toolbar img {
+  height: 80px;
+  width: auto;
+  user-select: none;
+  margin-right: 20px;
+}
+
+/* Contenedor de botones de la toolbar */
+.toolbar-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;                 /* scroll si no caben */
+  -webkit-overflow-scrolling: touch;
+  margin-left: auto;
+}
+
+.toolbar-buttons::-webkit-scrollbar {
+  display: none;
+}
+
+.toolbar button {
+  background-color: white;
+  color: #dc3545;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  white-space: nowrap;              /* <- para que no se partan */
+  line-height: 1;
+  margin: 0;                        /* <- evita choque con button global */
+  flex: 0 0 auto;
+}
+
+.toolbar button:hover {
+  background-color: #f8d7da;
+}
+
+/* ===== CONTENIDO ===== */
+.content {
+  margin-top: 120px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f8f9fa;
+}
+
+/* ⚠️ Evita que un button global rompa la toolbar */
+.content button {
+  cursor: pointer;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .toolbar {
+    height: auto;
+    padding: 10px 12px;
+    flex-wrap: wrap;
+  }
+
+  .toolbar img {
+    height: 60px;
+    margin-right: 0;
+  }
+
+  .toolbar-buttons {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .toolbar button {
+    font-size: 0.95rem;
+    padding: 10px 12px;
+  }
+
+  .content {
+    margin-top: 140px; /* un poquito más porque la barra puede crecer */
+    padding: 0 12px;
+  }
+}
