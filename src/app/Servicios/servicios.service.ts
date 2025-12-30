@@ -490,14 +490,19 @@ obtenerCarpetas(): Observable<any[]> {
 }
 private URLCartas = 'https://proyecto-cmr.onrender.com/api/cartas';
 
-  generarCarta(payload: CartaPayload): Observable<string | null> {
-    return this.http.post<string>(`${this.URLCartas}/generar`, payload).pipe(
-      catchError(err => {
-        console.error('Error al generar carta:', err);
-        return of(null);
-      })
-    );
-  }
+generarCarta(payload: CartaPayload): Observable<string | null> {
+  return this.http.post(
+    `${this.URLCartas}/generar`,
+    payload,
+    { responseType: 'text' } // 👈 ESTO ES CLAVE
+  ).pipe(
+    catchError(err => {
+      console.error('Error al generar carta:', err);
+      return of(null);
+    })
+  );
+}
+
     }
 
 
