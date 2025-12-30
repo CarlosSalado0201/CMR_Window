@@ -488,7 +488,7 @@ obtenerCarpetas(): Observable<any[]> {
     })
   );
 }
-  private URLCartas = 'https://proyecto-cmr.onrender.com/api/carta'; // Ajusta según tu backend
+private URLCartas = 'https://proyecto-cmr.onrender.com/api/cartas';
 
   generarCarta(payload: CartaPayload): Observable<string | null> {
     return this.http.post<string>(`${this.URLCartas}/generar`, payload).pipe(
