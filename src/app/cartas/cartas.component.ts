@@ -9,6 +9,7 @@ import { CartaPayload } from '../Models/ModalCartaComponent';
 })
 export class CartasComponent {
   formularioVisible: 'entrega' | 'garantia' | 'conjunto' | null = null;
+
   respuesta1 = '';
   respuesta2 = '';
   respuesta3 = '';
@@ -30,17 +31,39 @@ export class CartasComponent {
     this.respuesta4 = '';
   }
 
+  // ✅ Abre pestaña ANTES (evita popup bloqueado) y luego asigna URL
+  private abrirPdf(urlPdf: string | null, newTab?: Window | null) {
+    const url = (urlPdf ?? '').trim().replace(/^"|"$/g, '');
+    console.log('URL PDF backend:', url);
+
+    if (!url) {
+      console.error('Backend regresó URL vacío o null');
+      if (newTab) newTab.close();
+      return;
+    }
+
+    if (newTab) {
+      newTab.location.href = url;
+    } else {
+      // fallback
+      window.open(url, '_blank');
+    }
+  }
+
   // Método llamado al generar la carta desde el modal
   onGenerarCarta(payload: CartaPayload) {
     // ✅ Forzar carpeta 2 aunque el modal mande otra
     payload.idCarpeta = 2;
 
+    // ✅ abrir tab antes para que el navegador no lo bloquee
+    const newTab = window.open('', '_blank');
+
     this.serviciosService.generarCarta(payload).subscribe({
-      next: (urlPdf) => {
-        if (urlPdf) window.open(urlPdf, '_blank');
-        else console.error('No se recibió URL del PDF');
-      },
-      error: (err) => console.error('Error al generar carta:', err)
+      next: (urlPdf) => this.abrirPdf(urlPdf, newTab),
+      error: (err) => {
+        console.error('Error al generar carta:', err);
+        if (newTab) newTab.close();
+      }
     });
 
     this.mostrarModal = false;
@@ -48,6 +71,9 @@ export class CartasComponent {
 
   // Guardar desde el formulario actual
   guardar(tipo: 'entrega' | 'garantia' | 'conjunto') {
+    // ✅ abrir tab antes para que el navegador no lo bloquee
+    const newTab = window.open('', '_blank');
+
     // ✅ Forzar carpeta 2 siempre
     const payload: CartaPayload = { tipo, idCarpeta: 2 };
 
@@ -80,17 +106,18 @@ export class CartasComponent {
     }
 
     this.serviciosService.generarCarta(payload).subscribe({
-      next: (urlPdf) => {
-        if (urlPdf) window.open(urlPdf, '_blank');
-      },
-      error: (err) => console.error('Error al generar carta:', err)
+      next: (urlPdf) => this.abrirPdf(urlPdf, newTab),
+      error: (err) => {
+        console.error('Error al generar carta:', err);
+        if (newTab) newTab.close();
+      }
     });
 
     this.formularioVisible = null;
   }
 
   logout() {
-    document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = 'JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     window.location.href = '/login';
   }
 }
