@@ -494,7 +494,10 @@ generarCarta(payload: CartaPayload): Observable<string | null> {
   return this.http.post(
     `${this.URLCartas}/generar`,
     payload,
-    { responseType: 'text' } // 👈 ESTO ES CLAVE
+    {
+      responseType: 'text',
+      withCredentials: true, // ✅ importante para JSESSIONID
+    }
   ).pipe(
     catchError(err => {
       console.error('Error al generar carta:', err);
