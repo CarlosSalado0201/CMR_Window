@@ -234,4 +234,61 @@
     padding: 12px;
     font-size: 1rem;
   }
+  /* ==============================
+   PDF LINK LAYER (Cartas/Reportes)
+   ============================== */
+.pdf-link-layer {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 700px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #f0c2c7;
+  background: linear-gradient(145deg, #ffffff, #fff0f2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+}
+
+.pdf-link-layer p {
+  margin: 0 0 10px 0;
+  font-weight: 700;
+  color: #dc3545;
+}
+
+.pdf-link-layer input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+}
+
+.pdf-link-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Reusa tus estilos generales de botones,
+   pero aseguramos que se vean bien */
+.pdf-link-layer a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .pdf-link-actions {
+    flex-direction: column;
+  }
+  .pdf-link-layer button,
+  .pdf-link-layer a {
+    width: 100%;
+  }
+}
+
 }

@@ -123,4 +123,16 @@
     </div>
   </div>
 
+<div class="pdf-link-layer" *ngIf="urlPdf">
+  <p>✅ Último PDF generado:</p>
+  <input type="text" [value]="urlPdf" readonly #pdfLink />
+
+  <div class="pdf-link-actions">
+    <button type="button" (click)="copiarEnlace(pdfLink)">Copiar enlace</button>
+    <a [href]="urlPdf" target="_blank" rel="noopener">Abrir PDF</a>
+  </div>
+</div>
+
+
+
 </div>

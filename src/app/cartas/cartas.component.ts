@@ -21,6 +21,9 @@ export class CartasComponent {
   // ✅ SIEMPRE carpeta "Cartas" (id = 2)
   idCarpetaSeleccionada = 2;
 
+  // ✅ Para mostrar el panel de "Último PDF"
+  urlPdf: string | null = null;
+
   constructor(private serviciosService: ServiciosService) {}
 
   mostrarFormulario(tipo: 'entrega' | 'garantia' | 'conjunto') {
@@ -31,10 +34,13 @@ export class CartasComponent {
     this.respuesta4 = '';
   }
 
-  // ✅ Abre pestaña ANTES (evita popup bloqueado) y luego asigna URL
+  // ✅ Limpia URL, la guarda en el componente y abre pestaña (evita popup bloqueado)
   private abrirPdf(urlPdf: string | null, newTab?: Window | null) {
     const url = (urlPdf ?? '').trim().replace(/^"|"$/g, '');
     console.log('URL PDF backend:', url);
+
+    // ✅ Guardar para mostrar el layer
+    this.urlPdf = url || null;
 
     if (!url) {
       console.error('Backend regresó URL vacío o null');
@@ -45,9 +51,22 @@ export class CartasComponent {
     if (newTab) {
       newTab.location.href = url;
     } else {
-      // fallback
       window.open(url, '_blank');
     }
+  }
+
+  copiarEnlace(input: HTMLInputElement) {
+    const texto = (input.value ?? '').trim();
+    if (!texto) return;
+
+    navigator.clipboard.writeText(texto)
+      .then(() => alert('✅ Enlace copiado'))
+      .catch(() => {
+        // fallback por si el navegador bloquea clipboard
+        input.select();
+        document.execCommand('copy');
+        alert('✅ Enlace copiado');
+      });
   }
 
   // Método llamado al generar la carta desde el modal
