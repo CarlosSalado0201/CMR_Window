@@ -491,12 +491,12 @@ obtenerCarpetas(): Observable<any[]> {
 private URLCartas = 'https://proyecto-cmr.onrender.com/api/cartas';
 
 generarCarta(payload: CartaPayload): Observable<string | null> {
-  return this.http.post(
+  return this.http.post<string>(
     `${this.URLCartas}/generar`,
     payload,
     {
-      responseType: 'text',
-      withCredentials: true, // ✅ importante para JSESSIONID
+      responseType: 'text' as any, // Angular pide este "truco" cuando tipas string
+      withCredentials: true,
     }
   ).pipe(
     catchError(err => {
@@ -505,6 +505,7 @@ generarCarta(payload: CartaPayload): Observable<string | null> {
     })
   );
 }
+
 
     }
 

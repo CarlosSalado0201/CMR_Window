@@ -49,9 +49,6 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
   constructor(private serviciosService: ServiciosService) {}
 
   ngAfterViewInit(): void {
-    // Los canvas solo existen cuando se muestra el formulario,
-    // así que inicializamos en cada cambio de formulario también.
-    // Pero si el template ya está visible al cargar, esto ayuda.
     this.tryInitCanvases();
   }
 
@@ -109,29 +106,44 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
   // Firmas: helpers
   // ===============================
   limpiarFirma(rol: RolFirma) {
-    const canvas = rol === 'entrega' ? this.canvasEntregaRef?.nativeElement : this.canvasRecibeRef?.nativeElement;
+    const canvas = rol === 'entrega'
+      ? this.canvasEntregaRef?.nativeElement
+      : this.canvasRecibeRef?.nativeElement;
+
     const ctx = rol === 'entrega' ? this.ctxEntrega : this.ctxRecibe;
     if (!canvas || !ctx) return;
 
+    // limpiar + fondo blanco
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // opcional: fondo blanco para que no salga transparente
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // volver a setear estilos de pluma
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#000';
   }
 
+  // ✅ devuelve SOLO base64 (sin "data:image/png;base64,")
   private firmaComoBase64(rol: RolFirma): string | null {
-    const canvas = rol === 'entrega' ? this.canvasEntregaRef?.nativeElement : this.canvasRecibeRef?.nativeElement;
+    const canvas = rol === 'entrega'
+      ? this.canvasEntregaRef?.nativeElement
+      : this.canvasRecibeRef?.nativeElement;
+
     if (!canvas) return null;
 
-    // si está vacío (solo blanco), de todas formas manda; si quieres validar vacío, se puede comparar pixels
-    return canvas.toDataURL('image/png'); // "data:image/png;base64,...."
+    const dataUrl = canvas.toDataURL('image/png');
+    const parts = dataUrl.split(',');
+    return parts.length === 2 ? parts[1] : null;
   }
 
   private aplicarFirmas(payload: CartaPayload) {
-    payload.quienEntrega = this.quienEntrega;
-    payload.cargoEntrega = this.cargoEntrega;
-    payload.quienRecibe  = this.quienRecibe;
-    payload.cargoRecibe  = this.cargoRecibe;
+    payload.quienEntrega = this.quienEntrega?.trim();
+    payload.cargoEntrega = this.cargoEntrega?.trim();
+    payload.quienRecibe  = this.quienRecibe?.trim();
+    payload.cargoRecibe  = this.cargoRecibe?.trim();
 
     payload.firmaEntrega = this.firmaComoBase64('entrega');
     payload.firmaRecibe  = this.firmaComoBase64('recibe');
@@ -141,14 +153,13 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
   // Canvas init + drawing
   // ===============================
   private tryInitCanvases() {
-    // si el form no está visible, no hay canvas
     if (!this.formularioVisible) return;
 
     const cEnt = this.canvasEntregaRef?.nativeElement;
     const cRec = this.canvasRecibeRef?.nativeElement;
     if (!cEnt || !cRec) return;
 
-    // limpiar listeners previos para no duplicar
+    // limpiar listeners previos
     this.unsubs.forEach(fn => fn());
     this.unsubs = [];
 
@@ -158,7 +169,6 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
     this.hookDibujo(cEnt, 'entrega');
     this.hookDibujo(cRec, 'recibe');
 
-    // blanco de inicio (para evitar PDF con transparencia)
     this.limpiarFirma('entrega');
     this.limpiarFirma('recibe');
   }
@@ -167,16 +177,19 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
 
-    // Ajuste a tamaño real del elemento (HiDPI)
     const rect = canvas.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
 
-    canvas.width = Math.max(1, Math.floor(rect.width * dpr));
-    canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+    // ⚠️ Si tu CSS no le da altura, rect.height puede ser 0
+    const w = Math.max(1, Math.floor(rect.width));
+    const h = Math.max(1, Math.floor(rect.height || 160)); // fallback 160
 
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+
+    // escalado para dibujar en coords CSS
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    // estilo del trazo
     ctx.lineWidth = 2;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
@@ -197,7 +210,6 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
 
     const getPos = (ev: MouseEvent | TouchEvent) => {
       const rect = canvas.getBoundingClientRect();
-
       let clientX = 0;
       let clientY = 0;
 
@@ -211,13 +223,10 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
         clientY = ev.clientY;
       }
 
-      return {
-        x: clientX - rect.left,
-        y: clientY - rect.top
-      };
+      return { x: clientX - rect.left, y: clientY - rect.top };
     };
 
-    const start = (ev: MouseEvent | TouchEvent) => {
+    const start = (ev: any) => {
       ev.preventDefault();
       const ctx = getCtx();
       const pos = getPos(ev);
@@ -228,7 +237,7 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
       ctx.moveTo(pos.x, pos.y);
     };
 
-    const move = (ev: MouseEvent | TouchEvent) => {
+    const move = (ev: any) => {
       if (!isDibujando()) return;
       ev.preventDefault();
 
@@ -240,30 +249,27 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
       ctx.stroke();
     };
 
-    const end = (ev: MouseEvent | TouchEvent) => {
+    const end = (ev: any) => {
       if (!isDibujando()) return;
       ev.preventDefault();
       setDibujando(false);
     };
 
-    // Mouse
     canvas.addEventListener('mousedown', start);
     canvas.addEventListener('mousemove', move);
     window.addEventListener('mouseup', end);
 
-    // Touch
     canvas.addEventListener('touchstart', start, { passive: false });
     canvas.addEventListener('touchmove', move, { passive: false });
     window.addEventListener('touchend', end, { passive: false });
 
-    // Guardar unsubscribers
     this.unsubs.push(() => canvas.removeEventListener('mousedown', start));
     this.unsubs.push(() => canvas.removeEventListener('mousemove', move));
     this.unsubs.push(() => window.removeEventListener('mouseup', end));
 
-    this.unsubs.push(() => canvas.removeEventListener('touchstart', start as any));
-    this.unsubs.push(() => canvas.removeEventListener('touchmove', move as any));
-    this.unsubs.push(() => window.removeEventListener('touchend', end as any));
+    this.unsubs.push(() => canvas.removeEventListener('touchstart', start));
+    this.unsubs.push(() => canvas.removeEventListener('touchmove', move));
+    this.unsubs.push(() => window.removeEventListener('touchend', end));
   }
 
   // ===============================

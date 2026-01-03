@@ -8,13 +8,13 @@ export interface CartaPayload {
   preguntasGarantia?: string[];
   respuestasGarantia?: string[];
 
-  // ✅ NUEVO
-  // ✅ firmas en base64 (PNG)
+  // ✅ quien entrega / recibe
   quienEntrega?: string;
-cargoEntrega?: string;
-quienRecibe?: string;
-cargoRecibe?: string;
-firmaEntrega?: string | null; // base64 png
-firmaRecibe?: string | null;
+  cargoEntrega?: string;
+  quienRecibe?: string;
+  cargoRecibe?: string;
 
+  // ✅ firmas base64 PNG (solo base64, sin "data:image/png;base64,")
+  firmaEntrega?: string | null;
+  firmaRecibe?: string | null;
 }
