@@ -1,8 +1,20 @@
 export interface CartaPayload {
   tipo: 'entrega' | 'garantia' | 'conjunto';
+  idCarpeta: number;
+
   preguntasEntrega?: string[];
   respuestasEntrega?: string[];
+
   preguntasGarantia?: string[];
   respuestasGarantia?: string[];
-  idCarpeta: number;
+
+  // ✅ NUEVO
+  // ✅ firmas en base64 (PNG)
+  quienEntrega?: string;
+cargoEntrega?: string;
+quienRecibe?: string;
+cargoRecibe?: string;
+firmaEntrega?: string | null; // base64 png
+firmaRecibe?: string | null;
+
 }

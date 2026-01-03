@@ -1,19 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { ServiciosService } from '../Servicios/servicios.service';
 import { CartaPayload } from '../Models/ModalCartaComponent';
+
+type TipoCarta = 'entrega' | 'garantia' | 'conjunto';
+type RolFirma = 'entrega' | 'recibe';
 
 @Component({
   selector: 'app-cartas',
   templateUrl: './cartas.component.html',
   styleUrls: ['./cartas.component.css']
 })
-export class CartasComponent {
-  formularioVisible: 'entrega' | 'garantia' | 'conjunto' | null = null;
+export class CartasComponent implements AfterViewInit, OnDestroy {
+  formularioVisible: TipoCarta | null = null;
 
   respuesta1 = '';
   respuesta2 = '';
   respuesta3 = '';
   respuesta4 = '';
+
+  // ✅ quién entrega / quién recibe
+  quienEntrega = '';
+  cargoEntrega = '';
+  quienRecibe = '';
+  cargoRecibe = '';
 
   // Modal
   mostrarModal = false;
@@ -24,22 +33,53 @@ export class CartasComponent {
   // ✅ Para mostrar el panel de "Último PDF"
   urlPdf: string | null = null;
 
+  // ✅ canvases de firma
+  @ViewChild('canvasEntrega', { static: false }) canvasEntregaRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('canvasRecibe', { static: false }) canvasRecibeRef!: ElementRef<HTMLCanvasElement>;
+
+  private ctxEntrega: CanvasRenderingContext2D | null = null;
+  private ctxRecibe: CanvasRenderingContext2D | null = null;
+
+  private dibujandoEntrega = false;
+  private dibujandoRecibe = false;
+
+  // para limpiar event listeners en destroy
+  private unsubs: Array<() => void> = [];
+
   constructor(private serviciosService: ServiciosService) {}
 
-  mostrarFormulario(tipo: 'entrega' | 'garantia' | 'conjunto') {
+  ngAfterViewInit(): void {
+    // Los canvas solo existen cuando se muestra el formulario,
+    // así que inicializamos en cada cambio de formulario también.
+    // Pero si el template ya está visible al cargar, esto ayuda.
+    this.tryInitCanvases();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubs.forEach(fn => fn());
+    this.unsubs = [];
+  }
+
+  mostrarFormulario(tipo: TipoCarta) {
     this.formularioVisible = tipo;
+
+    // Limpia respuestas
     this.respuesta1 = '';
     this.respuesta2 = '';
     this.respuesta3 = '';
     this.respuesta4 = '';
+
+    // ✅ IMPORTANTE: esperar al render del DOM para que existan los canvas
+    setTimeout(() => this.tryInitCanvases(), 0);
   }
 
-  // ✅ Limpia URL, la guarda en el componente y abre pestaña (evita popup bloqueado)
+  // ===============================
+  // PDF: abrir y guardar URL
+  // ===============================
   private abrirPdf(urlPdf: string | null, newTab?: Window | null) {
     const url = (urlPdf ?? '').trim().replace(/^"|"$/g, '');
     console.log('URL PDF backend:', url);
 
-    // ✅ Guardar para mostrar el layer
     this.urlPdf = url || null;
 
     if (!url) {
@@ -48,11 +88,8 @@ export class CartasComponent {
       return;
     }
 
-    if (newTab) {
-      newTab.location.href = url;
-    } else {
-      window.open(url, '_blank');
-    }
+    if (newTab) newTab.location.href = url;
+    else window.open(url, '_blank');
   }
 
   copiarEnlace(input: HTMLInputElement) {
@@ -62,19 +99,180 @@ export class CartasComponent {
     navigator.clipboard.writeText(texto)
       .then(() => alert('✅ Enlace copiado'))
       .catch(() => {
-        // fallback por si el navegador bloquea clipboard
         input.select();
         document.execCommand('copy');
         alert('✅ Enlace copiado');
       });
   }
 
-  // Método llamado al generar la carta desde el modal
-  onGenerarCarta(payload: CartaPayload) {
-    // ✅ Forzar carpeta 2 aunque el modal mande otra
-    payload.idCarpeta = 2;
+  // ===============================
+  // Firmas: helpers
+  // ===============================
+  limpiarFirma(rol: RolFirma) {
+    const canvas = rol === 'entrega' ? this.canvasEntregaRef?.nativeElement : this.canvasRecibeRef?.nativeElement;
+    const ctx = rol === 'entrega' ? this.ctxEntrega : this.ctxRecibe;
+    if (!canvas || !ctx) return;
 
-    // ✅ abrir tab antes para que el navegador no lo bloquee
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // opcional: fondo blanco para que no salga transparente
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  private firmaComoBase64(rol: RolFirma): string | null {
+    const canvas = rol === 'entrega' ? this.canvasEntregaRef?.nativeElement : this.canvasRecibeRef?.nativeElement;
+    if (!canvas) return null;
+
+    // si está vacío (solo blanco), de todas formas manda; si quieres validar vacío, se puede comparar pixels
+    return canvas.toDataURL('image/png'); // "data:image/png;base64,...."
+  }
+
+  private aplicarFirmas(payload: CartaPayload) {
+    payload.quienEntrega = this.quienEntrega;
+    payload.cargoEntrega = this.cargoEntrega;
+    payload.quienRecibe  = this.quienRecibe;
+    payload.cargoRecibe  = this.cargoRecibe;
+
+    payload.firmaEntrega = this.firmaComoBase64('entrega');
+    payload.firmaRecibe  = this.firmaComoBase64('recibe');
+  }
+
+  // ===============================
+  // Canvas init + drawing
+  // ===============================
+  private tryInitCanvases() {
+    // si el form no está visible, no hay canvas
+    if (!this.formularioVisible) return;
+
+    const cEnt = this.canvasEntregaRef?.nativeElement;
+    const cRec = this.canvasRecibeRef?.nativeElement;
+    if (!cEnt || !cRec) return;
+
+    // limpiar listeners previos para no duplicar
+    this.unsubs.forEach(fn => fn());
+    this.unsubs = [];
+
+    this.ctxEntrega = this.prepararCanvas(cEnt);
+    this.ctxRecibe = this.prepararCanvas(cRec);
+
+    this.hookDibujo(cEnt, 'entrega');
+    this.hookDibujo(cRec, 'recibe');
+
+    // blanco de inicio (para evitar PDF con transparencia)
+    this.limpiarFirma('entrega');
+    this.limpiarFirma('recibe');
+  }
+
+  private prepararCanvas(canvas: HTMLCanvasElement): CanvasRenderingContext2D | null {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    // Ajuste a tamaño real del elemento (HiDPI)
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+    canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // estilo del trazo
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#000';
+
+    return ctx;
+  }
+
+  private hookDibujo(canvas: HTMLCanvasElement, rol: RolFirma) {
+    const getCtx = () => rol === 'entrega' ? this.ctxEntrega : this.ctxRecibe;
+
+    const setDibujando = (v: boolean) => {
+      if (rol === 'entrega') this.dibujandoEntrega = v;
+      else this.dibujandoRecibe = v;
+    };
+
+    const isDibujando = () => rol === 'entrega' ? this.dibujandoEntrega : this.dibujandoRecibe;
+
+    const getPos = (ev: MouseEvent | TouchEvent) => {
+      const rect = canvas.getBoundingClientRect();
+
+      let clientX = 0;
+      let clientY = 0;
+
+      if (ev instanceof TouchEvent) {
+        const t = ev.touches[0] || ev.changedTouches[0];
+        if (!t) return null;
+        clientX = t.clientX;
+        clientY = t.clientY;
+      } else {
+        clientX = ev.clientX;
+        clientY = ev.clientY;
+      }
+
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    };
+
+    const start = (ev: MouseEvent | TouchEvent) => {
+      ev.preventDefault();
+      const ctx = getCtx();
+      const pos = getPos(ev);
+      if (!ctx || !pos) return;
+
+      setDibujando(true);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+    };
+
+    const move = (ev: MouseEvent | TouchEvent) => {
+      if (!isDibujando()) return;
+      ev.preventDefault();
+
+      const ctx = getCtx();
+      const pos = getPos(ev);
+      if (!ctx || !pos) return;
+
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    };
+
+    const end = (ev: MouseEvent | TouchEvent) => {
+      if (!isDibujando()) return;
+      ev.preventDefault();
+      setDibujando(false);
+    };
+
+    // Mouse
+    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', end);
+
+    // Touch
+    canvas.addEventListener('touchstart', start, { passive: false });
+    canvas.addEventListener('touchmove', move, { passive: false });
+    window.addEventListener('touchend', end, { passive: false });
+
+    // Guardar unsubscribers
+    this.unsubs.push(() => canvas.removeEventListener('mousedown', start));
+    this.unsubs.push(() => canvas.removeEventListener('mousemove', move));
+    this.unsubs.push(() => window.removeEventListener('mouseup', end));
+
+    this.unsubs.push(() => canvas.removeEventListener('touchstart', start as any));
+    this.unsubs.push(() => canvas.removeEventListener('touchmove', move as any));
+    this.unsubs.push(() => window.removeEventListener('touchend', end as any));
+  }
+
+  // ===============================
+  // Generar carta
+  // ===============================
+  onGenerarCarta(payload: CartaPayload) {
+    payload.idCarpeta = 2;
+    this.aplicarFirmas(payload);
+
     const newTab = window.open('', '_blank');
 
     this.serviciosService.generarCarta(payload).subscribe({
@@ -88,13 +286,11 @@ export class CartasComponent {
     this.mostrarModal = false;
   }
 
-  // Guardar desde el formulario actual
-  guardar(tipo: 'entrega' | 'garantia' | 'conjunto') {
-    // ✅ abrir tab antes para que el navegador no lo bloquee
+  guardar(tipo: TipoCarta) {
     const newTab = window.open('', '_blank');
 
-    // ✅ Forzar carpeta 2 siempre
     const payload: CartaPayload = { tipo, idCarpeta: 2 };
+    this.aplicarFirmas(payload);
 
     if (tipo === 'entrega') {
       payload.preguntasEntrega = [

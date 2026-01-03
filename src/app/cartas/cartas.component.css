@@ -290,5 +290,20 @@
     width: 100%;
   }
 }
+.firma-box {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid #f0c2c7;
+  border-radius: 12px;
+  background: #fff0f2;
+}
 
+}
+.canvas-firma{
+  width:100%;
+  max-width:600px;
+  height:180px;   /* ← importantísimo */
+  border:1px solid #ccc;
+  border-radius:8px;
+  background:#fff;
 }
