@@ -307,3 +307,123 @@
   border-radius:8px;
   background:#fff;
 }
+/* ==============================
+   SELECCIÓN CLIENTES (CARTAS)
+   ============================== */
+.selection-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 15px 0 20px 0;
+  padding: 16px;
+  border: 1px solid #f0c2c7;
+  border-radius: 10px;
+  background: #fff0f2;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+}
+
+.selection-box:hover {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+.selection-box h4 {
+  margin: 0;
+  color: #dc3545;
+  font-weight: 700;
+}
+
+/* Select múltiple */
+.selection-box select {
+  width: 100%;
+  min-height: 120px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: #fffafc;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Botón Añadir clientes */
+.selection-box .add-client-button {
+  align-self: flex-end;
+  margin-top: 6px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  background: linear-gradient(90deg, #dc3545, #e8505b);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.selection-box .add-client-button:hover {
+  background: linear-gradient(90deg, #e8505b, #dc3545);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(220,53,69,0.3);
+}
+
+/* Lista seleccionados */
+.selection-box .clientes-seleccionados {
+  margin-top: 10px;
+}
+
+.selection-box .clientes-seleccionados p {
+  margin: 0 0 6px 0;
+}
+
+.selection-box .clientes-seleccionados ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.selection-box .clientes-seleccionados li {
+  background: #fff5f5;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #f0c2c7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+  transition: all 0.2s ease;
+}
+
+.selection-box .clientes-seleccionados li:hover {
+  background: #ffe6ec;
+  transform: translateX(2px);
+}
+
+/* Botón eliminar */
+.selection-box .remove-client-button {
+  background-color: transparent;
+  color: #dc3545;
+  font-size: 18px;
+  padding: 0 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.selection-box .remove-client-button:hover {
+  color: #b02a37;
+  transform: scale(1.1);
+}
+
+/* ==============================
+   RESPONSIVO
+   ============================== */
+@media (max-width: 600px) {
+  .selection-box .add-client-button {
+    width: 100%;
+    align-self: stretch;
+  }
+
+  .selection-box select {
+    min-height: 100px;
+  }
+}

@@ -1,6 +1,9 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import {
+  Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, OnInit
+} from '@angular/core';
 import { ServiciosService } from '../Servicios/servicios.service';
 import { CartaPayload } from '../Models/ModalCartaComponent';
+import { Cliente } from '../Models/Cliente';
 
 type TipoCarta = 'entrega' | 'garantia' | 'conjunto';
 type RolFirma = 'entrega' | 'recibe';
@@ -10,7 +13,8 @@ type RolFirma = 'entrega' | 'recibe';
   templateUrl: './cartas.component.html',
   styleUrls: ['./cartas.component.css']
 })
-export class CartasComponent implements AfterViewInit, OnDestroy {
+export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
+
   formularioVisible: TipoCarta | null = null;
 
   respuesta1 = '';
@@ -23,6 +27,11 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
   cargoEntrega = '';
   quienRecibe = '';
   cargoRecibe = '';
+
+  // ✅ clientes
+  clientesDisponibles: Cliente[] = [];
+  clientesSeleccionados: Cliente[] = [];
+  clientesSeleccionadosIds: number[] = [];
 
   // Modal
   mostrarModal = false;
@@ -43,10 +52,14 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
   private dibujandoEntrega = false;
   private dibujandoRecibe = false;
 
-  // para limpiar event listeners en destroy
   private unsubs: Array<() => void> = [];
 
   constructor(private serviciosService: ServiciosService) {}
+
+  ngOnInit(): void {
+    // ✅ cargar clientes desde que entra a la pantalla
+    this.cargarClientes();
+  }
 
   ngAfterViewInit(): void {
     this.tryInitCanvases();
@@ -66,7 +79,16 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
     this.respuesta3 = '';
     this.respuesta4 = '';
 
-    // ✅ IMPORTANTE: esperar al render del DOM para que existan los canvas
+    // (Opcional) si quieres limpiar selección al cambiar
+    // this.clientesSeleccionados = [];
+    // this.clientesSeleccionadosIds = [];
+
+    // ✅ Asegurar que clientes estén cargados
+    if (!this.clientesDisponibles || this.clientesDisponibles.length === 0) {
+      this.cargarClientes();
+    }
+
+    // ✅ esperar al render del DOM para canvas
     setTimeout(() => this.tryInitCanvases(), 0);
   }
 
@@ -103,6 +125,42 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
   }
 
   // ===============================
+  // CLIENTES
+  // ===============================
+  cargarClientes() {
+    this.serviciosService.obtenerClientes().subscribe({
+      next: (data: Cliente[]) => this.clientesDisponibles = data ?? [],
+      error: err => console.error('Error cargarClientes:', err)
+    });
+  }
+
+  agregarClientesSeleccionados() {
+    this.clientesSeleccionadosIds.forEach(id => {
+      const cliente = this.clientesDisponibles.find(c => c.id === id);
+      if (cliente && !this.clientesSeleccionados.some(c => c.id === id)) {
+        this.clientesSeleccionados.push(cliente);
+      }
+    });
+    this.clientesSeleccionadosIds = [];
+  }
+
+  eliminarCliente(index: number) {
+    this.clientesSeleccionados.splice(index, 1);
+  }
+
+  private validarClientes(): boolean {
+    if (!this.clientesSeleccionados || this.clientesSeleccionados.length === 0) {
+      alert('⚠️ Selecciona al menos un cliente');
+      return false;
+    }
+    return true;
+  }
+
+  private aplicarClientes(payload: CartaPayload) {
+    payload.clientesIds = (this.clientesSeleccionados || []).map(c => c.id);
+  }
+
+  // ===============================
   // Firmas: helpers
   // ===============================
   limpiarFirma(rol: RolFirma) {
@@ -113,13 +171,13 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
     const ctx = rol === 'entrega' ? this.ctxEntrega : this.ctxRecibe;
     if (!canvas || !ctx) return;
 
-    // limpiar + fondo blanco
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // fondo blanco (para PDF)
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // volver a setear estilos de pluma
     ctx.lineWidth = 2;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
@@ -180,14 +238,12 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
     const rect = canvas.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
 
-    // ⚠️ Si tu CSS no le da altura, rect.height puede ser 0
     const w = Math.max(1, Math.floor(rect.width));
-    const h = Math.max(1, Math.floor(rect.height || 160)); // fallback 160
+    const h = Math.max(1, Math.floor(rect.height || 160));
 
     canvas.width = Math.floor(w * dpr);
     canvas.height = Math.floor(h * dpr);
 
-    // escalado para dibujar en coords CSS
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     ctx.lineWidth = 2;
@@ -219,10 +275,9 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
         clientX = t.clientX;
         clientY = t.clientY;
       } else {
-        clientX = ev.clientX;
-        clientY = ev.clientY;
+        clientX = (ev as MouseEvent).clientX;
+        clientY = (ev as MouseEvent).clientY;
       }
-
       return { x: clientX - rect.left, y: clientY - rect.top };
     };
 
@@ -276,8 +331,12 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
   // Generar carta
   // ===============================
   onGenerarCarta(payload: CartaPayload) {
+    if (!this.validarClientes()) return;
+
     payload.idCarpeta = 2;
+
     this.aplicarFirmas(payload);
+    this.aplicarClientes(payload);
 
     const newTab = window.open('', '_blank');
 
@@ -293,10 +352,14 @@ export class CartasComponent implements AfterViewInit, OnDestroy {
   }
 
   guardar(tipo: TipoCarta) {
+    if (!this.validarClientes()) return;
+
     const newTab = window.open('', '_blank');
 
     const payload: CartaPayload = { tipo, idCarpeta: 2 };
+
     this.aplicarFirmas(payload);
+    this.aplicarClientes(payload);
 
     if (tipo === 'entrega') {
       payload.preguntasEntrega = [

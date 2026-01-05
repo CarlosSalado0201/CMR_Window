@@ -19,10 +19,42 @@
   </div>
 
   <!-- =========================
+       TEMPLATE REUTILIZABLE: CLIENTES
+       ========================= -->
+  <ng-template #clientesBlock>
+    <div class="selection-box">
+      <h4>Clientes *</h4>
+
+      <select multiple [(ngModel)]="clientesSeleccionadosIds" name="clientesSeleccionadosIds" required>
+        <option *ngFor="let c of clientesDisponibles" [ngValue]="c.id">
+          {{ c.nombre }}
+        </option>
+      </select>
+
+      <button type="button" class="add-client-button" (click)="agregarClientesSeleccionados()">
+        Añadir clientes
+      </button>
+
+      <div class="clientes-seleccionados" *ngIf="clientesSeleccionados.length > 0">
+        <p><strong>Seleccionados:</strong></p>
+        <ul>
+          <li *ngFor="let c of clientesSeleccionados; let i = index">
+            {{ c.nombre }}
+            <button type="button" class="remove-client-button" (click)="eliminarCliente(i)">✕</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- =========================
        FORMULARIO CARTA ENTREGA
        ========================= -->
   <div *ngIf="formularioVisible === 'entrega'" class="report-form">
     <h2>CARTA ENTREGA</h2>
+
+    <!-- ✅ CLIENTES (siempre) -->
+    <ng-container *ngTemplateOutlet="clientesBlock"></ng-container>
 
     <div class="input-group">
       <label>Pregunta 1:</label>
@@ -99,6 +131,9 @@
   <div *ngIf="formularioVisible === 'garantia'" class="report-form">
     <h2>CARTA GARANTÍA</h2>
 
+    <!-- ✅ CLIENTES (siempre) -->
+    <ng-container *ngTemplateOutlet="clientesBlock"></ng-container>
+
     <div class="input-group">
       <label>Pregunta 1:</label>
       <p class="texto-instruccion">
@@ -119,43 +154,33 @@
     <div class="firma-box">
       <h3>Firmas</h3>
 
-      <!-- QUIEN ENTREGA -->
       <div class="firma-row">
         <h4>Quien entrega</h4>
-
         <div class="input-group">
           <label>Nombre</label>
           <input class="input-rojo" type="text" [(ngModel)]="quienEntrega" placeholder="Nombre de quien entrega">
         </div>
-
         <div class="input-group">
           <label>Cargo</label>
           <input class="input-rojo" type="text" [(ngModel)]="cargoEntrega" placeholder="Cargo de quien entrega">
         </div>
-
         <canvas #canvasEntrega class="canvas-firma"></canvas>
-
         <div class="signature-buttons">
           <button type="button" (click)="limpiarFirma('entrega')">Limpiar firma entrega</button>
         </div>
       </div>
 
-      <!-- QUIEN RECIBE -->
       <div class="firma-row">
         <h4>Quien recibe</h4>
-
         <div class="input-group">
           <label>Nombre</label>
           <input class="input-rojo" type="text" [(ngModel)]="quienRecibe" placeholder="Nombre de quien recibe">
         </div>
-
         <div class="input-group">
           <label>Cargo</label>
           <input class="input-rojo" type="text" [(ngModel)]="cargoRecibe" placeholder="Cargo de quien recibe">
         </div>
-
         <canvas #canvasRecibe class="canvas-firma"></canvas>
-
         <div class="signature-buttons">
           <button type="button" (click)="limpiarFirma('recibe')">Limpiar firma recibe</button>
         </div>
@@ -173,6 +198,9 @@
        ========================= -->
   <div *ngIf="formularioVisible === 'conjunto'" class="report-form">
     <h2>CARTAS EN CONJUNTO</h2>
+
+    <!-- ✅ CLIENTES (siempre) -->
+    <ng-container *ngTemplateOutlet="clientesBlock"></ng-container>
 
     <h3 style="margin-top: 10px;">CARTA ENTREGA</h3>
 
@@ -214,43 +242,33 @@
     <div class="firma-box">
       <h3>Firmas</h3>
 
-      <!-- QUIEN ENTREGA -->
       <div class="firma-row">
         <h4>Quien entrega</h4>
-
         <div class="input-group">
           <label>Nombre</label>
           <input class="input-rojo" type="text" [(ngModel)]="quienEntrega" placeholder="Nombre de quien entrega">
         </div>
-
         <div class="input-group">
           <label>Cargo</label>
           <input class="input-rojo" type="text" [(ngModel)]="cargoEntrega" placeholder="Cargo de quien entrega">
         </div>
-
         <canvas #canvasEntrega class="canvas-firma"></canvas>
-
         <div class="signature-buttons">
           <button type="button" (click)="limpiarFirma('entrega')">Limpiar firma entrega</button>
         </div>
       </div>
 
-      <!-- QUIEN RECIBE -->
       <div class="firma-row">
         <h4>Quien recibe</h4>
-
         <div class="input-group">
           <label>Nombre</label>
           <input class="input-rojo" type="text" [(ngModel)]="quienRecibe" placeholder="Nombre de quien recibe">
         </div>
-
         <div class="input-group">
           <label>Cargo</label>
           <input class="input-rojo" type="text" [(ngModel)]="cargoRecibe" placeholder="Cargo de quien recibe">
         </div>
-
         <canvas #canvasRecibe class="canvas-firma"></canvas>
-
         <div class="signature-buttons">
           <button type="button" (click)="limpiarFirma('recibe')">Limpiar firma recibe</button>
         </div>
