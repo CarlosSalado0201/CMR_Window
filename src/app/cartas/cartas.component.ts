@@ -364,7 +364,7 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
     if (tipo === 'entrega') {
       payload.preguntasEntrega = [
         'Por medio del presente se hace la entrega recepción de los trabajos realizado en:',
-        'HACEMOS ENTREGA AL DEPARTAMENTO DE MANTENIMIENTO Y NOS RECIBEN EN CONFORMIDAD A LAS CONDICIONES ESTABLECIDAS POR AMBAS PARTES.'
+        'Hacemos entrega al departamento de mantenimiento y nos reciben en conformidad a las condiciones establecidas por ambas partes.'
       ];
       payload.respuestasEntrega = [this.respuesta1, this.respuesta2];
 
@@ -378,7 +378,7 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
     } else if (tipo === 'conjunto') {
       payload.preguntasEntrega = [
         'Por medio del presente se hace la entrega recepción de los trabajos realizado en:',
-        'HACEMOS ENTREGA AL DEPARTAMENTO DE MANTENIMIENTO Y NOS RECIBEN EN CONFORMIDAD A LAS CONDICIONES ESTABLECIDAS POR AMBAS PARTES.'
+        'Hacemos entrega al departamento de mantenimiento y nos reciben en conformidad a las condiciones establecidas por ambas partes.'
       ];
       payload.respuestasEntrega = [this.respuesta1, this.respuesta2];
 
