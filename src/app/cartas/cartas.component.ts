@@ -267,15 +267,10 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!ctx) return null;
 
     const rect = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
 
     const w = Math.max(1, Math.floor(rect.width));
     const h = Math.max(1, Math.floor(rect.height || 160));
 
-    canvas.width = Math.floor(w * dpr);
-    canvas.height = Math.floor(h * dpr);
-
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     ctx.lineWidth = 2;
     ctx.lineCap = 'round';
