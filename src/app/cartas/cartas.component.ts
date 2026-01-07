@@ -5,6 +5,10 @@ import { ServiciosService } from '../Servicios/servicios.service';
 import { CartaPayload } from '../Models/ModalCartaComponent';
 import { Cliente } from '../Models/Cliente';
 
+// ✅ Si ya tienes un modelo Usuario, úsalo:
+// import { Usuario } from '../Models/Usuario';
+type Usuario = { nombre: string; cargo: string };
+
 type TipoCarta = 'entrega' | 'garantia' | 'conjunto';
 type RolFirma = 'entrega' | 'recibe';
 
@@ -27,6 +31,9 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
   cargoEntrega = '';
   quienRecibe = '';
   cargoRecibe = '';
+
+  // ✅ usuario actual
+  usuarioActual: Usuario | null = null;
 
   // ✅ clientes
   clientesDisponibles: Cliente[] = [];
@@ -59,6 +66,9 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     // ✅ cargar clientes desde que entra a la pantalla
     this.cargarClientes();
+
+    // ✅ cargar usuario actual (para autollenar quien entrega)
+    this.obtenerUsuarioActual();
   }
 
   ngAfterViewInit(): void {
@@ -70,6 +80,28 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
     this.unsubs = [];
   }
 
+  // ===============================
+  // ✅ Usuario actual
+  // ===============================
+  obtenerUsuarioActual() {
+    this.serviciosService.obtenerUsuarioActual().subscribe({
+      next: (data: Usuario) => {
+        this.usuarioActual = data;
+
+        // ✅ autollenar quien entrega
+        this.quienEntrega = data?.nombre ?? '';
+        this.cargoEntrega = data?.cargo ?? '';
+      },
+      error: err => console.error('Error obtenerUsuarioActual:', err)
+    });
+  }
+
+  private reponeQuienEntregaDesdeUsuario() {
+    if (!this.usuarioActual) return;
+    this.quienEntrega = this.usuarioActual.nombre ?? '';
+    this.cargoEntrega = this.usuarioActual.cargo ?? '';
+  }
+
   mostrarFormulario(tipo: TipoCarta) {
     this.formularioVisible = tipo;
 
@@ -79,9 +111,8 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
     this.respuesta3 = '';
     this.respuesta4 = '';
 
-    // (Opcional) si quieres limpiar selección al cambiar
-    // this.clientesSeleccionados = [];
-    // this.clientesSeleccionadosIds = [];
+    // ✅ cada vez que abras formulario, repone el "quien entrega"
+    this.reponeQuienEntregaDesdeUsuario();
 
     // ✅ Asegurar que clientes estén cargados
     if (!this.clientesDisponibles || this.clientesDisponibles.length === 0) {
@@ -322,9 +353,9 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
     this.unsubs.push(() => canvas.removeEventListener('mousemove', move));
     this.unsubs.push(() => window.removeEventListener('mouseup', end));
 
-    this.unsubs.push(() => canvas.removeEventListener('touchstart', start));
-    this.unsubs.push(() => canvas.removeEventListener('touchmove', move));
-    this.unsubs.push(() => window.removeEventListener('touchend', end));
+    this.unsubs.push(() => canvas.removeEventListener('touchstart', start as any));
+    this.unsubs.push(() => canvas.removeEventListener('touchmove', move as any));
+    this.unsubs.push(() => window.removeEventListener('touchend', end as any));
   }
 
   // ===============================
@@ -354,8 +385,10 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
   guardar(tipo: TipoCarta) {
     if (!this.validarClientes()) return;
 
-    const newTab = window.open('', '_blank');
+    // ✅ por seguridad, repone quien entrega antes de enviar
+    this.reponeQuienEntregaDesdeUsuario();
 
+    const newTab = window.open('', '_blank');
     const payload: CartaPayload = { tipo, idCarpeta: 2 };
 
     this.aplicarFirmas(payload);
