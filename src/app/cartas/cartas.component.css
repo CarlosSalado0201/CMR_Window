@@ -1,77 +1,76 @@
+/* =========================
+   BASE
+   ========================= */
 :host {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-      sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-size: 14px;
-    color: #333;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 14px;
+  color: #333;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  .toolbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    background-color: #dc3545;
-    color: white;
-    font-weight: 600;
-    padding: 0 24px;
-    box-sizing: border-box;
-    z-index: 1000;
-  }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
-  .toolbar img {
-    height: 80px;
-    width: auto;
-    user-select: none;
-    margin-right: 20px;
-  }
-
-  .toolbar button {
-    background-color: white;
-    color: #dc3545;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-    font-size: 1rem;
-    white-space: normal;
-    max-width: 120px;
-    line-height: 1.2;
-    margin-right: 10px;
-  }
-
-  .toolbar button:hover {
-    background-color: #f8d7da;
-  }
-
-  .content {
-    margin-top: 120px;
-    padding: 0 24px;
-  }
-
-  .circle-indicator {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid #dc3545;
-  }
-
-  .circle-indicator.selected {
-    background-color: #dc3545;
-  }
-
-/* ===== CONTENIDO ===== */
-.content {
-  margin-top: 120px;
+/* =========================
+   TOOLBAR
+   ========================= */
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  background-color: #dc3545;
+  color: white;
+  font-weight: 600;
   padding: 0 24px;
+  z-index: 1000;
+}
+
+.toolbar img {
+  height: 80px;
+  width: auto;
+  user-select: none;
+  margin-right: 20px;
+}
+
+.toolbar-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.toolbar button {
+  background-color: white;
+  color: #dc3545;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  white-space: normal;
+  max-width: 140px;
+  line-height: 1.2;
+}
+
+.toolbar button:hover {
+  background-color: #f8d7da;
+}
+
+/* =========================
+   CONTENT WRAPPER
+   ========================= */
+.content {
+  margin-top: 120px; /* espacio para toolbar */
+  padding: 0 24px 30px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -79,7 +78,24 @@
   min-height: 100vh;
 }
 
-/* ===== BOTONES PRINCIPALES ===== */
+/* =========================
+   INDICADORES (si los usas)
+   ========================= */
+.circle-indicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #dc3545;
+}
+
+.circle-indicator.selected {
+  background-color: #dc3545;
+}
+
+/* =========================
+   BOTONES PRINCIPALES
+   ========================= */
 .btn-generate {
   background-color: #dc3545;
   color: #fff;
@@ -102,7 +118,27 @@
   cursor: not-allowed;
 }
 
-/* ===== FORMULARIO ===== */
+/* =========================
+   RESPONSABLE (usuario actual)
+   ========================= */
+.usuario-actual-trabajador {
+  width: 100%;
+  max-width: 800px;
+  margin: 10px 0 0 0;
+  padding: 10px 14px;
+  border: 1px solid #f0c2c7;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.usuario-actual-trabajador strong {
+  color: #dc3545;
+}
+
+/* =========================
+   FORMULARIO
+   ========================= */
 .report-form {
   width: clamp(300px, 55vw, 800px);
   background: linear-gradient(145deg, #ffffff, #fff0f2);
@@ -137,6 +173,12 @@
   color: #b30000;
 }
 
+.texto-instruccion {
+  margin: 0 0 8px 0;
+  color: #444;
+  line-height: 1.35;
+}
+
 .input-rojo {
   padding: 10px 12px;
   border: 2px solid #c62828;
@@ -157,7 +199,76 @@
   box-shadow: 0 0 5px rgba(179, 0, 0, 0.4);
 }
 
-/* ===== PANEL ACTIONS ===== */
+/* =========================
+   FIRMAS
+   ========================= */
+.firma-box {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid #f0c2c7;
+  border-radius: 12px;
+  background: #fff0f2;
+}
+
+.firma-box h3 {
+  margin: 0 0 12px 0;
+  color: #dc3545;
+}
+
+.firma-row {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #f0c2c7;
+}
+
+.firma-row h4 {
+  margin: 0 0 10px 0;
+  color: #b30000;
+}
+
+/* ✅ Canvas SIN desfase (PC + móvil) */
+.canvas-firma {
+  width: 100%;
+  max-width: 600px;
+  height: 180px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+
+  display: block;       /* evita offsets por inline */
+  touch-action: none;   /* clave: evita scroll/zoom mientras firmas */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.signature-buttons {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.signature-buttons button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: #dc3545;
+  color: #fff;
+  transition: all 0.25s ease;
+}
+
+.signature-buttons button:hover {
+  background: #b02a37;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   PANEL ACTIONS
+   ========================= */
 .panel-actions {
   display: flex;
   justify-content: center;
@@ -172,6 +283,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  border: none;
 }
 
 .panel-actions button:hover:not(.cancel) {
@@ -188,55 +300,9 @@
   background-color: #777;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 600px) {
-  .toolbar {
-    height: auto;
-    padding: 10px 12px;
-    flex-wrap: wrap;
-  }
-
-  .toolbar img {
-    height: 60px;
-  }
-
-  .toolbar-buttons {
-    width: 100%;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .toolbar button {
-    font-size: 0.95rem;
-    padding: 10px 12px;
-  }
-
-  .content {
-    margin-top: 140px;
-    padding: 0 12px;
-  }
-
-  .report-form {
-    width: 100% !important;
-    padding: 16px !important;
-    margin: 10px 0;
-  }
-
-  .panel-actions {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .panel-actions button,
-  .btn-generate {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-  }
-  /* ==============================
-   PDF LINK LAYER (Cartas/Reportes)
-   ============================== */
+/* =========================
+   PDF LINK LAYER (último PDF)
+   ========================= */
 .pdf-link-layer {
   margin-top: 20px;
   width: 100%;
@@ -261,7 +327,6 @@
   border: 1px solid #ddd;
   background: #fff;
   font-size: 14px;
-  box-sizing: border-box;
   margin-bottom: 12px;
 }
 
@@ -271,46 +336,45 @@
   flex-wrap: wrap;
 }
 
-/* Reusa tus estilos generales de botones,
-   pero aseguramos que se vean bien */
 .pdf-link-layer a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
+  background: #dc3545;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  transition: all 0.25s ease;
 }
 
-/* Mobile */
-@media (max-width: 600px) {
-  .pdf-link-actions {
-    flex-direction: column;
-  }
-  .pdf-link-layer button,
-  .pdf-link-layer a {
-    width: 100%;
-  }
-}
-.firma-box {
-  margin-top: 20px;
-  padding: 16px;
-  border: 1px solid #f0c2c7;
-  border-radius: 12px;
-  background: #fff0f2;
+.pdf-link-layer a:hover {
+  background: #b02a37;
+  transform: translateY(-1px);
 }
 
+.pdf-link-layer button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  background: #dc3545;
+  color: #fff;
+  transition: all 0.25s ease;
 }
-.canvas-firma{
-  width:100%;
-  max-width:600px;
-  height:180px;   /* ← importantísimo */
-  border:1px solid #ccc;
-  border-radius:8px;
-  background:#fff;
+
+.pdf-link-layer button:hover {
+  background: #b02a37;
+  transform: translateY(-1px);
 }
-/* ==============================
-   SELECCIÓN CLIENTES (CARTAS)
-   ============================== */
+
+/* =========================
+   SELECCIÓN CLIENTES (Cartas)
+   ========================= */
 .selection-box {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -352,7 +416,7 @@
   margin-top: 6px;
   padding: 8px 16px;
   border-radius: 6px;
-  font-weight: 600;
+  font-weight: 700;
   background: linear-gradient(90deg, #dc3545, #e8505b);
   color: #fff;
   border: none;
@@ -414,10 +478,68 @@
   transform: scale(1.1);
 }
 
-/* ==============================
-   RESPONSIVO
-   ============================== */
+/* =========================
+   RESPONSIVE (MÓVIL)
+   ========================= */
 @media (max-width: 600px) {
+
+  .toolbar {
+    height: auto;
+    padding: 10px 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .toolbar img {
+    height: 60px;
+    margin-right: 10px;
+  }
+
+  .toolbar-buttons {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .toolbar button {
+    font-size: 0.95rem;
+    padding: 10px 12px;
+    max-width: none;
+  }
+
+  .content {
+    margin-top: 140px;
+    padding: 0 12px 24px 12px;
+  }
+
+  .report-form {
+    width: 100%;
+    padding: 16px;
+    margin: 10px 0;
+  }
+
+  .panel-actions {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .panel-actions button,
+  .btn-generate {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+  }
+
+  .pdf-link-actions {
+    flex-direction: column;
+  }
+
+  .pdf-link-layer button,
+  .pdf-link-layer a {
+    width: 100%;
+  }
+
   .selection-box .add-client-button {
     width: 100%;
     align-self: stretch;
@@ -425,5 +547,10 @@
 
   .selection-box select {
     min-height: 100px;
+  }
+
+  .canvas-firma {
+    height: 170px; /* un poquito más compacto en móvil */
+    max-width: 100%;
   }
 }

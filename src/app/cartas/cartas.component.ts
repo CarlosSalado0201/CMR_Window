@@ -194,26 +194,33 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
   // ===============================
   // Firmas: helpers
   // ===============================
-  limpiarFirma(rol: RolFirma) {
-    const canvas = rol === 'entrega'
-      ? this.canvasEntregaRef?.nativeElement
-      : this.canvasRecibeRef?.nativeElement;
+limpiarFirma(rol: RolFirma) {
+  const canvas = rol === 'entrega'
+    ? this.canvasEntregaRef?.nativeElement
+    : this.canvasRecibeRef?.nativeElement;
 
-    const ctx = rol === 'entrega' ? this.ctxEntrega : this.ctxRecibe;
-    if (!canvas || !ctx) return;
+  const ctx = rol === 'entrega' ? this.ctxEntrega : this.ctxRecibe;
+  if (!canvas || !ctx) return;
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
 
-    // fondo blanco (para PDF)
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // Reaplica el transform correcto
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.strokeStyle = '#000';
-  }
+  // Limpieza en CSS pixels (porque hay transform)
+  ctx.clearRect(0, 0, rect.width, rect.height);
+
+  // Fondo blanco
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, rect.width, rect.height);
+
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#000';
+}
+
 
   // ✅ devuelve SOLO base64 (sin "data:image/png;base64,")
   private firmaComoBase64(rol: RolFirma): string | null {
@@ -261,24 +268,33 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
     this.limpiarFirma('entrega');
     this.limpiarFirma('recibe');
   }
+private prepararCanvas(canvas: HTMLCanvasElement): CanvasRenderingContext2D | null {
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
 
-  private prepararCanvas(canvas: HTMLCanvasElement): CanvasRenderingContext2D | null {
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return null;
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
 
-    const rect = canvas.getBoundingClientRect();
+  // Tamaño real (pixeles internos)
+  canvas.width = Math.round(rect.width * dpr);
+  canvas.height = Math.round(rect.height * dpr);
 
-    const w = Math.max(1, Math.floor(rect.width));
-    const h = Math.max(1, Math.floor(rect.height || 160));
+  // Para dibujar usando coordenadas CSS (no internas)
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+  // Estilo de trazogetPos 
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#000';
 
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.strokeStyle = '#000';
+  // Fondo blanco (para que en PDF no salga transparente)
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, rect.width, rect.height);
 
-    return ctx;
-  }
+  return ctx;
+}
+
 
   private hookDibujo(canvas: HTMLCanvasElement, rol: RolFirma) {
     const getCtx = () => rol === 'entrega' ? this.ctxEntrega : this.ctxRecibe;
@@ -289,23 +305,29 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     const isDibujando = () => rol === 'entrega' ? this.dibujandoEntrega : this.dibujandoRecibe;
+const getPos = (ev: MouseEvent | TouchEvent) => {
+  const rect = canvas.getBoundingClientRect();
 
-    const getPos = (ev: MouseEvent | TouchEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      let clientX = 0;
-      let clientY = 0;
+  let clientX = 0;
+  let clientY = 0;
 
-      if (ev instanceof TouchEvent) {
-        const t = ev.touches[0] || ev.changedTouches[0];
-        if (!t) return null;
-        clientX = t.clientX;
-        clientY = t.clientY;
-      } else {
-        clientX = (ev as MouseEvent).clientX;
-        clientY = (ev as MouseEvent).clientY;
-      }
-      return { x: clientX - rect.left, y: clientY - rect.top };
-    };
+  if (ev instanceof TouchEvent) {
+    const t = ev.touches[0] || ev.changedTouches[0];
+    if (!t) return null;
+    clientX = t.clientX;
+    clientY = t.clientY;
+  } else {
+    clientX = (ev as MouseEvent).clientX;
+    clientY = (ev as MouseEvent).clientY;
+  }
+
+  // Coordenadas en CSS pixels
+  const x = clientX - rect.left;
+  const y = clientY - rect.top;
+
+  return { x, y };
+};
+
 
     const start = (ev: any) => {
       ev.preventDefault();
