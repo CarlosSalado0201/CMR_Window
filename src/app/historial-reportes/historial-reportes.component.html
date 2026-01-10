@@ -7,148 +7,135 @@
   <button routerLink="/login">Cerrar sesión</button>
 </div>
 
-<div class="historial-layout">
+<div class="calendar-container">
 
-  <!-- =========================
-       ✅ CALENDARIO
-  ========================== -->
-  <div class="calendar-container">
+  <!-- Encabezado -->
+  <div class="calendar-header">
+    <button class="month-arrow" (click)="prevMonth()">&#9664;</button>
 
-    <div class="calendar-header">
-      <button class="month-arrow" (click)="prevMonth()">&#9664;</button>
+    <div class="month-year-container">
+      <span class="month-year">{{ monthNames[currentMonth] }} {{ currentYear }}</span>
+      <button class="calendar-picker-btn" (click)="toggleMiniCalendar()">📅</button>
 
-      <div class="month-year-container">
-        <span class="month-year">{{ monthNames[currentMonth] }} {{ currentYear }}</span>
-        <button class="calendar-picker-btn" (click)="toggleMiniCalendar()">📅</button>
+      <div class="mini-calendar" *ngIf="showMiniCalendar">
+        <div class="months">
+          <button *ngFor="let month of monthNames; let i = index"
+                  (click)="selectMonth(i)">
+            {{ month }}
+          </button>
+        </div>
 
-        <div class="mini-calendar" *ngIf="showMiniCalendar">
-          <div class="months">
-            <button *ngFor="let month of monthNames; let i = index"
-                    (click)="selectMonth(i)">
-              {{ month }}
-            </button>
-          </div>
-
-          <div class="year-bar">
-            <button (click)="prevYear()">&#9664;</button>
-            <span>{{ currentYear }}</span>
-            <button (click)="nextYear()">&#9654;</button>
-          </div>
+        <div class="year-bar">
+          <button (click)="prevYear()">&#9664;</button>
+          <span>{{ currentYear }}</span>
+          <button (click)="nextYear()">&#9654;</button>
         </div>
       </div>
-
-      <button class="month-arrow" (click)="nextMonth()">&#9654;</button>
     </div>
 
-    <div class="calendar-weekdays">
-      <div *ngFor="let day of weekDays">{{ day }}</div>
-    </div>
+    <button class="month-arrow" (click)="nextMonth()">&#9654;</button>
+  </div>
 
-    <div class="calendar-grid">
-      <div class="calendar-day"
-           *ngFor="let day of daysInMonth"
-           [class.empty]="day === 0"
-           [class.selected]="isSelectedDay(day)"
-           (click)="selectDate(day)">
+  <!-- Días -->
+  <div class="calendar-weekdays">
+    <div *ngFor="let day of weekDays">{{ day }}</div>
+  </div>
 
-        <!-- número de día -->
-        <span class="day-number" *ngIf="day !== 0">{{ day }}</span>
+  <!-- Cuadros -->
+  <div class="calendar-grid">
+    <div class="calendar-day"
+         *ngFor="let day of daysInMonth"
+         [class.empty]="day === 0"
+         [class.selected]="isSelectedDay(day)"
+         (click)="selectDate(day, true)">
 
-        <!-- ✅ mini listado dentro del cuadrito -->
-        <div class="day-items" *ngIf="day !== 0 && getItemsForDay(day).length > 0">
+      <span *ngIf="day !== 0">{{ day }}</span>
+
+      <!-- ✅ Items dentro del cuadro -->
+      <ng-container *ngIf="day !== 0">
+        <div class="day-items" *ngIf="getItemsDelDia(day).length > 0">
+          <!-- mostramos máximo 2 -->
           <a class="day-item"
-             *ngFor="let item of getItemsPreview(day)"
-             (click)="$event.stopPropagation(); abrirPdf(item)">
-            {{ item.tipoItem === 'REPORTE' ? 'Reporte' : 'Carta' }}
-            {{ item.referencia || item.id }}
+             *ngFor="let it of getItemsDelDia(day) | slice:0:2"
+             (click)="$event.stopPropagation(); abrirPdf(it)">
+            {{ it.tipoItem === 'REPORTE' ? 'Reporte' : 'Carta' }} {{ it.id }}
           </a>
 
-          <div class="day-more" *ngIf="getMoreCount(day) > 0">
-            +{{ getMoreCount(day) }} más
+          <!-- "+X más" -->
+          <div class="day-more"
+               *ngIf="getItemsDelDia(day).length > 2"
+               (click)="$event.stopPropagation(); selectDate(day, true)">
+            +{{ getItemsDelDia(day).length - 2 }} más
           </div>
         </div>
-
-      </div>
-    </div>
-
-  </div>
-
-  <!-- =========================
-       ✅ PANEL HISTORIAL
-  ========================== -->
-  <div class="historial-panel">
-
-    <h2>Historial</h2>
-
-    <div class="historial-subtitle">
-      Fecha seleccionada:
-      <strong>{{ selectedDateLabel || '---' }}</strong>
-    </div>
-
-    <!-- ✅ Tabs -->
-    <div class="tabs">
-      <button (click)="setTab('TODOS')" [class.active]="tab==='TODOS'">
-        Todos ({{ historial.length }})
-      </button>
-      <button (click)="setTab('REPORTES')" [class.active]="tab==='REPORTES'">
-        Reportes ({{ reportes.length }})
-      </button>
-      <button (click)="setTab('CARTAS')" [class.active]="tab==='CARTAS'">
-        Cartas ({{ cartas.length }})
-      </button>
-    </div>
-
-    <!-- Loader -->
-    <div class="estado" *ngIf="loading">
-      Cargando...
-    </div>
-
-    <!-- Error -->
-    <div class="estado error" *ngIf="errorMsg && !loading">
-      {{ errorMsg }}
-    </div>
-
-    <!-- Vacío -->
-    <div class="estado" *ngIf="!loading && !errorMsg && itemsFiltrados.length === 0">
-      No hay documentos para esta fecha.
-    </div>
-
-    <!-- Lista -->
-    <div class="doc-card"
-         *ngFor="let item of itemsFiltrados; trackBy: trackByKey">
-
-      <div class="doc-top">
-        <div class="doc-left">
-
-          <div class="badge"
-               [class.badge-reporte]="item.tipoItem==='REPORTE'"
-               [class.badge-carta]="item.tipoItem==='CARTA'">
-            {{ item.tipoItem === 'REPORTE' ? 'REPORTE' : 'CARTA' }}
-          </div>
-
-          <div class="doc-title">
-            {{ item.referencia || (item.tipoItem + ' #' + item.id) }}
-          </div>
-
-          <div class="doc-meta">
-            <span *ngIf="item.usuario && item.tipoItem==='REPORTE'">👤 {{ item.usuario }}</span>
-            <span *ngIf="item.tipoCarta && item.tipoItem==='CARTA'">📝 {{ item.tipoCarta }}</span>
-            <span *ngIf="item.fechaCreacion">🗓 {{ item.fechaCreacion }}</span>
-          </div>
-
-        </div>
-
-        <button class="btn-ver" (click)="abrirPdf(item)">
-          Ver PDF
-        </button>
-      </div>
-
-      <div class="url" *ngIf="item.urlPdf">
-        <input [value]="item.urlPdf" readonly />
-        <button (click)="copiarUrl(item.urlPdf)">Copiar</button>
-      </div>
+      </ng-container>
 
     </div>
-
   </div>
 </div>
+
+<!-- =========================
+     ✅ MODAL / PANEL DEL DÍA
+========================= -->
+<div class="modal-backdrop" *ngIf="showDayPanel" (click)="cerrarPanel()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div>
+        <h2>Documentos del día</h2>
+        <div class="modal-subtitle">📅 {{ panelFechaLabel }}</div>
+      </div>
+
+      <button class="btn-close" (click)="cerrarPanel()">✖</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="estado" *ngIf="loading">Cargando...</div>
+
+      <div class="estado error" *ngIf="errorMsg && !loading">
+        {{ errorMsg }}
+      </div>
+
+      <div class="estado" *ngIf="!loading && !errorMsg && panelItems.length === 0">
+        No hay documentos para esta fecha.
+      </div>
+
+      <!-- Lista completa -->
+      <div class="doc-card"
+           *ngFor="let item of panelItems; trackBy: trackByKey">
+
+        <div class="doc-top">
+          <div class="doc-left">
+            <div class="badge"
+                 [class.badge-reporte]="item.tipoItem==='REPORTE'"
+                 [class.badge-carta]="item.tipoItem==='CARTA'">
+              {{ item.tipoItem }}
+            </div>
+
+            <div class="doc-title">
+              {{ item.referencia || (item.tipoItem + ' #' + item.id) }}
+            </div>
+
+            <div class="doc-meta">
+              <span *ngIf="item.usuario && item.tipoItem==='REPORTE'">👤 {{ item.usuario }}</span>
+              <span *ngIf="item.tipoCarta && item.tipoItem==='CARTA'">📝 {{ item.tipoCarta }}</span>
+              <span *ngIf="item.fechaCreacion">🗓 {{ item.fechaCreacion }}</span>
+            </div>
+          </div>
+
+          <button class="btn-ver" (click)="abrirPdf(item)">
+            Ver PDF
+          </button>
+        </div>
+
+        <div class="url" *ngIf="item.urlPdf">
+          <input [value]="item.urlPdf" readonly />
+          <button (click)="copiarUrl(item.urlPdf)">Copiar</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+  

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { forkJoin, of } from 'rxjs';
-import { catchError, finalize } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 import { ServiciosService } from 'src/app/Servicios/servicios.service';
 
 type HistorialItem = {
@@ -8,8 +7,8 @@ type HistorialItem = {
   id?: number;
   referencia?: string;
   usuario?: string;
-  tipoCarta?: string;      // entrega/garantia/conjunto
-  fechaCreacion?: string;  // ISO o texto
+  tipoCarta?: string;
+  fechaCreacion?: string;
   urlPdf?: string;
 };
 
@@ -38,20 +37,24 @@ export class HistorialReportesComponent implements OnInit {
   // ===== Selección =====
   selectedDateISO: string = '';     // YYYY-MM-DD
   selectedDateLabel: string = '';   // DD/MM/YYYY
-  selectedDay: number | null = null;
 
-  // ===== Historial panel =====
+  // ===== Historial =====
   loading = false;
   errorMsg = '';
+
   tab: TabFiltro = 'TODOS';
 
   historial: HistorialItem[] = [];
   reportes: HistorialItem[] = [];
   cartas: HistorialItem[] = [];
 
-  // ✅ Cache para pintar items dentro del calendario
-  private cachePorDia = new Map<string, HistorialItem[]>();
-  private requestsEnCurso = new Set<string>();
+  // ✅ Para pintar texto dentro del día (mapa por día)
+  itemsPorDia: Record<string, HistorialItem[]> = {}; // key: YYYY-MM-DD
+
+  // ✅ Modal / Panel del día
+  showDayPanel = false;
+  panelItems: HistorialItem[] = [];
+  panelFechaLabel = '';
 
   constructor(private serviciosService: ServiciosService) {}
 
@@ -62,10 +65,8 @@ export class HistorialReportesComponent implements OnInit {
     this.generateCalendar();
 
     // ✅ por defecto hoy
-    this.selectDate(hoy.getDate());
-
-    // ✅ precargar mes para mostrar texto en cuadritos
-    this.prefetchMonth();
+    this.selectDate(hoy.getDate(), false);
+    this.precargarMes(); // ✅ esto llena los cuadritos con "Reporte 123"
   }
 
   // ============================
@@ -84,18 +85,27 @@ export class HistorialReportesComponent implements OnInit {
     this.currentMonth--;
     if (this.currentMonth < 0) { this.currentMonth = 11; this.currentYear--; }
     this.generateCalendar();
-    this.prefetchMonth();
+    this.precargarMes(); // ✅ refrescar items del mes
   }
 
   nextMonth() {
     this.currentMonth++;
     if (this.currentMonth > 11) { this.currentMonth = 0; this.currentYear++; }
     this.generateCalendar();
-    this.prefetchMonth();
+    this.precargarMes(); // ✅ refrescar items del mes
   }
 
-  prevYear() { this.currentYear--; this.generateCalendar(); this.prefetchMonth(); }
-  nextYear() { this.currentYear++; this.generateCalendar(); this.prefetchMonth(); }
+  prevYear() {
+    this.currentYear--;
+    this.generateCalendar();
+    this.precargarMes();
+  }
+
+  nextYear() {
+    this.currentYear++;
+    this.generateCalendar();
+    this.precargarMes();
+  }
 
   toggleMiniCalendar() { this.showMiniCalendar = !this.showMiniCalendar; }
 
@@ -103,16 +113,14 @@ export class HistorialReportesComponent implements OnInit {
     this.currentMonth = monthIndex;
     this.showMiniCalendar = false;
     this.generateCalendar();
-    this.prefetchMonth();
+    this.precargarMes();
   }
 
   // ============================
   // Selección de fecha
   // ============================
-  selectDate(day: number) {
+  selectDate(day: number, abrirPanel = true) {
     if (day === 0) return;
-
-    this.selectedDay = day;
 
     const mm = String(this.currentMonth + 1).padStart(2, '0');
     const dd = String(day).padStart(2, '0');
@@ -120,48 +128,115 @@ export class HistorialReportesComponent implements OnInit {
     this.selectedDateISO = `${this.currentYear}-${mm}-${dd}`;
     this.selectedDateLabel = `${dd}/${mm}/${this.currentYear}`;
 
-    // ✅ si ya está cacheado, úsalo directo
-    const cached = this.cachePorDia.get(this.selectedDateISO);
-    if (cached) {
-      this.setHistorialDesdeItems(cached);
-      return;
-    }
-
-    // ✅ si no, lo carga
-    this.cargarHistorial(this.selectedDateISO);
+    // cargar historial solo para panel/lateral si quieres
+    this.cargarHistorial(this.selectedDateISO, abrirPanel);
   }
 
   isSelectedDay(day: number): boolean {
-    return day !== 0 && this.selectedDay === day;
+    if (day === 0 || !this.selectedDateISO) return false;
+    const dd = String(day).padStart(2, '0');
+    const mm = String(this.currentMonth + 1).padStart(2, '0');
+    return this.selectedDateISO === `${this.currentYear}-${mm}-${dd}`;
   }
 
   // ============================
-  // ✅ Cargar Reportes + Cartas y combinar
+  // ✅ Precargar mes completo para que se vean los textos dentro de cada día
   // ============================
-  cargarHistorial(fechaISO: string) {
+  precargarMes() {
+    this.itemsPorDia = {};
+
+    const totalDays = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
+    const requests = [];
+
+    for (let day = 1; day <= totalDays; day++) {
+      const mm = String(this.currentMonth + 1).padStart(2, '0');
+      const dd = String(day).padStart(2, '0');
+      const fechaISO = `${this.currentYear}-${mm}-${dd}`;
+
+      requests.push(
+        forkJoin({
+          reportes: this.serviciosService.obtenerHistorialReportesPorDia(fechaISO),
+          cartas: this.serviciosService.obtenerHistorialCartasPorDia(fechaISO),
+        })
+      );
+    }
+
+    // ⚠️ Esto es pesado si tu mes tiene muuuchos días y muchos docs.
+    // Si notas lento, lo optimizamos con un endpoint "historial-mes" en backend.
+    // Por ahora funciona.
+    let day = 1;
+
+    // Procesar en cadena simple (sin saturar)
+    const procesarDia = () => {
+      if (day > totalDays) return;
+
+      const mm = String(this.currentMonth + 1).padStart(2, '0');
+      const dd = String(day).padStart(2, '0');
+      const fechaISO = `${this.currentYear}-${mm}-${dd}`;
+
+      forkJoin({
+        reportes: this.serviciosService.obtenerHistorialReportesPorDia(fechaISO),
+        cartas: this.serviciosService.obtenerHistorialCartasPorDia(fechaISO),
+      }).subscribe({
+        next: ({ reportes, cartas }) => {
+          const rep = (reportes || []).map((x: any) => ({
+            tipoItem: 'REPORTE',
+            id: x.id ?? x.idReporte ?? x.reporteId,
+            referencia: x.referencia || (x.id ? `Reporte ${x.id}` : ''),
+            usuario: x.usuario,
+            fechaCreacion: x.fechaCreacion ?? x.fecha,
+            urlPdf: x.urlPdf ?? x.url
+          })) as HistorialItem[];
+
+          const car = (cartas || []).map((x: any) => ({
+            tipoItem: 'CARTA',
+            id: x.id ?? x.idCarta ?? x.cartaId,
+            referencia: x.referencia || (x.id ? `Carta ${x.id}` : ''),
+            tipoCarta: x.tipo ?? x.tipoCarta,
+            fechaCreacion: x.fechaCreacion ?? x.fecha,
+            urlPdf: x.urlPdf ?? x.url
+          })) as HistorialItem[];
+
+          const items = [...rep, ...car].sort((a, b) => {
+            const ta = this.parseDate(a.fechaCreacion);
+            const tb = this.parseDate(b.fechaCreacion);
+            return (tb ?? 0) - (ta ?? 0);
+          });
+
+          if (items.length > 0) {
+            this.itemsPorDia[fechaISO] = items;
+          }
+          day++;
+          procesarDia();
+        },
+        error: () => {
+          // si falla un día, lo saltamos
+          day++;
+          procesarDia();
+        }
+      });
+    };
+
+    procesarDia();
+  }
+
+  // ============================
+  // ✅ Cargar historial de un día (para el panel)
+  // ============================
+  cargarHistorial(fechaISO: string, abrirPanel: boolean) {
     this.loading = true;
     this.errorMsg = '';
 
-    this.historial = [];
-    this.reportes = [];
-    this.cartas = [];
-
     forkJoin({
-      reportes: this.serviciosService.obtenerHistorialReportesPorDia(fechaISO).pipe(
-        catchError(() => of([]))
-      ),
-      cartas: this.serviciosService.obtenerHistorialCartasPorDia(fechaISO).pipe(
-        catchError(() => of([]))
-      )
-    }).pipe(
-      finalize(() => this.loading = false)
-    ).subscribe({
+      reportes: this.serviciosService.obtenerHistorialReportesPorDia(fechaISO),
+      cartas: this.serviciosService.obtenerHistorialCartasPorDia(fechaISO)
+    }).subscribe({
       next: ({ reportes, cartas }) => {
 
         this.reportes = (reportes || []).map((x: any) => ({
           tipoItem: 'REPORTE',
           id: x.id ?? x.idReporte ?? x.reporteId,
-          referencia: x.referencia,
+          referencia: x.referencia || (x.id ? `Reporte ${x.id}` : ''),
           usuario: x.usuario,
           fechaCreacion: x.fechaCreacion ?? x.fecha,
           urlPdf: x.urlPdf ?? x.url
@@ -170,30 +245,36 @@ export class HistorialReportesComponent implements OnInit {
         this.cartas = (cartas || []).map((x: any) => ({
           tipoItem: 'CARTA',
           id: x.id ?? x.idCarta ?? x.cartaId,
-          referencia: x.referencia,
+          referencia: x.referencia || (x.id ? `Carta ${x.id}` : ''),
           tipoCarta: x.tipo ?? x.tipoCarta,
           fechaCreacion: x.fechaCreacion ?? x.fecha,
           urlPdf: x.urlPdf ?? x.url
         }));
 
-        // ✅ Combinar
-        this.historial = [...this.reportes, ...this.cartas];
-
-        // ✅ Ordenar por fechaCreacion desc si existe
-        this.historial.sort((a, b) => {
+        this.historial = [...this.reportes, ...this.cartas].sort((a, b) => {
           const ta = this.parseDate(a.fechaCreacion);
           const tb = this.parseDate(b.fechaCreacion);
           return (tb ?? 0) - (ta ?? 0);
         });
 
-        // ✅ guardar en cache para pintar en el cuadro
-        this.cachePorDia.set(fechaISO, this.historial);
+        // ✅ cachea para mostrar dentro del cuadro
+        if (this.historial.length > 0) this.itemsPorDia[fechaISO] = this.historial;
+        else delete this.itemsPorDia[fechaISO];
 
-        // ✅ si no hay nada, no es “error”, solo vacío
-        if (this.historial.length === 0) this.errorMsg = '';
+        this.loading = false;
+
+        if (abrirPanel) {
+          this.abrirPanelDia(fechaISO, this.selectedDateLabel);
+        }
       },
       error: (err) => {
         console.error(err);
+        this.loading = false;
+
+        if (err?.status === 404) {
+          this.errorMsg = 'El historial aún no está disponible en backend (404).';
+          return;
+        }
         if (err?.status === 401 || err?.status === 403) {
           this.errorMsg = 'No autenticado. Inicia sesión para ver el historial.';
           return;
@@ -203,88 +284,33 @@ export class HistorialReportesComponent implements OnInit {
     });
   }
 
-  private setHistorialDesdeItems(items: HistorialItem[]) {
-    this.historial = items;
-    this.reportes = items.filter(x => x.tipoItem === 'REPORTE');
-    this.cartas = items.filter(x => x.tipoItem === 'CARTA');
+  // ============================
+  // ✅ Modal/panel
+  // ============================
+  abrirPanelDia(fechaISO: string, label: string) {
+    this.panelFechaLabel = label;
+    this.panelItems = this.itemsPorDia[fechaISO] || this.historial || [];
+    this.showDayPanel = true;
+
+    // bloquear scroll de fondo
+    document.body.style.overflow = 'hidden';
+  }
+
+  cerrarPanel() {
+    this.showDayPanel = false;
+    this.panelItems = [];
+    document.body.style.overflow = 'auto';
   }
 
   // ============================
-  // ✅ Prefetch del mes (para mostrar texto en los cuadritos)
+  // Mostrar dentro del cuadro (máx 2)
   // ============================
-  private prefetchMonth() {
-    const totalDays = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
-
-    for (let d = 1; d <= totalDays; d++) {
-      const iso = this.toISO(this.currentYear, this.currentMonth, d);
-
-      if (this.cachePorDia.has(iso) || this.requestsEnCurso.has(iso)) continue;
-
-      this.requestsEnCurso.add(iso);
-
-      forkJoin({
-        reportes: this.serviciosService.obtenerHistorialReportesPorDia(iso).pipe(catchError(() => of([]))),
-        cartas: this.serviciosService.obtenerHistorialCartasPorDia(iso).pipe(catchError(() => of([]))),
-      }).pipe(
-        finalize(() => this.requestsEnCurso.delete(iso))
-      ).subscribe(({ reportes, cartas }) => {
-
-        const rep = (reportes || []).map((x: any) => ({
-          tipoItem: 'REPORTE' as const,
-          id: x.id ?? x.idReporte ?? x.reporteId,
-          referencia: x.referencia,
-          usuario: x.usuario,
-          fechaCreacion: x.fechaCreacion ?? x.fecha,
-          urlPdf: x.urlPdf ?? x.url
-        }));
-
-        const car = (cartas || []).map((x: any) => ({
-          tipoItem: 'CARTA' as const,
-          id: x.id ?? x.idCarta ?? x.cartaId,
-          referencia: x.referencia,
-          tipoCarta: x.tipo ?? x.tipoCarta,
-          fechaCreacion: x.fechaCreacion ?? x.fecha,
-          urlPdf: x.urlPdf ?? x.url
-        }));
-
-        const items = [...rep, ...car].sort((a, b) => {
-          const ta = this.parseDate(a.fechaCreacion);
-          const tb = this.parseDate(b.fechaCreacion);
-          return (tb ?? 0) - (ta ?? 0);
-        });
-
-        this.cachePorDia.set(iso, items);
-      });
-    }
-  }
-
-  // ============================
-  // ✅ Helpers para pintar en cuadrito
-  // ============================
-  getItemsForDay(day: number): HistorialItem[] {
+  getItemsDelDia(day: number): HistorialItem[] {
     if (day === 0) return [];
-    const iso = this.toISO(this.currentYear, this.currentMonth, day);
-    return this.cachePorDia.get(iso) || [];
-  }
-
-  getItemsPreview(day: number): HistorialItem[] {
-    return this.getItemsForDay(day).slice(0, 2);
-  }
-
-  getMoreCount(day: number): number {
-    const total = this.getItemsForDay(day).length;
-    return total > 2 ? total - 2 : 0;
-  }
-
-  // ============================
-  // Tabs / filtros
-  // ============================
-  setTab(t: TabFiltro) { this.tab = t; }
-
-  get itemsFiltrados(): HistorialItem[] {
-    if (this.tab === 'REPORTES') return this.reportes;
-    if (this.tab === 'CARTAS') return this.cartas;
-    return this.historial;
+    const mm = String(this.currentMonth + 1).padStart(2, '0');
+    const dd = String(day).padStart(2, '0');
+    const fechaISO = `${this.currentYear}-${mm}-${dd}`;
+    return this.itemsPorDia[fechaISO] || [];
   }
 
   // ============================
@@ -309,21 +335,11 @@ export class HistorialReportesComponent implements OnInit {
     return `${item.tipoItem}-${item.id ?? index}`;
   }
 
-  // ============================
-  // Fecha helpers
-  // ============================
-  private toISO(year: number, monthIndex0: number, day: number): string {
-    const mm = String(monthIndex0 + 1).padStart(2, '0');
-    const dd = String(day).padStart(2, '0');
-    return `${year}-${mm}-${dd}`;
-  }
-
   private parseDate(v?: string): number | null {
     if (!v) return null;
     const t = Date.parse(v);
     if (!Number.isNaN(t)) return t;
 
-    // fallback: dd/MM/yyyy
     const m = /^(\d{2})\/(\d{2})\/(\d{4})/.exec(v);
     if (m) {
       const dd = Number(m[1]), mm = Number(m[2]) - 1, yyyy = Number(m[3]);
