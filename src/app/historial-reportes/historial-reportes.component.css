@@ -1,232 +1,300 @@
-/* ---- TU ESTILO ORIGINAL SE RESPETA ---- */
-:host {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: 14px;
-  color: #333;
-  box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  /* ---- TU ESTILO ORIGINAL SE RESPETA ---- */
+  :host {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+      sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 14px;
+    color: #333;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-.toolbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  background-color: #dc3545;
-  color: white;
-  font-weight: 600;
-  padding: 0 24px;
-  box-sizing: border-box;
-  z-index: 1000;
-}
+  .toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    background-color: #dc3545;
+    color: white;
+    font-weight: 600;
+    padding: 0 24px;
+    box-sizing: border-box;
+    z-index: 1000;
+  }
 
-.toolbar img {
-  height: 80px;
-  width: auto;
-  margin-right: 20px;
-}
+  .toolbar img {
+    height: 80px;
+    width: auto;
+    margin-right: 20px;
+  }
 
-.toolbar button {
-  background-color: white;
-  color: #dc3545;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
-  font-size: 1rem;
-  max-width: 120px;
-  line-height: 1.2;
-  margin-right: 10px;
-}
+  .toolbar button {
+    background-color: white;
+    color: #dc3545;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+    max-width: 120px;
+    line-height: 1.2;
+    margin-right: 10px;
+  }
 
-.toolbar button:hover {
-  background-color: #f8d7da;
-}
+  .toolbar button:hover {
+    background-color: #f8d7da;
+  }
 
-/* ---- CALENDARIO ---- */
-.calendar-container {
-  margin-top: 140px; /* debajo de la barra */
-  width: 95%;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-}
+  /* ---- CALENDARIO ---- */
+  .calendar-container {
+    margin-top: 140px; /* debajo de la barra */
+    width: 95%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-.calendar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
 
-.calendar-header h2 {
-  color: #dc3545;
-  font-size: 1.8rem;
-  margin: 0;
-  font-weight: 700;
-}
+  .calendar-header h2 {
+    color: #dc3545;
+    font-size: 1.8rem;
+    margin: 0;
+    font-weight: 700;
+  }
 
-.calendar-header button {
-  background-color: #dc3545;
-  border: none;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1.2rem;
-}
+  .calendar-header button {
+    background-color: #dc3545;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
 
-.calendar-header button:hover {
-  background-color: #b92c3a;
-}
+  .calendar-header button:hover {
+    background-color: #b92c3a;
+  }
 
-.calendar-weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7 columnas para los días */
-  text-align: center;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: #dc3545;
-  font-size: 1.2rem;
-}
+  .calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 columnas para los días */
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #dc3545;
+    font-size: 1.2rem;
+  }
 
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7 columnas de extremo a extremo */
-  gap: 8px; /* espacio entre cuadros */
-}
-/* ---- BOTONES DE LOS DÍAS GIGANTES ---- */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 columnas de extremo a extremo */
+    gap: 8px; /* espacio entre cuadros */
+  }
+  /* ---- BOTONES DE LOS DÍAS GIGANTES ---- */
+  .calendar-day {
+    height: 40vh; /* cada día ocupa el 40% de la altura de la ventana */
+    border-radius: 12px;
+    text-align: center;
+    padding: 16px;
+    cursor: pointer;
+    position: relative;
+    background-color: rgba(220, 53, 69, 0.15); /* rojo clarito transparente */
+    color: #dc3545; /* letras rojo fuerte */
+    font-weight: 700;
+    font-size: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+    word-wrap: break-word;
+  }
+
+  .calendar-day:hover {
+    background-color: rgba(220, 53, 69, 0.3); /* rojo un poco más intenso al pasar el mouse */
+  }
+
+  .calendar-day.empty {
+    background: transparent;
+    cursor: default;
+    height: 40vh; /* mismo tamaño que los días con contenido */
+  }
+
+
+  /* PUNTO DE REPORTE */
+  .report-indicator {
+    width: 12px;
+    height: 12px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .month-year-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .calendar-picker-btn {
+    background-color: white;
+    color: #dc3545;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
+
+  .calendar-picker-btn:hover {
+    background-color: #f8d7da;
+  }
+
+  .mini-calendar {
+    position: absolute;
+    top: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    background: white;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .mini-calendar .months {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  .mini-calendar .months button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .mini-calendar .months button:hover {
+    background-color: #b92c3a;
+  }
+
+  .year-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .year-bar button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .year-bar button:hover {
+    background-color: #b92c3a;
+  }
+
+  .year-bar span {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .month-year {
+    color: #dc3545; /* rojo fuerte */
+    font-weight: 700;
+    font-size: 1.8rem;
+  }
+/* =========================
+   ✅ Ajustes para mostrar "Reporte 174" dentro del cuadro
+   (sin romper tu estilo)
+========================= */
+
+/* Alineación: número arriba, items abajo */
 .calendar-day {
-  height: 40vh; /* cada día ocupa el 40% de la altura de la ventana */
-  border-radius: 12px;
-  text-align: center;
-  padding: 16px;
+  justify-content: flex-start; /* antes center */
+  align-items: flex-start;     /* antes center */
+  text-align: left;            /* antes center */
+  padding-top: 14px;
+}
+
+/* Número del día */
+.calendar-day span {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+/* Contenedor de items dentro del cuadro */
+.day-items {
+  width: 100%;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.95rem;
+  line-height: 1.2;
+
+  /* ✅ para que no se salga el contenido */
+  max-height: calc(40vh - 70px); /* ajusta si quieres */
+  overflow: auto;
+  padding-right: 6px;
+}
+
+/* Link estilo "Reporte 174" */
+.day-item {
+  display: block;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 8px;
+  padding: 6px 8px;
   cursor: pointer;
-  position: relative;
-  background-color: rgba(220, 53, 69, 0.15); /* rojo clarito transparente */
-  color: #dc3545; /* letras rojo fuerte */
+  text-decoration: none;
+  color: #b92c3a;
   font-weight: 700;
-  font-size: 1.4rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  transition: background-color 0.3s ease;
-  word-wrap: break-word;
+  word-break: break-word;
 }
 
-.calendar-day:hover {
-  background-color: rgba(220, 53, 69, 0.3); /* rojo un poco más intenso al pasar el mouse */
+.day-item:hover {
+  background: rgba(255, 255, 255, 0.9);
 }
 
-.calendar-day.empty {
-  background: transparent;
-  cursor: default;
-  height: 40vh; /* mismo tamaño que los días con contenido */
-}
-
-
-/* PUNTO DE REPORTE */
-.report-indicator {
-  width: 12px;
-  height: 12px;
-  background-color: #fff;
-  border-radius: 50%;
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.month-year-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.calendar-picker-btn {
-  background-color: white;
-  color: #dc3545;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1.2rem;
-}
-
-.calendar-picker-btn:hover {
-  background-color: #f8d7da;
-}
-
-.mini-calendar {
-  position: absolute;
-  top: 36px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2000;
-  background: white;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
-}
-
-.mini-calendar .months {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  justify-content: center;
-}
-
-.mini-calendar .months button {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.mini-calendar .months button:hover {
-  background-color: #b92c3a;
-}
-
-.year-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* "+2 más" */
+.day-more {
   margin-top: 4px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #dc3545;
+  opacity: 0.9;
 }
 
-.year-bar button {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 4px 8px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.year-bar button:hover {
-  background-color: #b92c3a;
-}
-
-.year-bar span {
-  font-weight: 700;
-  font-size: 1rem;
-}
-.month-year {
-  color: #dc3545; /* rojo fuerte */
-  font-weight: 700;
-  font-size: 1.8rem;
+/* ✅ Día seleccionado (si usas [class.selected]) */
+.calendar-day.selected {
+  outline: 3px solid rgba(220, 53, 69, 0.65);
+  background-color: rgba(220, 53, 69, 0.22);
 }

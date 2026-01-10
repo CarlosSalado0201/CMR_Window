@@ -50,7 +50,24 @@
            [class.empty]="day === 0"
            [class.selected]="isSelectedDay(day)"
            (click)="selectDate(day)">
-        <span *ngIf="day !== 0">{{ day }}</span>
+
+        <!-- número de día -->
+        <span class="day-number" *ngIf="day !== 0">{{ day }}</span>
+
+        <!-- ✅ mini listado dentro del cuadrito -->
+        <div class="day-items" *ngIf="day !== 0 && getItemsForDay(day).length > 0">
+          <a class="day-item"
+             *ngFor="let item of getItemsPreview(day)"
+             (click)="$event.stopPropagation(); abrirPdf(item)">
+            {{ item.tipoItem === 'REPORTE' ? 'Reporte' : 'Carta' }}
+            {{ item.referencia || item.id }}
+          </a>
+
+          <div class="day-more" *ngIf="getMoreCount(day) > 0">
+            +{{ getMoreCount(day) }} más
+          </div>
+        </div>
+
       </div>
     </div>
 
