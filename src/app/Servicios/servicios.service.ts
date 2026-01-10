@@ -505,7 +505,31 @@ generarCarta(payload: CartaPayload): Observable<string | null> {
     })
   );
 }
+private baseUrl = 'https://proyecto-cmr.onrender.com';
+// ✅ HISTORIAL POR DÍA
+ obtenerHistorialReportesPorDia(fechaISO: string) {
+    return this.http.get<any[]>(
+      `${this.baseUrl}/api/reportes/historial-dia`,
+      {
+        params: { fecha: fechaISO },
+        withCredentials: true
+      }
+    );
+  }
 
+  // =================================================
+  // ✅ HISTORIAL DE CARTAS POR DÍA
+  // fechaISO = YYYY-MM-DD
+  // =================================================
+  obtenerHistorialCartasPorDia(fechaISO: string) {
+    return this.http.get<any[]>(
+      `${this.baseUrl}/api/cartas/historial-dia`,
+      {
+        params: { fecha: fechaISO },
+        withCredentials: true
+      }
+    );
+  }
 
     }
 

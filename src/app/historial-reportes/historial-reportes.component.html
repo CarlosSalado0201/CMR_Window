@@ -1,62 +1,137 @@
-<p>historial-reportes works!</p>
-
 <!-- 🔻 BARRA SUPERIOR -->
 <div class="toolbar">
   <img src="assets/CMR.jpg" style="cursor:pointer" routerLink="/inicio" />
   <button routerLink="/calculadora">Abrir calculadora</button>
   <button routerLink="/editar">Editar inventario</button>
-  <button routerLink="/historial">Historial de reportes</button>
+  <button routerLink="/historial">Historial</button>
   <button routerLink="/login">Cerrar sesión</button>
 </div>
 
-<div class="calendar-container">
+<div class="historial-layout">
 
-  <!-- 🔻 Encabezado del calendario -->
-  <div class="calendar-header">
-    <!-- Flecha mes anterior -->
-    <button class="month-arrow" (click)="prevMonth()">&#9664;</button>
+  <!-- =========================
+       ✅ CALENDARIO
+  ========================== -->
+  <div class="calendar-container">
 
-    <!-- Mes y año + mini calendario -->
-    <div class="month-year-container">
-      <span class="month-year">{{ monthNames[currentMonth] }} {{ currentYear }}</span>
-      <button class="calendar-picker-btn" (click)="toggleMiniCalendar()">📅</button>
+    <div class="calendar-header">
+      <button class="month-arrow" (click)="prevMonth()">&#9664;</button>
 
-      <!-- Mini calendario -->
-      <div class="mini-calendar" *ngIf="showMiniCalendar">
-        <!-- Botones de meses -->
-        <div class="months">
-          <button *ngFor="let month of monthNames; let i = index"
-                  (click)="selectMonth(i)">
-            {{ month }}
-          </button>
+      <div class="month-year-container">
+        <span class="month-year">{{ monthNames[currentMonth] }} {{ currentYear }}</span>
+        <button class="calendar-picker-btn" (click)="toggleMiniCalendar()">📅</button>
+
+        <div class="mini-calendar" *ngIf="showMiniCalendar">
+          <div class="months">
+            <button *ngFor="let month of monthNames; let i = index"
+                    (click)="selectMonth(i)">
+              {{ month }}
+            </button>
+          </div>
+
+          <div class="year-bar">
+            <button (click)="prevYear()">&#9664;</button>
+            <span>{{ currentYear }}</span>
+            <button (click)="nextYear()">&#9654;</button>
+          </div>
         </div>
+      </div>
 
-        <!-- Barra de año -->
-        <div class="year-bar">
-          <button (click)="prevYear()">&#9664;</button>
-          <span>{{ currentYear }}</span>
-          <button (click)="nextYear()">&#9654;</button>
-        </div>
+      <button class="month-arrow" (click)="nextMonth()">&#9654;</button>
+    </div>
+
+    <div class="calendar-weekdays">
+      <div *ngFor="let day of weekDays">{{ day }}</div>
+    </div>
+
+    <div class="calendar-grid">
+      <div class="calendar-day"
+           *ngFor="let day of daysInMonth"
+           [class.empty]="day === 0"
+           [class.selected]="isSelectedDay(day)"
+           (click)="selectDate(day)">
+        <span *ngIf="day !== 0">{{ day }}</span>
       </div>
     </div>
 
-    <!-- Flecha mes siguiente -->
-    <button class="month-arrow" (click)="nextMonth()">&#9654;</button>
   </div>
 
-  <!-- 🔻 Días de la semana -->
-  <div class="calendar-weekdays">
-    <div *ngFor="let day of weekDays">{{ day }}</div>
-  </div>
+  <!-- =========================
+       ✅ PANEL HISTORIAL
+  ========================== -->
+  <div class="historial-panel">
 
-  <!-- 🔻 Cuadros del mes -->
-  <div class="calendar-grid">
-    <div class="calendar-day"
-         *ngFor="let day of daysInMonth"
-         [class.empty]="day === 0"
-         (click)="selectDate(day)">
-      <span *ngIf="day !== 0">{{ day }}</span>
+    <h2>Historial</h2>
+
+    <div class="historial-subtitle">
+      Fecha seleccionada:
+      <strong>{{ selectedDateLabel || '---' }}</strong>
     </div>
-  </div>
 
+    <!-- ✅ Tabs -->
+    <div class="tabs">
+      <button (click)="setTab('TODOS')" [class.active]="tab==='TODOS'">
+        Todos ({{ historial.length }})
+      </button>
+      <button (click)="setTab('REPORTES')" [class.active]="tab==='REPORTES'">
+        Reportes ({{ reportes.length }})
+      </button>
+      <button (click)="setTab('CARTAS')" [class.active]="tab==='CARTAS'">
+        Cartas ({{ cartas.length }})
+      </button>
+    </div>
+
+    <!-- Loader -->
+    <div class="estado" *ngIf="loading">
+      Cargando...
+    </div>
+
+    <!-- Error -->
+    <div class="estado error" *ngIf="errorMsg && !loading">
+      {{ errorMsg }}
+    </div>
+
+    <!-- Vacío -->
+    <div class="estado" *ngIf="!loading && !errorMsg && itemsFiltrados.length === 0">
+      No hay documentos para esta fecha.
+    </div>
+
+    <!-- Lista -->
+    <div class="doc-card"
+         *ngFor="let item of itemsFiltrados; trackBy: trackByKey">
+
+      <div class="doc-top">
+        <div class="doc-left">
+
+          <div class="badge"
+               [class.badge-reporte]="item.tipoItem==='REPORTE'"
+               [class.badge-carta]="item.tipoItem==='CARTA'">
+            {{ item.tipoItem === 'REPORTE' ? 'REPORTE' : 'CARTA' }}
+          </div>
+
+          <div class="doc-title">
+            {{ item.referencia || (item.tipoItem + ' #' + item.id) }}
+          </div>
+
+          <div class="doc-meta">
+            <span *ngIf="item.usuario && item.tipoItem==='REPORTE'">👤 {{ item.usuario }}</span>
+            <span *ngIf="item.tipoCarta && item.tipoItem==='CARTA'">📝 {{ item.tipoCarta }}</span>
+            <span *ngIf="item.fechaCreacion">🗓 {{ item.fechaCreacion }}</span>
+          </div>
+
+        </div>
+
+        <button class="btn-ver" (click)="abrirPdf(item)">
+          Ver PDF
+        </button>
+      </div>
+
+      <div class="url" *ngIf="item.urlPdf">
+        <input [value]="item.urlPdf" readonly />
+        <button (click)="copiarUrl(item.urlPdf)">Copiar</button>
+      </div>
+
+    </div>
+
+  </div>
 </div>
