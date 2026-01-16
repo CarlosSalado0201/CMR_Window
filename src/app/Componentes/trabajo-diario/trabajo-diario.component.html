@@ -1,0 +1,573 @@
+<style>
+  :host {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+      sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 14px;
+    color: #333;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    background-color: #dc3545;
+    color: white;
+    font-weight: 600;
+    padding: 0 24px;
+    box-sizing: border-box;
+    z-index: 1000;
+  }
+
+  .toolbar img {
+    height: 80px;
+    width: auto;
+    user-select: none;
+    margin-right: 20px;
+  }
+
+  .toolbar button {
+    background-color: white;
+    color: #dc3545;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+    white-space: normal;
+    max-width: 120px;
+    line-height: 1.2;
+    margin-right: 10px;
+  }
+
+  .toolbar button:hover {
+    background-color: #f8d7da;
+  }
+
+  .content {
+    margin-top: 120px;
+    padding: 0 24px;
+  }
+
+  .circle-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #dc3545;
+  }
+
+  .circle-indicator.selected {
+    background-color: #dc3545;
+  }
+</style>
+
+<!-- 🔻 BARRA SUPERIOR -->
+<div class="toolbar">
+  <img src="assets/CMR.jpg" alt="Logo CMR" style="cursor:pointer" routerLink="/inicio" />
+  <button routerLink="/calculadora">Abrir calculadora</button>
+  <button routerLink="/editar">Editar inventario</button>
+  <button routerLink="/login">Cerrar sesión</button>
+</div>
+
+<!-- 🔻 CONTENEDOR PRINCIPAL -->
+<div class="mb-4 content">
+
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+
+      <!-- Selección de fechas -->
+       
+<div class="mt-3 p-2 border rounded bg-white shadow-sm"style="max-width: 350px; width: 100%;">
+  <!-- Botones en fila -->
+  <div class="d-flex gap-2 mb-3">
+
+    <button type="button"
+            class="btn btn-success"
+            (click)="abrirModalEquipos()"
+            data-bs-toggle="modal"
+            data-bs-target="#modalEquipos">
+      Agregar equipo
+    </button>
+    <button class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#modalMateriales"
+            (click)="abrirModalMateriales()">
+      Añadir material
+    </button>
+
+  </div>
+
+  <label class="form-label fw-bold">Selecciona duración del trabajo</label>
+
+  <div class="d-flex gap-2">
+    <div>
+      <label class="form-label">Fecha de inicio</label>
+<!-- Permitir fechas pasadas -->
+<input type="date" [(ngModel)]="fechaInicio" class="form-control" />
+
+    </div>
+    <div>
+      <label class="form-label">Fecha de fin</label>
+<input type="date" [(ngModel)]="fechaFin" [min]="fechaInicio" class="form-control" />
+    </div>
+  </div>
+
+<!-- Botón para calcular días -->
+<button class="btn btn-outline-primary mt-2 w-100" (click)="calcularDias()">Calcular días</button>
+
+<!-- Botón para actualizar días y realizar los cálculos -->
+<button class="btn btn-outline-success mt-2 w-100" (click)="actualizarDias()">Actualizar días</button>
+
+  <div *ngIf="diasDeTrabajo > 0" class="alert alert-info mt-2 p-2 mb-0">
+    Duración: <strong>{{ diasDeTrabajo }} día(s)</strong>
+  </div>
+    <label class="form-label fw-bold">Selecciona gastos</label>
+      <button class="btn btn-outline-secondary w-100 mb-2" (click)="mostrarMO = !mostrarMO">
+        {{ mostrarMO ? 'Ocultar' : 'Seleccionar gastos' }}
+      </button>
+      <div *ngIf="mostrarMO">
+        <div class="d-flex justify-content-start mb-2 gap-2">
+          <button class="btn btn-outline-secondary btn-sm" (click)="seleccionarTodoMO()">Seleccionar todo</button>
+          <button class="btn btn-outline-secondary btn-sm" (click)="deseleccionarTodoMO()">Deseleccionar todo</button>
+        </div>
+        <div class="border rounded p-3" style="max-height: 110px; overflow-y: auto;">
+          <div *ngFor="let mo of manosDeObra" class="form-check mb-2">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [id]="mo.nombre"
+              [value]="mo.nombre"
+              (change)="onChangeManoDeObra($event)"
+              [checked]="manosDeObraSeleccionadasNombres.includes(mo.nombre)"
+            />
+            <label class="form-check-label" [for]="mo.nombre">
+              {{ mo.nombre }} - ${{ mo.precio }}
+            </label>
+          </div>
+        </div>
+        <button class="btn btn-primary mt-2 w-100" (click)="guardarManosDeObra()">Guardar selección</button>
+      </div>
+      
+<!-- Nuevo botón debajo del botón verde y el bloque de fechas -->
+
+<!-- Botón verde centrado en su columna -->
+    <div style="flex: 0 0 150px; display: flex; justify-content: center;">
+      
+</div>
+
+    </div>
+
+    <!-- Mano de obra a la izquierda, ancho fijo -->
+    <div style="flex: 0 0 300px;">
+    
+    <!-- Costos adicionales -->
+<div class="mt-4 p-3 border rounded shadow-sm bg-white">
+  <h5 class="fw-bold mb-3">Costos adicionales</h5>
+
+  <div class="d-flex flex-wrap gap-3 mb-3">
+    <div>
+      <label class="form-label fw-bold"># Trabajadores</label>
+      <input type="number" class="form-control" placeholder="Ej. 3" min="1" [(ngModel)]="costosAdicionales.numeroTrabajadores">
+    </div>
+
+    <div>
+      <label class="form-label fw-bold">Sueldo por trabajador</label>
+      <input type="number" class="form-control" [(ngModel)]="costosAdicionales.sueldoPorTrabajador" readonly>
+    </div>
+
+    <div>
+      <label class="form-label fw-bold">IMSS por trabajador</label>
+      <input type="number" class="form-control" [(ngModel)]="costosAdicionales.imssPorTrabajador" readonly>
+    </div>
+  </div>
+
+  <!-- Ubicación del trabajo -->
+  <div class="mb-3">
+    <label class="form-label fw-bold">Ubicación del trabajo</label>
+    <select class="form-select" [(ngModel)]="costosAdicionales.ubicacion" (change)="asignarValoresPorDefecto()">
+      <option selected disabled value="">Selecciona ubicación</option>
+      <option value="ciudad">Dentro de la ciudad</option>
+      <option value="fuera">Fuera de la ciudad</option>
+    </select>
+  </div>
+
+  <!-- Solo mostrar si selecciona 'fuera' -->
+  <div class="mb-3" *ngIf="costosAdicionales.ubicacion === 'fuera'">
+    <label class="form-label fw-bold">Distancia estimada</label>
+    <select class="form-select" [(ngModel)]="costosAdicionales.distancia" (change)="asignarValoresPorDefecto()">
+      <option selected disabled value="">Selecciona distancia</option>
+      <option value="500">Hasta 500m</option>
+      <option value="1000">Hasta 1000m</option>
+      <option value="1500">Hasta 1500m</option>
+    </select>
+  </div>
+
+  <!-- Mostrar los campos de costos adicionales -->
+  <div *ngIf="costosAdicionales.ubicacion === 'fuera' || costosAdicionales.ubicacion === 'ciudad'">
+    <div class="mb-3">
+      <label class="form-label fw-bold">Gasolina por día</label>
+      <input type="number" class="form-control" [(ngModel)]="costosAdicionales.gasolinaPorDia" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold">Tags por día</label>
+      <input type="number" class="form-control" [(ngModel)]="costosAdicionales.tagsPorDia" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold">Viáticos por día</label>
+      <input type="number" class="form-control" [(ngModel)]="costosAdicionales.viaticosPorDia" />
+    </div>
+  </div>
+        <!-- Botón para guardar costos -->
+        <button class="btn btn-primary" (click)="guardarCostosAdicionales()">Guardar costos</button>
+      </div>
+    </div>
+<!-- Contenedor derecho con flex vertical -->
+<div style="flex: 0 0 300px; display: flex; flex-direction: column; height: 600px; border: 1px solid #ddd; border-radius: 0.25rem; background-color: #f8f9fa; box-shadow: 0 0 6px rgba(0,0,0,0.1);">
+<div style="overflow-y: auto; padding: 1rem; flex-grow: 1;">
+  <h5 class="fw-bold mb-3">Resumen</h5>
+
+  <!-- Equipos -->
+  <div *ngIf="listaEquiposSeleccionados.length > 0">
+    <h6>Equipos:</h6>
+    <div *ngFor="let equipo of listaEquiposSeleccionados; let i = index" class="d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <div class="fw-semibold"></div>
+        <div class="text-muted small">Cantidad: {{ equipo.cantidad }} x ${{ equipo.precio }}</div>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-muted fw-bold">
+          ${{ (equipo.precioFinal ?? (equipo.precio * equipo.cantidad)).toFixed(2) }}
+        </span>
+        <button class="btn btn-sm btn-danger" (click)="eliminarEquipo(i)">Eliminar</button>
+      </div>
+    </div>
+  </div>
+<!-- Resumen materiales -->
+<div *ngIf="listaMaterialesSeleccionados.length > 0" class="mt-4">
+  <h6>Materiales:</h6>
+  <div *ngFor="let material of listaMaterialesSeleccionados; let i = index" class="d-flex justify-content-between align-items-center mb-2">
+    <div>
+      <div class="fw-semibold">{{ material.nombre }}</div>
+      <div class="text-muted small">Cantidad: {{ material.cantidad }} x ${{ material.precioUnitario }}</div>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <span class="text-muted fw-bold">
+        ${{ material.precioFinal.toFixed(2) }}
+      </span>
+      <button class="btn btn-sm btn-danger" (click)="listaMaterialesSeleccionados.splice(i, 1)">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+  <!-- Mano de obra -->
+<div *ngIf="resumenManoDeObra" class="mt-4">
+  <h6>Mano de obra (total):</h6>
+  <ul class="list-group">
+    <li 
+      *ngFor="let mo of manosDeObraSeleccionadas" 
+      class="list-group-item d-flex justify-content-between p-2">
+      <span>{{ mo.nombre }}</span>
+      <span>${{ mo.total.toFixed(2) }}</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between fw-bold p-2 bg-light">
+<span>Total mano de obra</span>
+<span>
+  ${{ resumenManoDeObra?.total ? resumenManoDeObra.total.toFixed(2) : '0.00' }}
+</span>
+    </li>
+  </ul>
+</div>
+
+
+  <!-- Costos adicionales -->
+  <div *ngIf="resumenCostosAdicionales" class="mt-4">
+    <h6>Costos adicionales (totales):</h6>
+    <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-between p-2">
+        <span>Trabajadores</span>
+        <span>{{ resumenCostosAdicionales.trabajadores }}</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between p-2">
+        <span>Sueldo total</span>
+        <span>${{ resumenCostosAdicionales.sueldoTotal.toFixed(2) }}</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between p-2">
+        <span>IMSS total</span>
+        <span>${{ resumenCostosAdicionales.imssTotal.toFixed(2) }}</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between p-2">
+        <span>Viáticos</span>
+        <span>${{ resumenCostosAdicionales.viaticos.toFixed(2) }}</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between p-2">
+        <span>Tags</span>
+        <span>${{ resumenCostosAdicionales.tags.toFixed(2) }}</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between p-2">
+        <span>Gasolina</span>
+        <span>${{ resumenCostosAdicionales.gasolina.toFixed(2) }}</span>
+      </li>
+    </ul>
+  </div>
+
+
+
+
+</div>
+  <!-- Área fija para porcentaje, botones y resultado -->
+<div style="padding: 1rem; border-top: 1px solid #ddd;">
+  <label for="porcentajeMO" class="form-label fw-bold">Porcentaje para mano de obra (%)</label>
+  <input type="number" id="porcentajeMO" class="form-control mb-2" min="0" max="100" placeholder="Ej. 10" [(ngModel)]="porcentajeManoObra">
+
+  <div class="mb-3 d-flex gap-2">
+    <button class="btn btn-primary flex-grow-1" (click)="calcularManoObra()">Calcular</button>
+    <button class="btn btn-secondary flex-grow-1" (click)="limpiarResumen()">Limpiar</button>
+  </div>
+
+  <div *ngIf="valorManoObra !== null" class="alert alert-info p-2 mb-0">
+    El valor de mano de obra es: <strong>${{ valorManoObra.toFixed(2) }}</strong>
+  </div>
+</div>
+
+<!-- Cálculo del valor total del trabajo -->
+<div style="padding: 1rem; border-top: 1px solid #ddd;">
+  <label class="form-label fw-bold">Valor total del trabajo</label>
+
+  <button class="btn btn-success w-100 mb-2" (click)="calcularValorTotalTrabajo()">Calcular valor total</button>
+
+  <div *ngIf="valorTotalTrabajo !== null" class="alert alert-success p-2 mb-0">
+    El valor total del trabajo es: <strong>${{ valorTotalTrabajo.toFixed(2) }}</strong>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modalEquipos" tabindex="-1" aria-labelledby="modalEquiposLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Selecciona un equipo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Paso 1: Categorías -->
+        <div *ngIf="!categoriaSeleccionada" class="d-flex flex-wrap gap-3 justify-content-center mb-4">
+          <div *ngFor="let categoria of categorias" class="text-center"
+               (click)="seleccionarCategoria(categoria)" style="cursor:pointer;">
+            <p class="mb-0 fw-semibold">{{ categoria.nombre }}</p>
+          </div>
+        </div>
+
+        <!-- Paso 2: Modelos -->
+        <div *ngIf="categoriaSeleccionada && !modeloSeleccionado" class="mb-4">
+          <h6 class="mb-3 text-center">Modelos en {{ categoriaSeleccionada.nombre }}</h6>
+          <div class="d-flex flex-wrap gap-3 justify-content-center">
+            <div *ngFor="let modelo of modelosFiltradosPorCategoria" class="text-center"
+                 (click)="seleccionarModelo(modelo)" style="cursor:pointer;">
+              <p class="mb-0 fw-semibold">{{ modelo.nombre }}</p>
+            </div>
+          </div>
+          <div class="text-center mt-3">
+            <button class="btn btn-secondary" (click)="categoriaSeleccionada = null; modeloSeleccionado = null;">
+              Volver a Categorías
+            </button>
+          </div>
+        </div>
+
+        <!-- Paso 3: Equipos -->
+        <div *ngIf="modeloSeleccionado">
+          <h6 class="mb-3 text-center">Equipos en modelo {{ modeloSeleccionado.nombre }}</h6>
+
+          <div class="d-flex justify-content-center mb-3">
+            <input
+              type="text"
+              class="form-control w-50"
+              placeholder="Buscar equipo..."
+              [(ngModel)]="textoBusqueda"
+              (input)="filtrarBusqueda()"
+            />
+          </div>
+
+          <div class="d-flex flex-wrap gap-3 justify-content-center mb-3">
+            <div *ngFor="let equipo of equiposFiltradosBusqueda"
+                 class="card p-2"
+                 style="width: 100px; cursor: pointer;">
+              <div class="text-center fw-semibold mb-1">{{ equipo.marca }}</div>
+              <div class="text-center text-muted">${{ equipo.precio }}</div>
+              <div class="text-center mt-1">
+                <div class="row g-1">
+                  <div class="col-6">
+                    <input type="number" min="1" [(ngModel)]="equipo.cantidad"
+                           class="form-control form-control-sm" placeholder="Cantidad" />
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-sm btn-outline-primary mt-2"
+                      [class.active]="equiposSeleccionadosTemporal.includes(equipo)"
+                      (click)="toggleSeleccionEquipo(equipo)">
+                {{ equiposSeleccionadosTemporal.includes(equipo) ? 'Quitar' : 'Agregar' }}
+              </button>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center align-items-center gap-2 mt-3">
+            <input type="number" min="0" max="100" [(ngModel)]="porcentajeGeneralEquipos"
+                   class="form-control w-25" placeholder="% Ganancia general" />
+            <button class="btn btn-primary"
+                    (click)="agregarEquiposSeleccionados()"
+                    [disabled]="equiposSeleccionadosTemporal.length === 0">
+              Agregar seleccionados
+            </button>
+          </div>
+
+          <div class="text-center mt-3">
+            <button class="btn btn-secondary" (click)="modeloSeleccionado = null;">
+              Volver a Modelos
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Materiales -->
+<div class="modal fade" id="modalMateriales" tabindex="-1" aria-labelledby="modalMaterialesLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Selecciona un material</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Paso 1: Categorías -->
+        <div *ngIf="!categoriaSeleccionadaMateriales" class="d-flex flex-wrap gap-3 justify-content-center mb-4">
+        <div *ngFor="let categoria of categoriasMateriales">
+  <div (click)="seleccionarCategoriaMateriales(categoria)" style="cursor:pointer;">
+    {{ categoria.nombre }}
+  </div>
+</div>
+
+        </div>
+
+        <!-- Paso 2: Modelos -->
+<div *ngIf="categoriaSeleccionadaMateriales && !modeloSeleccionadoMateriales" class="mb-4">
+  <h6 class="mb-3 text-center">Modelos en {{ categoriaSeleccionadaMateriales.nombre }}</h6>
+  <div class="d-flex flex-wrap gap-3 justify-content-center">
+    <!-- Recorremos los modelos filtrados que obtuviste por categoría -->
+    <div *ngFor="let modelo of modelosFiltradosMateriales" class="text-center"
+         (click)="seleccionarModeloMateriales(modelo)" style="cursor:pointer;">
+      <p class="mb-0 fw-semibold">{{ modelo.nombre }}</p>
+    </div>
+  </div>
+  <div class="text-center mt-3">
+    <button class="btn btn-secondary"
+            (click)="categoriaSeleccionadaMateriales = null; modeloSeleccionadoMateriales = null; modelosFiltradosMateriales = [];">
+      Volver a Categorías
+    </button>
+  </div>
+</div>
+
+        <!-- Paso 3: Materiales -->
+        <!-- Paso 3: Materiales -->
+<div *ngIf="modeloSeleccionadoMateriales">
+  <h6 class="mb-3 text-center">Materiales del modelo {{ modeloSeleccionadoMateriales.nombre }}</h6>
+
+  <div class="d-flex justify-content-center mb-3">
+    <input
+      type="text"
+      class="form-control w-50"
+      placeholder="Buscar material..."
+      [(ngModel)]="textoBusquedaMateriales"
+      (input)="filtrarMateriales()"
+    />
+  </div>
+
+  <div class="d-flex flex-wrap gap-3 justify-content-center mb-3">
+    <div *ngFor="let material of materialesFiltrados"
+         class="card p-2"
+         style="width: 130px; cursor: pointer;">
+      <div class="text-center fw-semibold mb-1">{{ material.nombre }}</div>
+      <div class="text-center text-muted">${{ material.precioUnitario }}</div>
+      <div class="text-center mt-1">
+        <input type="number" min="1"
+               [(ngModel)]="material.cantidadSeleccionada"
+               class="form-control form-control-sm"
+               placeholder="Cantidad" />
+      </div>
+      <button class="btn btn-sm btn-outline-primary mt-2"
+              [class.active]="materialesSeleccionadosTemporal.includes(material)"
+              (click)="toggleSeleccionMaterial(material)">
+        {{ materialesSeleccionadosTemporal.includes(material) ? 'Quitar' : 'Agregar' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- NUEVO CONTENEDOR BOTONES Y INPUTS -->
+  <div class="d-flex justify-content-center align-items-center gap-2 mt-3">
+
+    <!-- Porcentaje ganancia -->
+<!-- Porcentaje ganancia -->
+<div class="w-25 mb-2">
+  <label for="inputGanancia" class="form-label">Ganancia %</label>
+  <input id="inputGanancia" type="number" min="0" max="25"
+         [(ngModel)]="porcentajeGeneralMateriales"
+         class="form-control"
+         placeholder="% Ganancia general" />
+</div>
+
+<button class="btn btn-primary"
+        (click)="agregarMaterialesSeleccionados()"
+        [disabled]="materialesSeleccionadosTemporal.length === 0"
+        style="padding: 4px 10px; font-size: 15px;">
+  Agregar seleccionados
+</button>
+
+
+  <!-- Metros -->
+<div class="w-25 mb-2">
+  <label for="inputMetros" class="form-label">Metros (5m)</label>
+  <input id="inputMetros" type="number" min="1"
+         [(ngModel)]="metrosInstalacion"
+        (ngModelChange)="actualizarCantidadesPorInstalacion()"
+         class="form-control"
+         placeholder="Metros" />
+</div>
+
+<!-- Equipos -->
+<div class="w-25 mb-2">
+  <label for="inputEquipos" class="form-label">Equipos</label>
+  <input id="inputEquipos" type="number" min="1"
+         [(ngModel)]="cantidadEquipos"
+       (ngModelChange)="actualizarCantidadesPorInstalacion()"
+         class="form-control"
+         placeholder="Equipos" />
+</div>
+    <!-- Botón Instalación -->
+    <button type="button" class="btn btn-secondary"
+        (click)="toggleInstalacion()">
+  {{ instalacionActiva ? 'Quitar instalación' : 'Instalación' }}
+</button>
+
+
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</div>

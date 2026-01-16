@@ -1,0 +1,439 @@
+import { Component } from '@angular/core';
+import { Categoria } from 'src/app/Models/Categorias';
+import { Equipo } from 'src/app/Models/Equipos';
+import { Materiales } from 'src/app/Models/Materiales';
+import { ServiciosService } from 'src/app/Servicios/servicios.service';
+
+@Component({
+  selector: 'app-editar-inventario',
+  templateUrl: './editar-inventario.component.html',
+  styleUrls: ['./editar-inventario.component.css']
+})
+export class EditarInventarioComponent {
+
+entidadActiva: 'categoria' | 'equipo' | 'materiales' | '' = '';
+
+  categorias: Categoria[] = [];
+  nuevaCategoria: Categoria = { id: 0, nombre: '' };
+  editandoCategoria: Categoria | null = null;
+  filtroCategorias: string = '';
+
+  equipos: Equipo[] = [];
+  nuevoEquipo: Equipo = { 
+  id: 0,  
+  marca: '', 
+  precio: 0,
+  modelo: {    
+    id: 0,    
+    nombre: '',    
+    capacidad: '',    
+    categoria: {      
+      id: 0,      
+      nombre: ''
+    }
+  }
+};
+// Materiales
+  materiales: Materiales[] = [];
+  materialesFiltrados: Materiales[] = [];
+nuevoMaterial: Materiales = {id: 0,  nombre: '',  unidad: '',  cantidad: 0,  precioUnitario: 0,  modelo: {    id: 0,     nombre: '',     capacidad: '',     categoria: { id: 0, nombre: '' } }};
+ editandoMaterial: Materiales | null = null;
+  filtroMateriales: string = '';
+  mostrarPanelAgregarMaterial: boolean = false;
+  mostrarErrorNuevoMaterial: boolean = false;
+  mostrarErrorEditarMaterial: boolean = false;
+  mostrarPanelAgregarCategoria = false;
+  mostrarPanelAgregarEquipo = false;
+
+  mostrarErrorNuevaCategoria = false;
+  mostrarErrorEditarCategoria = false;
+  mostrarErrorNuevoEquipo = false;
+  mostrarErrorEditarEquipo = false;
+
+  constructor(private servicios: ServiciosService) {}
+
+  activarEntidad(entidad: 'categoria' | 'equipo' | 'materiales') {
+    this.entidadActiva = entidad;
+    this.cerrarPanelesAgregar();
+    if (entidad === 'categoria') {
+      this.cargarCategorias();
+    } else if (entidad === 'equipo') {
+      this.cargarEquipos();
+      
+    } else if (entidad === 'materiales') {
+      this.cargarMateriales();
+      
+    }
+  }
+
+  cargarCategorias() {
+    this.servicios.obtenerCategorias().subscribe(data => {
+      this.categorias = data;
+     });
+  
+}
+filtroEquipos: string = '';
+
+  cargarEquipos() {
+    this.servicios.obtenerEquipos().subscribe(data => {
+      this.equipos = data;
+      this.filtroEquipos = '';
+    });
+  }
+
+  get categoriasFiltradas(): Categoria[] {
+    if (!this.filtroCategorias.trim()) return this.categorias;
+    return this.categorias.filter(c =>
+      c.nombre.toLowerCase().includes(this.filtroCategorias.toLowerCase())
+    );
+  }
+
+  get equiposFiltrados(): Equipo[] {
+    if (!this.filtroEquipos.trim()) return this.equipos;
+    return this.equipos.filter(e =>
+      e.marca.toLowerCase().includes(this.filtroEquipos.toLowerCase())
+    );
+  }
+
+  // --- CATEGORÍAS ---
+
+ agregarCategoria() {
+  if (!this.nuevaCategoria.nombre.trim()) {
+    alert('El nombre es obligatorio');
+    return;
+  }
+
+  // Solo enviamos el nombre para que el backend genere el ID autoincrementable
+  const categoriaPayload = { nombre: this.nuevaCategoria.nombre.trim() };
+
+  this.servicios.guardarCategoria(categoriaPayload).subscribe(res => {
+    if (res === 'nombreYaExiste') {
+      alert('Ya existe una categoría con ese nombre');
+    } else if (res === null) {
+      alert('Error al agregar categoría');
+    } else {
+      alert('Categoría agregada');
+      this.nuevaCategoria = { id: 0, nombre: '' };
+      this.mostrarPanelAgregarCategoria = false;
+      this.cargarCategorias();
+    }
+  });
+}
+
+  cancelarAgregarCategoria() {
+    this.mostrarPanelAgregarCategoria = false;
+    this.mostrarErrorNuevaCategoria = false;
+    this.nuevaCategoria = { id: 0, nombre: '' };
+  }
+
+  seleccionarParaEditarCategoria(categoria: Categoria) {
+    this.editandoCategoria = { ...categoria };
+    this.mostrarErrorEditarCategoria = false;
+  }
+
+  editarCategoria() {
+    this.mostrarErrorEditarCategoria = false;
+
+    if (!this.editandoCategoria) return;
+
+    if (!this.editandoCategoria.nombre.trim()) {
+      this.mostrarErrorEditarCategoria = true;
+      return;
+    }
+
+    this.servicios.editarCategoria(this.editandoCategoria).subscribe(res => {
+      if (res) {
+        alert('Categoría editada');
+        this.editandoCategoria = null;
+        this.cargarCategorias();
+      } else {
+        alert('Error al editar categoría');
+      }
+    });
+  }
+
+  eliminarCategoria(id: number) {
+    if (!confirm('¿Seguro que quieres eliminar esta categoría?')) return;
+    this.servicios.eliminarCategoria(id).subscribe(() => {
+      alert('Categoría eliminada');
+      this.cargarCategorias();
+    });
+  }
+
+  cancelarEdicionCategoria() {
+    this.editandoCategoria = null;
+    this.mostrarErrorEditarCategoria = false;
+  }
+
+  isEditandoCategoria(categoria: Categoria): boolean {
+    return this.editandoCategoria !== null && this.editandoCategoria.id === categoria.id;
+  }
+
+  // --- EQUIPOS ---
+
+  agregarEquipo() {
+  if (!this.nuevoEquipo.marca.trim()) {
+    alert('La marca es obligatoria');
+    return;
+  }
+  if (!this.nuevoEquipo.modelo || !this.nuevoEquipo.modelo.id) {
+    alert('El modelo es obligatorio');
+    return;
+  }
+
+  // No enviar id, porque el backend lo generará al crear nuevo equipo
+  const { id, ...equipoSinId } = this.nuevoEquipo;
+
+  const equipoPayload = {
+    ...equipoSinId,
+    modelo: { id: this.nuevoEquipo.modelo.id }
+  };
+
+  this.servicios.guardarEquipo(equipoPayload).subscribe(res => {
+    if (res === 'nombreYaExiste') {
+      alert('Ya existe un equipo con ese nombre');
+    } else if (res === null) {
+      alert('Error al agregar equipo');
+    } else {
+      alert('Equipo agregado');
+      this.nuevoEquipo = {
+        id: 0,
+        marca: '',
+        precio: 0,
+        modelo: {
+          id: 0,
+          nombre: '',
+          capacidad: '',
+          categoria: { id: 0, nombre: '' }
+        }
+      };
+      this.cargarEquipos();
+    }
+  });
+}
+
+
+  cancelarAgregarEquipo() {
+    this.mostrarPanelAgregarEquipo = false;
+    this.mostrarErrorNuevoEquipo = false;
+  this.nuevoEquipo = {id: 0,    marca: '',    precio: 0,    modelo: {      id: 0,      nombre: '',      capacidad: '',      categoria: { id: 0, nombre: '' }  }  };
+  }
+editandoEquipo: Equipo | null = null;
+
+  seleccionarParaEditarEquipo(equipo: Equipo) {
+    this.editandoEquipo = JSON.parse(JSON.stringify(equipo));
+    this.mostrarErrorEditarEquipo = false;
+  }
+editarEquipo() {
+  this.mostrarErrorEditarEquipo = false;
+
+  if (!this.editandoEquipo) return;
+
+  if (!this.editandoEquipo.marca.trim()) {
+    this.mostrarErrorEditarEquipo = true;
+    alert('La marca es obligatoria');
+    return;
+  }
+  if (!this.editandoEquipo.modelo || this.editandoEquipo.modelo.id === 0) {
+    this.mostrarErrorEditarEquipo = true;
+    alert('El modelo es obligatorio');
+    return;
+  }
+
+  // Aquí sí se debe incluir el id porque el backend lo necesita para actualizar
+  const payload: Equipo = {
+    id: this.editandoEquipo.id,
+    marca: this.editandoEquipo.marca,
+    precio: this.editandoEquipo.precio,
+    modelo: { id: this.editandoEquipo.modelo.id }
+  };
+
+  this.servicios.editarEquipo(payload).subscribe(res => {
+    if (res) {
+      alert('Equipo editado');
+      this.editandoEquipo = null;
+      this.cargarEquipos();
+    } else {
+      alert('Error al editar equipo');
+    }
+  });
+}
+
+
+
+  eliminarEquipo(id: number) {
+    if (!confirm('¿Seguro que quieres eliminar este equipo?')) return;
+    this.servicios.eliminarEquipo(id).subscribe(() => {
+      alert('Equipo eliminado');
+      this.cargarEquipos();
+    });
+  }
+
+  cancelarEdicionEquipo() {
+    this.editandoEquipo = null;
+    this.mostrarErrorEditarEquipo = false;
+  }
+
+  isEditandoEquipo(equipo: Equipo): boolean {
+    return this.editandoEquipo !== null && this.editandoEquipo.id === equipo.id;
+  }
+  
+  cargarMateriales() {
+  this.servicios.obtenerMateriales().subscribe(data => {
+        console.log('Materiales recibidos:', data);
+    this.materiales = data;
+    this.filtrarMateriales();
+  }, error => {
+    console.error('Error cargando materiales:', error);
+  });
+}
+
+  filtrarMateriales() {
+    if (!this.filtroMateriales.trim()) {
+      this.materialesFiltrados = this.materiales;
+    } else {
+      const texto = this.filtroMateriales.toLowerCase();
+      this.materialesFiltrados = this.materiales.filter(m =>
+        m.nombre.toLowerCase().includes(texto)
+      );
+    }
+  }
+
+  seleccionarParaEditarMaterial(material: Materiales) {
+    this.editandoMaterial = JSON.parse(JSON.stringify(material));
+    this.mostrarErrorEditarMaterial = false;
+  }
+
+  isEditandoMaterial(material: Materiales): boolean {
+    return this.editandoMaterial !== null && this.editandoMaterial.id === material.id;
+  }
+agregarMaterial() {
+  if (!this.nuevoMaterial.nombre.trim()) {
+    alert('El nombre es obligatorio');
+    return;
+  }
+  if (!this.nuevoMaterial.modelo || !this.nuevoMaterial.modelo.id) {
+    alert('El modelo es obligatorio');
+    return;
+  }
+
+  const { id, ...materialSinId } = this.nuevoMaterial;
+
+  const payload = {
+    ...materialSinId,
+    modelo: { id: this.nuevoMaterial.modelo.id }
+  };
+
+  this.servicios.guardarMaterial(payload).subscribe(res => {
+    if (res === 'nombreYaExiste') {
+      alert('Ya existe un material con ese nombre');
+    } else if (res === null) {
+      alert('Error al agregar material');
+    } else {
+      alert('Material agregado correctamente');
+      this.cargarMateriales();
+      this.mostrarPanelAgregarMaterial = false;
+    }
+  });
+}
+
+
+cancelarAgregarMaterial() {
+  this.mostrarPanelAgregarMaterial = false;
+  this.mostrarErrorNuevoMaterial = false;
+  this.nuevoMaterial = {
+  id: 0,
+  nombre: '',
+  unidad: '',
+  cantidad: 0,
+  precioUnitario: 0,
+  modelo: { id: 0, nombre: '', capacidad: '', categoria: { id: 0, nombre: '' } }
+};
+
+}
+
+  editarMaterial() {
+    this.mostrarErrorEditarMaterial = false;
+
+    if (!this.editandoMaterial) return;
+
+    if (!this.editandoMaterial.nombre.trim()) {
+      this.mostrarErrorEditarMaterial = true;
+      alert('El nombre es obligatorio');
+      return;
+    }
+   if (!this.editandoMaterial.modelo || this.editandoMaterial.modelo.id === 0) {
+  this.mostrarErrorEditarMaterial = true;
+  alert('El modelo es obligatorio');
+  return;
+}
+
+
+    const payload: Materiales = {
+  id: this.editandoMaterial.id,
+  nombre: this.editandoMaterial.nombre,
+  unidad: this.editandoMaterial.unidad,
+  cantidad: this.editandoMaterial.cantidad,
+  precioUnitario: this.editandoMaterial.precioUnitario,
+  modelo: this.editandoMaterial.modelo // ← el modelo completo
+};
+
+
+this.servicios.editarMaterial(payload).subscribe(res => {
+  if (res) {
+    alert('Material editado');
+    this.editandoMaterial = null;
+    this.cargarMateriales();
+  } else {
+    alert('Error al editar material');
+  }
+});
+
+  }
+
+  cancelarEdicionMaterial() {
+    this.editandoMaterial = null;
+    this.mostrarErrorEditarMaterial = false;
+  }
+
+  eliminarMaterial(id: number) {
+  if (!confirm('¿Seguro que quieres eliminar este material?')) return;
+  this.servicios.eliminarMaterial(id).subscribe(() => {
+    alert('Material eliminado');
+    this.cargarMateriales();
+  });
+}
+
+   cerrarPanelesAgregar() {
+    this.mostrarPanelAgregarCategoria = false;
+    this.mostrarPanelAgregarEquipo = false;
+    this.mostrarPanelAgregarMaterial = false;
+
+    this.mostrarErrorNuevaCategoria = false;
+    this.mostrarErrorNuevoEquipo = false;
+    this.mostrarErrorNuevoMaterial = false;
+
+    this.nuevaCategoria = { id: 0, nombre: '' };
+    this.nuevoEquipo = {
+  id: 0,
+  marca: '',
+  precio: 0,
+  modelo: {
+    id: 0,
+    nombre: '',
+    capacidad: '',
+    categoria: { id: 0, nombre: '' }
+  }
+};
+this.nuevoMaterial = {
+  id: 0,
+  nombre: '',
+  unidad: '',
+  cantidad: 0,
+  precioUnitario: 0,
+  modelo: { id: 0, nombre: '', capacidad: '', categoria: { id: 0, nombre: '' } }
+};
+}
+
+
+}

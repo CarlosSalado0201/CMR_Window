@@ -1,0 +1,257 @@
+<!-- 🔻 BARRA SUPERIOR -->
+
+<!-- 🔻 BARRA SUPERIOR -->
+<div class="toolbar">
+  <img src="assets/CMR.jpg" alt="Logo CMR" style="cursor:pointer" routerLink="/reportes" />
+  <div class="toolbar-buttons">
+    <button routerLink="/generar">Generar Reportes</button>
+    <button routerLink="/generar-carta">Generar carta</button>
+    <button (click)="logout()">Cerrar sesión</button>
+  </div>
+</div>
+
+
+<div class="content">
+<!-- 🔹 CONTENIDO PRINCIPAL -->
+  <div *ngIf="vistaActual === 'form'" class="report-form">
+    <h2>Generar Reporte</h2>
+<div class="input-group">
+  <label for="fechaInicio">Fecha inicio:</label>
+  <input type="date" id="fechaInicio" [(ngModel)]="fechaInicio" name="fechaInicio" class="input-rojo" required>
+</div>
+
+<div class="input-group">
+  <label for="fechaFin">Fecha fin:</label>
+  <input type="date" id="fechaFin" [(ngModel)]="fechaFin" name="fechaFin" class="input-rojo">
+</div>
+
+    <!-- Clientes -->
+    <div class="selection-box">
+      <h4>Clientes *</h4>
+      <select multiple [(ngModel)]="clientesSeleccionadosIds" name="clientesSeleccionadosIds" required>
+        <option *ngFor="let c of clientesDisponibles" [ngValue]="c.id">
+          {{ c.nombre }}
+        </option>
+      </select>
+      <button class="add-client-button" (click)="agregarClientesSeleccionados()">Añadir clientes</button>
+      <div class="clientes-seleccionados" *ngIf="clientesSeleccionados.length > 0">
+        <p><strong>Seleccionados:</strong></p>
+        <ul>
+          <li *ngFor="let c of clientesSeleccionados">
+            {{ c.nombre }}
+            <button class="remove-client-button" (click)="eliminarCliente(clientesSeleccionados.indexOf(c))">✕</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Trabajadores -->
+    <div class="selection-box">
+      <h4>Trabajadores</h4>
+      <div class="usuario-actual-trabajador" *ngIf="usuarioActual">
+        <p><strong>Responsable:</strong> {{ usuarioActual.nombre }} ({{ usuarioActual.cargo }})</p>
+      </div>
+      <div class="trabajadores-select-container">
+        <select multiple [(ngModel)]="trabajadoresSeleccionadosIds" name="trabajadoresSeleccionadosIds">
+          <option *ngFor="let t of usuariosDisponiblesFiltrados" [ngValue]="t.id">
+            {{ t.nombre }} ({{ t.cargo }})
+          </option>
+        </select>
+        <button class="add-worker-button" (click)="agregarTrabajadoresSeleccionados()">Añadir trabajadores</button>
+      </div>
+      <div class="trabajadores-seleccionados" *ngIf="trabajadoresSeleccionados.length > 0">
+        <p><strong>Seleccionados:</strong></p>
+        <ul>
+          <li *ngFor="let t of trabajadoresSeleccionados">
+            {{ t.nombre }} — {{ t.cargo }}
+            <button class="remove-worker-button" (click)="eliminarTrabajador(trabajadoresSeleccionados.indexOf(t))">✕</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Operación / Actividades -->
+    <div class="selection-box">
+      <label>Operación</label>
+      <select [(ngModel)]="tipoOperacionSeleccionadaId" name="tipoOperacionSeleccionadaId" (change)="cargarActividades()">
+        <option [ngValue]="null" disabled selected>Selecciona tipo de operación</option>
+        <option *ngFor="let tipo of tiposOperacion" [ngValue]="tipo.idTipoOperacion">
+          {{ tipo.nombre }}
+        </option>
+      </select>
+
+      <h4>Trabajo realizado</h4>
+      <select class="select-actividades" multiple [(ngModel)]="actividadesSeleccionadasIds" name="actividadesSeleccionadasIds">
+        <option *ngFor="let a of actividadesDisponibles" [ngValue]="a.idActividad">
+          {{ a.descripcion }}
+        </option>
+      </select>
+      <button class="add-actividad-button" (click)="agregarActividadesSeleccionadas()">Añadir actividades</button>
+
+      <div class="actividades-seleccionadas" *ngIf="actividadesSeleccionadas.length > 0">
+        <p><strong>Seleccionadas:</strong></p>
+        <ul>
+          <li *ngFor="let a of actividadesSeleccionadas">
+            {{ a.descripcion }}
+            <button class="remove-client-button" (click)="eliminarActividad(actividadesSeleccionadas.indexOf(a))">✕</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Ubicación y tipo de equipo -->
+    <div class="info-container">
+      <div class="info-field">
+        <label for="ubicacion">Ubicación del equipo *</label>
+        <input type="text" [(ngModel)]="ubicacion" placeholder="Escribe la ubicación" required />
+      </div>
+      <div class="info-field">
+        <label for="equipo">Tipo de equipo / equipos *</label>
+        <input type="text" id="equipo" [(ngModel)]="tipoEquipo" placeholder="Escribe el tipo de equipo..." required />
+      </div>
+    </div>
+
+    <!-- Descripción -->
+    <label>Descripción / Trabajo realizado *</label>
+    <textarea [(ngModel)]="descripcionTrabajo" name="descripcionTrabajo" rows="5" placeholder="Describe aquí las actividades realizadas..." required></textarea>
+
+    <!-- Fotos de lo hecho -->
+    <label>Fotos del trabajo realizado *</label>
+    <input type="file" multiple accept="image/*" (change)="onImagenesSeleccionadas($event)" required />
+
+    <!-- Toma de lecturas -->
+    <label>Toma de lecturas</label>
+    <textarea [(ngModel)]="lecturas" rows="4" placeholder="Registrar lecturas..."></textarea>
+
+    <!-- Fotos de la toma de lecturas -->
+    <label>Fotos de toma de lecturas</label>
+    <input type="file" multiple accept="image/*" (change)="onLecturasSeleccionadas($event)" />
+
+    <!-- Observaciones / Autorización -->
+    <label>Observaciones</label>
+    <textarea [(ngModel)]="observaciones" rows="3" placeholder="Observaciones adicionales..."></textarea>
+
+    <!-- Firma -->
+    <label>Firma *</label>
+   <!-- Canvas Técnico --> <canvas #canvas width="600" height="200" class="canvas-firma" (mousedown)="iniciarDibujo($event)" (mousemove)="dibujar($event)" (mouseup)="detenerDibujo()" (mouseleave)="detenerDibujo()" (touchstart)="iniciarDibujo($event)" (touchmove)="dibujar($event)" (touchend)="detenerDibujo()" ></canvas>
+
+    <p class="firma-aviso">
+      ⚠️ <strong>Esta firma solo valida el registro o entrega del reporte técnico y no puede ser utilizada para otros fines que puedan perjudicar a la persona.</strong>
+    </p>
+    <div class="signature-buttons">
+      <button (click)="limpiarFirma()">Limpiar firma</button>
+      <button (click)="guardarFirma()">Guardar firma (previsualizar)</button>
+    </div>
+<!-- 🔻 SELECCIÓN DE CARPETA -->
+<div class="selection-box carpeta-box">
+  <label class="carpeta-label">Carpeta del reporte *</label>
+
+<div class="carpeta-display" (click)="toggleCarpetas()">
+  {{ carpetaSeleccionada || 'Seleccionar carpeta...' }}
+</div>
+<ul class="carpeta-list" *ngIf="mostrarListaCarpetas">
+  <li *ngFor="let c of carpetas" (click)="seleccionarCarpeta(c)">
+    {{ c.nombre }}
+  </li>
+</ul>
+<div class="report-btns-container">
+  <button class="btn-verify" (click)="siguienteVerificacion()">Siguiente: Verificación del cliente</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- VISTA VERIFICACIÓN -->
+<div *ngIf="enVerificacion" class="verificacion">
+<h2>Verificación del Cliente</h2>
+
+  <!-- Trabajadores -->
+  <h3>Trabajadores</h3>
+  <ul>
+    <li *ngFor="let t of trabajadoresSeleccionados">
+      <strong>{{ t.nombre }}</strong> — {{ t.cargo }}
+    </li>
+  </ul>
+
+  <!-- Encargado -->
+  <p *ngIf="usuarioActual; else sinEncargado">
+    <strong>Encargado del reporte:</strong> {{ usuarioActual.nombre }} ({{ usuarioActual.cargo }})
+  </p>
+  <ng-template #sinEncargado>
+    <p><em>Encargado de reporte no asignado</em></p>
+  </ng-template>
+
+  <!-- Detalles del equipo -->
+  <h3>Detalles del equipo</h3>
+  <p><strong>Ubicación:</strong> {{ ubicacion || 'No especificado' }}</p>
+  <p><strong>Tipo de equipo:</strong> {{ tipoEquipo || 'No especificado' }}</p>
+  <p><strong>Descripción:</strong> {{ descripcionTrabajo || 'No especificado' }}</p>
+
+  <!-- Actividades realizadas -->
+  <h3>Actividades realizadas</h3>
+  <ul>
+    <li *ngFor="let a of actividadesSeleccionadas">{{ a.descripcion }}</li>
+  </ul>
+
+  <!-- Fotos -->
+  <div *ngIf="imagenes && imagenes.length > 0">
+    <h3>Imágenes subidas</h3>
+    <p>Se han subido {{ imagenes.length }} imágenes del trabajo realizado.</p>
+  </div>
+
+  <!-- Lecturas -->
+  <div *ngIf="lecturas?.trim()">
+    <h3>Toma de lecturas</h3>
+    <p>{{ lecturas }}</p>
+    <div *ngIf="imagenesLecturas && imagenesLecturas.length > 0">
+      <p>Se han subido {{ imagenesLecturas.length }} imágenes de lecturas.</p>
+    </div>
+  </div>
+
+  <!-- Observaciones -->
+  <div *ngIf="observaciones?.trim()">
+    <h3>Observaciones</h3>
+    <p>{{ observaciones }}</p>
+  </div>
+
+  <!-- Supervisor -->
+  <label>Nombre del supervisor</label>
+  <input type="text" [(ngModel)]="nombreSupervisor" placeholder="Nombre completo" />
+
+  <label><strong>Firma del supervisor / responsable</strong></label>
+  <canvas
+    #canvasSupervisor
+    width="600"
+    height="200"
+    class="canvas-firma"
+    (mousedown)="iniciarDibujoSupervisor($event)"
+    (mousemove)="dibujarSupervisor($event)"
+    (mouseup)="detenerDibujoSupervisor()"
+    (mouseleave)="detenerDibujoSupervisor()"
+    (touchstart)="iniciarDibujoSupervisor($event)"
+    (touchmove)="dibujarSupervisor($event)"
+    (touchend)="detenerDibujoSupervisor()"
+  ></canvas>
+
+  <div class="signature-buttons">
+    <button type="button" (click)="limpiarFirmaSupervisor()">Limpiar</button>
+    <button type="button" (click)="guardarFirmaSupervisor()">Guardar firma supervisor</button>
+  </div>
+
+  <!-- BOTONES FINALES Y PDF -->
+  <div class="report-btns-container">
+    <button (click)="aprobarVerificacion()">Supervisado o aprobado</button>
+    <button class="btn-generate" [disabled]="!verificado" (click)="generarReporte()">Generar reporte PDF</button>
+    <button class="cancel" (click)="vistaActual='form'">Volver</button>
+  </div>
+
+  <div class="pdf-link-layer" *ngIf="urlPdf">
+    <p>✅ Último reporte generado:</p>
+    <input type="text" [value]="urlPdf" readonly #pdfLink />
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button (click)="copiarEnlace(pdfLink)">Copiar enlace</button>
+      <a [href]="urlPdf" target="_blank">Abrir PDF</a>
+    </div>
+  </div>
+</div>
+</div>

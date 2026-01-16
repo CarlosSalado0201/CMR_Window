@@ -1,0 +1,1061 @@
+/* ==============================
+   ESTILOS GENERALES
+   ============================== */
+:host {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 14px;
+  color: #333;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
+}
+
+/* ==============================
+   BARRA SUPERIOR / TOOLBAR
+   ============================== */
+
+  .toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    background-color: #dc3545;
+    color: white;
+    font-weight: 600;
+    padding: 0 24px;
+    box-sizing: border-box;
+    z-index: 1000;
+  }
+
+  .toolbar img {
+    height: 80px;
+    width: auto;
+    user-select: none;
+    margin-right: 20px;
+  }
+
+  .toolbar button {
+    background-color: white;
+    color: #dc3545;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+    white-space: normal;
+    max-width: 120px;
+    line-height: 1.2;
+    margin-right: 10px;
+  }
+
+  .toolbar button:hover {
+    background-color: #f8d7da;
+  }
+
+
+/* ==============================
+   CONTENIDO Y FORMULARIO PRINCIPAL
+   ============================== */
+.content {
+  margin-top: 120px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-wrapper {
+  display: flex;
+  flex-direction: row-reverse; /* clientes a la izquierda */
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  margin: 115px auto;
+  max-width: 1200px;
+  flex-wrap: wrap;
+}
+
+.report-form {
+  flex: 1 1 700px;
+  max-width: 800px;
+  background: linear-gradient(145deg, #ffffff, #fff0f2);
+  padding: 20px 30px;
+  border: 1px solid #f0c2c7;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.report-form:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+}
+
+.report-form h2 {
+  color: #dc3545;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.report-form label {
+  font-weight: 600;
+  margin-top: 10px;
+  display: block;
+}
+
+/* Inputs y Select modernos */
+.report-form input[type="text"],
+.report-form textarea,
+.report-form input[type="file"],
+.trabajadores-section select,
+.clientes-section select,
+.select-actividades {
+  width: 100%;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.report-form input[type="text"]:focus,
+.report-form textarea:focus,
+.trabajadores-section select:focus,
+.clientes-section select:focus,
+.select-actividades:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 8px rgba(220, 53, 69, 0.2);
+  outline: none;
+  background-color: #fffafc;
+}
+
+/* ==============================
+   BOTONES GENERALES
+   ============================== */
+button, .submit-button, .pdf-link-layer button, .pdf-link-layer a {
+  background-color: white;
+  color: #dc3545;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  line-height: 1.2;
+  margin-right: 10px;
+  text-decoration: none;
+}
+
+button:hover, .submit-button:hover, .pdf-link-layer button:hover, .pdf-link-layer a:hover {
+  background-color: #f8d7da;
+  transform: translateY(-1px);
+}
+
+/* ==============================
+   SECCIÓN CLIENTES, TRABAJADORES, ACTIVIDADES
+   ============================== */
+.clientes-section,
+.trabajadores-section,
+.actividades-section {
+  background: linear-gradient(145deg, #ffffff, #fff0f2);
+  border: 1px solid #f0c2c7;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.clientes-section:hover,
+.trabajadores-section:hover,
+.actividades-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.add-client-button,
+.add-worker-button,
+.btn-generate,
+.btn-verify,
+.submit-button {
+  background: linear-gradient(90deg, #dc3545, #e8505b);
+  color: white;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(220, 53, 69, 0.4);
+  transition: all 0.3s ease;
+}
+
+.add-client-button:hover,
+.add-worker-button:hover,
+.btn-generate:hover:not([disabled]),
+.btn-verify:hover,
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.5);
+  background: linear-gradient(90deg, #e8505b, #dc3545);
+}
+
+/* Remove button estilo */
+.remove-client-button, .remove-worker-button {
+  background-color: transparent;
+  color: #dc3545;
+  font-size: 18px;
+  padding: 0 5px;
+  transition: all 0.2s ease;
+}
+
+.remove-client-button:hover, .remove-worker-button:hover {
+  color: #b02a37;
+  transform: scale(1.1);
+}
+
+/* Lista de elementos seleccionados */
+.clientes-seleccionados li,
+.trabajadores-seleccionados li,
+.actividades-seleccionadas li {
+  padding: 6px 12px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  background: #fff0f2;
+  border: 1px solid #f0c2c7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.clientes-seleccionados li:hover,
+.trabajadores-seleccionados li:hover,
+.actividades-seleccionadas li:hover {
+  background: #ffe6ec;
+  transform: translateX(2px);
+}
+
+/* ==============================
+   PDF LINK LAYER
+   ============================== */
+.pdf-link-layer {
+  margin-top: 25px;
+  width: 100%;
+  max-width: 700px;
+  background: #fff5f5;
+  border: 1px solid #dc3545;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.pdf-link-layer p {
+  margin: 0 0 10px 0;
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.pdf-link-layer input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* ==============================
+   MODAL DE VERIFICACIÓN
+   ============================== */
+
+/* ==============================
+   CANVAS DE FIRMAS
+   ============================== */
+canvas {
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  background-color: #fffafc;
+}
+
+/* ==============================
+   INFO / SUPERVISOR INPUT
+   ============================== */
+.supervisor-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #dc3545;
+}
+
+.supervisor-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.supervisor-input:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 6px rgba(220,53,69,0.3);
+  outline: none;
+}
+
+/* ==============================
+   RESPONSIVO
+   ============================== */
+
+
+/* ==============================
+   ANIMACIONES
+   ============================== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+/* ==============================
+   SELECCIÓN DE CLIENTES, TRABAJADORES Y ACTIVIDADES
+   ============================== */
+.selection-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 16px;
+  border: 1px solid #f0c2c7;
+  border-radius: 10px;
+  background: #fff0f2;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+}
+
+.selection-box:hover {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+.selection-box select {
+  width: 100%;
+  min-height: 120px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: #fffafc;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.selection-box button.add-client-button,
+.selection-box button.add-worker-button,
+.selection-box button.add-actividad-button {
+  align-self: flex-end;
+  margin-top: 6px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  background: linear-gradient(90deg, #dc3545, #e8505b);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.selection-box button.add-client-button:hover,
+.selection-box button.add-worker-button:hover,
+.selection-box button.add-actividad-button:hover {
+  background: linear-gradient(90deg, #e8505b, #dc3545);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(220,53,69,0.3);
+}
+
+/* Lista de elementos seleccionados dentro del box */
+.selection-box .clientes-seleccionados,
+.selection-box .trabajadores-seleccionados,
+.selection-box .actividades-seleccionadas {
+  margin-top: 10px;
+}
+
+.selection-box .clientes-seleccionados li,
+.selection-box .trabajadores-seleccionados li,
+.selection-box .actividades-seleccionadas li {
+  background: #fff5f5;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #f0c2c7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.usuario-actual-trabajador {
+  background-color: #fff0f0;
+  border: 1px solid #dc3545;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #b02a37;
+}
+.btn-generate {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-generate:hover:enabled {
+  background-color: #b02a37; /* solo cambia si está habilitado */
+}
+
+.btn-generate:disabled {
+  background-color: #ccc; /* gris */
+  color: #666;
+  cursor: not-allowed;
+}
+
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+/* ESTILO INPUT ROJO */
+.input-rojo {
+  padding: 10px 12px;
+  border: 2px solid #c62828; /* rojo */
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  background: #fff;
+  color: #333;
+  transition: 0.25s ease-in-out;
+}
+
+.input-rojo:hover {
+  border-color: #a30000; /* rojo más fuerte */
+}
+
+.input-rojo:focus {
+  border-color: #b30000;
+  box-shadow: 0 0 5px rgba(179, 0, 0, 0.4);
+}
+
+/* LABEL */
+.input-group label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #b30000; /* mismo rojo */
+}
+
+
+
+
+/* 🔻 Caja principal */
+.carpeta-box {
+  margin-top: 15px;
+}
+
+/* 🔻 Texto del label */
+.carpeta-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* 🔻 Caja roja */
+.carpeta-display {
+  background: #b30000;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.2s ease;
+  border: 2px solid #750000;
+}
+
+.carpeta-display:hover {
+  background: #cc0000;
+}
+
+/* 🔻 Flechita */
+.carpeta-display .arrow {
+  font-size: 18px;
+}
+
+/* 🔻 Lista desplegable */
+.carpeta-list {
+  background: white;
+  border: 2px solid #b30000;
+  border-radius: 8px;
+  margin-top: 5px;
+  padding: 0;
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.carpeta-list li {
+  padding: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.carpeta-list li:hover {
+  background: #ffe5e5;
+}
+/* ===== Layout fluido real ===== */
+.form-wrapper {
+  max-width: clamp(900px, 80vw, 1600px);
+  gap: clamp(20px, 3vw, 60px);
+}
+
+.report-form {
+  width: clamp(300px, 55vw, 900px);
+}
+
+.clientes-section,
+.trabajadores-section,
+.actividades-section {
+  width: clamp(260px, 30vw, 420px);
+}
+@media (max-width: 1300px) {
+  .form-wrapper {
+    flex-direction: column;
+    align-items: center;
+    max-width: 95vw;
+  }
+
+  .report-form {
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .clientes-section,
+  .trabajadores-section,
+  .actividades-section {
+    width: 100%;
+    max-width: 600px;
+  }
+}
+@media (min-width: 1600px) {
+  .form-wrapper {
+    max-width: 1500px;
+  }
+  .report-form {
+    max-width: 950px;
+  }
+}
+/* ==============================
+   MODO MÓVIL REAL
+   ============================== */
+@media (max-width: 600px) {
+
+  /* Toolbar más chica */
+  .toolbar {
+    height: 70px;
+    padding: 0 12px;
+  }
+
+  .toolbar img {
+    height: 55px;
+    margin-right: 10px;
+  }
+
+  .toolbar button {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    max-width: 90px;
+  }
+
+  /* Espacio del contenido */
+  .content {
+    margin-top: 90px;
+    padding: 0 12px;
+  }
+
+  /* Layout vertical total */
+  .form-wrapper {
+    flex-direction: column !important;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Formularios más compactos */
+  .report-form {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px !important;
+  }
+
+  .clientes-section,
+  .trabajadores-section,
+  .actividades-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px !important;
+  }
+
+  /* Inputs más cómodos en celular */
+  .report-form input,
+  .report-form select,
+  .report-form textarea {
+    font-size: 15px;
+    padding: 12px;
+  }
+
+  /* Listas y selects */
+  select {
+    min-height: 100px;
+  }
+
+  /* Botones más grandes y legibles */
+  button,
+  .submit-button,
+  .btn-generate,
+  .btn-verify {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .add-client-button,
+  .add-worker-button,
+  .add-actividad-button {
+    width: 100%;
+  }
+
+  /* PDF Layer */
+  .pdf-link-layer {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px;
+  }
+
+/* ==============================
+   CANVAS RESPONSIVE PARA CELULAR
+   ============================== */
+@media (max-width: 600px) {
+  canvas {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100%;
+    display: block;
+    margin: 10px 0;
+  }
+
+  /* Si el canvas está dentro de un contenedor */
+  .firma-container, 
+  .canvas-wrapper {
+    width: 100% !important;
+  }
+}
+.canvas-firma {
+  border: 1px solid #ccc;
+  touch-action: none;
+  width: 100%;          /* Se ajusta al ancho disponible */
+  max-width: 600px;     /* No crece más de 600 */
+  height: auto;         /* Mantiene proporción */
+  display: block;
+  margin: 10px auto;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+}
+/* En celulares se adapta totalmente */
+@media (max-width: 600px) {
+  .canvas-firma {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+/* ===== Ajuste perfecto del canvas en celulares ===== */
+.canvas-firma,
+canvas {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Mantener proporción correcta */
+.canvas-firma {
+  aspect-ratio: 3 / 1; /* Puedes ajustarlo según tu firma */
+}
+
+/* En caso de que el contenedor limite el tamaño */
+.firma-container,
+.canvas-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+/* ===== Ajuste perfecto del canvas ===== */
+canvas,
+.canvas-firma {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+  margin: 10px auto;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* Mantener proporción correcta */
+.canvas-firma {
+  aspect-ratio: 3 / 1; /* Ajusta si tu firma necesita más alto */
+  touch-action: none;  /* NECESARIO para escribir bien en cel */
+  border: 1px solid #ccc;
+}
+
+/* Si el canvas está dentro de contenedor, que también sea fluido */
+.firma-container,
+.canvas-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* ===== Ajuste extra para celulares ===== */
+@media (max-width: 600px) {
+  canvas,
+  .canvas-firma {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.canvas-firma {
+  width: 100% !important;
+  height: auto !important;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  aspect-ratio: 3 / 1;
+  touch-action: none;
+}
+/* ==========================
+   MODAL / PANEL DE VERIFICACIÓN
+   ========================== */
+
+/* Después: flujo normal */
+.panel-verificacion {
+  position: relative;  /* importante */
+  max-width: 900px;
+  width: 100%;
+  margin: 40px auto; /* centrado con espacio arriba */
+  padding: 30px;
+  border-radius: 12px;
+  background: #fff0f2;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  overflow: visible;
+}
+
+
+/* Para mobile (toolbar más chica) */
+@media (max-width: 600px) {
+  .panel-verificacion {
+    top: 70px;          /* Altura de toolbar en móvil */
+    padding: 15px;
+    max-height: calc(100vh - 70px);  /* Ajusta altura máxima */
+    width: 95%;
+    left: 2.5%;
+    right: 2.5%;
+    border-radius: 8px;
+  }
+}
+
+
+
+
+.panel-verificacion h2 {
+  color: #dc3545;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.panel-verificacion h3 {
+  color: #444;
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+.panel-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.panel-actions button {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.panel-actions button:hover {
+  background-color: #b02a37;
+}
+
+.panel-actions .cancel {
+  background-color: #999;
+}
+
+.panel-actions .cancel:hover {
+  background-color: #777;
+}
+
+/* Animación */
+@keyframes slideIn {
+  from { transform: translateY(-15px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ==========================
+   CANVAS DENTRO DEL MODAL
+   ========================== */
+.panel-verificacion canvas,
+.panel-verificacion .canvas-firma {
+  width: 100% !important;
+  max-width: 100%;
+  height: auto !important;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  aspect-ratio: 3 / 1;
+  touch-action: none;
+  display: block;
+  margin: 10px 0;
+}
+
+/* Ajuste para móviles */
+@media (max-width: 600px) {
+
+
+  .panel-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+@media (max-width: 600px) {
+  
+  .panel-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .panel-verificacion {
+    top: 70px;          /* Altura de toolbar en móvil */
+    padding: 15px;
+    max-height: calc(100vh - 70px);  /* Ajusta altura máxima */
+    width: 95%;
+    left: 2.5%;
+    right: 2.5%;
+    border-radius: 8px;
+  }
+}
+
+/* === BASE ROJO Y BLANCO === */
+.verificacion {
+  background-color: #fff; /* fondo blanco */
+  border: 2px solid #e74c3c; /* borde rojo */
+  border-radius: 12px;
+  padding: 25px;
+  max-width: 900px;
+  margin: 20px auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Titulares */
+.verificacion h2 {
+  color: #e74c3c; /* rojo */
+  margin-bottom: 20px;
+  font-size: 28px;
+  border-bottom: 2px solid #e74c3c;
+  padding-bottom: 6px;
+}
+
+.verificacion h3 {
+  color: #c0392b; /* rojo oscuro */
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  border-bottom: 1px dashed #e74c3c;
+  padding-bottom: 4px;
+}
+
+/* Listas */
+.verificacion ul {
+  list-style-type: disc;
+  padding-left: 25px;
+  margin-bottom: 15px;
+}
+
+.verificacion ul li {
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+/* Inputs de supervisor */
+.verificacion input[type="text"] {
+  width: 100%;
+  padding: 8px 12px;
+  margin: 8px 0 16px 0;
+  border: 1px solid #e74c3c; /* borde rojo */
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Canvas de firma */
+.canvas-firma {
+  border: 2px solid #e74c3c;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  display: block;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Botones de firmas y reportes */
+.signature-buttons,
+.report-btns-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.signature-buttons button,
+.report-btns-container button {
+  background-color: #e74c3c; /* rojo */
+  color: #fff; /* texto blanco */
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.signature-buttons button:hover,
+.report-btns-container button:hover {
+  background-color: #c0392b; /* rojo más oscuro */
+}
+
+.btn-generate:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+/* PDF link */
+.pdf-link-layer {
+  margin-top: 20px;
+  padding: 12px;
+  border: 1px solid #e74c3c;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.pdf-link-layer input[type="text"] {
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #e74c3c;
+  margin-bottom: 8px;
+}
+
+.pdf-link-layer a,
+.pdf-link-layer button {
+  text-decoration: none;
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* === RESPONSIVE MÓVIL === */
+@media (max-width: 768px) {
+  .verificacion {
+    padding: 15px;
+    margin: 10px;
+  }
+
+  .verificacion h2 {
+    font-size: 24px;
+  }
+
+  .verificacion h3 {
+    font-size: 18px;
+  }
+
+  .signature-buttons,
+  .report-btns-container {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .signature-buttons button,
+  .report-btns-container button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .canvas-firma {
+    max-width: 100%;
+    height: 180px;
+  }
+}
+/* Hover normal */
+.report-btns-container button:hover:not(:disabled) {
+  background-color: #cc0000;
+}
+
+/* Botón deshabilitado */
+.btn-generate:disabled {
+  background-color: #aaa; /* gris para mostrar que está bloqueado */
+  cursor: not-allowed;
+}

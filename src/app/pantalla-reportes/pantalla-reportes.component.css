@@ -1,0 +1,116 @@
+.gif-container {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center;     /* Centra verticalmente */
+  height: calc(100vh - 120px); /* Altura total menos la barra */
+}
+.gif-container img {
+  max-width: 80%; /* Ajusta tamaño */
+  height: auto;
+}
+/* ===== Estilos generales ===== */
+:host {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 14px;
+  color: #333;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  background-color: #dc3545;
+  color: white;
+  font-weight: 600;
+  padding: 0 24px;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.toolbar img {
+  height: 80px;
+  width: auto;
+  user-select: none;
+  margin-right: 20px;
+}
+
+.toolbar button {
+  background-color: white;
+  color: #dc3545;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  white-space: normal;
+  max-width: 120px;
+  line-height: 1.2;
+  margin-right: 10px;
+}
+
+.toolbar button:hover {
+  background-color: #f8d7da;
+}
+
+.content {
+  margin-top: 120px;
+  padding: 0 24px;
+}
+
+.circle-indicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #dc3545;
+}
+
+.circle-indicator.selected {
+  background-color: #dc3545;
+}
+
+.gif-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 120px);
+}
+
+.gif-container img {
+  max-width: 80%;
+  height: auto;
+}
+/* Contenedor de botones de la toolbar */
+.toolbar-buttons {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;      /* permite scroll horizontal si no caben */
+  -webkit-overflow-scrolling: touch; /* suaviza el scroll en iOS */
+}
+
+.toolbar-buttons::-webkit-scrollbar {
+  display: none; /* oculta scrollbar */
+}
+
+/* Botones individuales */
+.toolbar-buttons button {
+  flex: 0 0 auto; /* no se encogen ni expanden, mantienen su tamaño */
+}
+
+/* Responsive Móvil */
+@media (max-width: 768px) {
+  .toolbar-buttons {
+    width: 100%;
+    justify-content: flex-start; /* alineados a la izquierda */
+  }
+}

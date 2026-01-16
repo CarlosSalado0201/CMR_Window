@@ -1,0 +1,477 @@
+/* ---- TU ESTILO ORIGINAL SE RESPETA ---- */
+:host {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 14px;
+  color: #333;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  background-color: #dc3545;
+  color: white;
+  font-weight: 600;
+  padding: 0 24px;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.toolbar img {
+  height: 80px;
+  width: auto;
+  margin-right: 20px;
+}
+
+.toolbar button {
+  background-color: white;
+  color: #dc3545;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  max-width: 120px;
+  line-height: 1.2;
+  margin-right: 10px;
+}
+
+.toolbar button:hover {
+  background-color: #f8d7da;
+}
+
+/* ---- CALENDARIO ---- */
+.calendar-container {
+  margin-top: 140px; /* debajo de la barra */
+  width: 95%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.calendar-header button {
+  background-color: #dc3545;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.calendar-header button:hover {
+  background-color: #b92c3a;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #dc3545;
+  font-size: 1.2rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+/* ---- DÍAS ---- */
+.calendar-day {
+  height: 40vh;
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  background-color: rgba(220, 53, 69, 0.15);
+  color: #dc3545;
+  font-weight: 700;
+  font-size: 1.4rem;
+  display: flex;
+  flex-direction: column;
+
+  /* ✅ para mostrar items dentro */
+  justify-content: flex-start;
+  align-items: flex-start;
+  text-align: left;
+
+  transition: background-color 0.3s ease;
+  word-wrap: break-word;
+  padding: 14px 16px;
+}
+
+.calendar-day:hover {
+  background-color: rgba(220, 53, 69, 0.3);
+}
+
+.calendar-day.empty {
+  background: transparent;
+  cursor: default;
+  height: 40vh;
+}
+
+.calendar-day.selected {
+  outline: 3px solid rgba(220, 53, 69, 0.65);
+  background-color: rgba(220, 53, 69, 0.22);
+}
+
+.calendar-day span {
+  font-size: 1.6rem;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+/* PUNTO DE REPORTE (si lo usas) */
+.report-indicator {
+  width: 12px;
+  height: 12px;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ---- Mes/año mini calendario ---- */
+.month-year-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.month-year {
+  color: #dc3545;
+  font-weight: 900;
+  font-size: 1.8rem;
+}
+
+.calendar-picker-btn {
+  background-color: white;
+  color: #dc3545;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.calendar-picker-btn:hover {
+  background-color: #f8d7da;
+}
+
+.mini-calendar {
+  position: absolute;
+  top: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  background: white;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.mini-calendar .months {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+
+.mini-calendar .months button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.mini-calendar .months button:hover {
+  background-color: #b92c3a;
+}
+
+.year-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.year-bar button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.year-bar button:hover {
+  background-color: #b92c3a;
+}
+
+.year-bar span {
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+/* =========================
+   ✅ ITEMS dentro del cuadro
+========================= */
+.day-items {
+  width: 100%;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  max-height: calc(40vh - 70px);
+  overflow: auto;
+  padding-right: 6px;
+}
+
+.day-item {
+  display: block;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #b92c3a;
+  font-weight: 900;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.day-item:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.day-more {
+  font-weight: 900;
+  color: #dc3545;
+  cursor: pointer;
+  padding: 4px 2px;
+  font-size: 0.95rem;
+}
+
+/* =========================
+   ✅ MODAL / PANEL
+========================= */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 5000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 120px; /* debajo de toolbar */
+}
+
+.modal-panel {
+  width: min(900px, 95vw);
+  max-height: calc(100vh - 160px);
+  overflow: auto;
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #dc3545;
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+.modal-subtitle {
+  margin-top: 4px;
+  font-weight: 900;
+  color: #b92c3a;
+}
+
+.btn-close {
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.btn-close:hover {
+  background: #b92c3a;
+}
+
+/* =========================
+   ✅ DOC-CARDS dentro del MODAL (aquí se arreglan botones)
+========================= */
+.modal-panel .doc-card {
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: #fff;
+}
+
+.modal-panel .doc-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modal-panel .doc-left {
+  min-width: 0; /* ✅ evita que empuje el botón */
+}
+
+.modal-panel .doc-title {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #b92c3a;
+  margin-top: 6px;
+  word-break: break-word;
+}
+
+.modal-panel .doc-meta {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-weight: 700;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.modal-panel .badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.modal-panel .badge-reporte {
+  background: rgba(220, 53, 69, 0.12);
+  color: #dc3545;
+  border: 1px solid rgba(220, 53, 69, 0.25);
+}
+
+.modal-panel .badge-carta {
+  background: rgba(13, 110, 253, 0.12);
+  color: #0d6efd;
+  border: 1px solid rgba(13, 110, 253, 0.25);
+}
+
+/* ✅ Botón "Ver PDF" bien alineado */
+.modal-panel .btn-ver {
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight: 900;
+  white-space: nowrap;
+  min-width: 110px;
+  height: fit-content;
+}
+
+.modal-panel .btn-ver:hover {
+  background: #b92c3a;
+}
+
+/* ✅ Bloque URL (input + copiar) */
+.modal-panel .url {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.modal-panel .url input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.modal-panel .url button {
+  background: #fff;
+  color: #dc3545;
+  border: 1px solid rgba(220, 53, 69, 0.35);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.modal-panel .url button:hover {
+  background: #f8d7da;
+}
+
+/* ✅ Responsive: en móvil la fila se apila */
+@media (max-width: 640px) {
+  .modal-panel .doc-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .modal-panel .btn-ver {
+    width: 100%;
+  }
+
+  .modal-panel .url {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .modal-panel .url button {
+    width: 100%;
+  }
+}

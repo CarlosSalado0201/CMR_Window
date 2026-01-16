@@ -1,0 +1,319 @@
+<!-- 🔻 BARRA SUPERIOR -->
+<div class="toolbar">
+  <img src="assets/CMR.jpg" alt="Logo CMR" style="cursor:pointer" routerLink="/reportes" />
+  <div class="toolbar-buttons">
+    <button routerLink="/generar">Generar Reportes</button>
+    <button routerLink="/generar-carta">Generar carta</button>
+    <button (click)="logout()">Cerrar sesión</button>
+  </div>
+</div>
+
+<!-- ✅ CONTENIDO PRINCIPAL -->
+<div class="content">
+
+  <!-- ✅ Botones principales -->
+  <div>
+    <button class="btn-generate" (click)="mostrarFormulario('entrega')">CARTA ENTREGA</button>
+    <button class="btn-generate" (click)="mostrarFormulario('garantia')">CARTA GARANTÍA</button>
+    <button class="btn-generate" (click)="mostrarFormulario('conjunto')">CARTAS EN CONJUNTO</button>
+  </div>
+
+  <!-- ✅ RESPONSABLE (usuario actual) -->
+
+  <!-- =========================
+      TEMPLATE REUTILIZABLE: CLIENTES
+      ========================= -->
+  <ng-template #clientesBlock>
+    <div class="selection-box">
+      <h4>Clientes *</h4>
+
+      <select multiple [(ngModel)]="clientesSeleccionadosIds" name="clientesSeleccionadosIds" required>
+        <option *ngFor="let c of clientesDisponibles" [ngValue]="c.id">
+          {{ c.nombre }}
+        </option>
+      </select>
+
+      <button type="button" class="add-client-button" (click)="agregarClientesSeleccionados()">
+        Añadir clientes
+      </button>
+
+      <div class="clientes-seleccionados" *ngIf="clientesSeleccionados.length > 0">
+        <p><strong>Seleccionados:</strong></p>
+        <ul>
+          <li *ngFor="let c of clientesSeleccionados; let i = index">
+            {{ c.nombre }}
+            <button type="button" class="remove-client-button" (click)="eliminarCliente(i)">✕</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- =========================
+      FORMULARIO CARTA ENTREGA
+      ========================= -->
+  <div *ngIf="formularioVisible === 'entrega'" class="report-form">
+    <h2>CARTA ENTREGA</h2>
+
+    <!-- ✅ CLIENTES (siempre) -->
+    <ng-container *ngTemplateOutlet="clientesBlock"></ng-container>
+
+    <div class="input-group">
+      <label>Pregunta 1:</label>
+      <p class="texto-instruccion">
+        Por medio del presente se hace la entrega recepción de los trabajos realizado en:
+      </p>
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta1" name="respuesta1" placeholder="Escribe tu comentario">
+    </div>
+
+    <div class="input-group">
+      <label>Pregunta 2:</label>
+      <p class="texto-instruccion">
+        Hacemos entrega al Departamento de Mantenimiento y nos reciben en conformidad a las condiciones establecidas por ambas partes.
+      </p>
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta2" name="respuesta2" placeholder="Escribe tu comentario">
+    </div>
+
+    <!-- ✅ FIRMAS (siempre) -->
+    <div class="firma-box">
+      <h3>Firmas</h3>
+
+      <!-- QUIEN ENTREGA -->
+      <div class="firma-row">
+        <h4>Quien entrega</h4>
+
+        <div class="input-group">
+          <label>Nombre</label>
+          <!-- ✅ Autollenado desde usuarioActual (readonly) -->
+          <input class="input-rojo" type="text" [(ngModel)]="quienEntrega" name="quienEntrega" readonly>
+        </div>
+
+        <div class="input-group">
+          <label>Cargo</label>
+          <!-- ✅ Autollenado desde usuarioActual (readonly) -->
+          <input class="input-rojo" type="text" [(ngModel)]="cargoEntrega" name="cargoEntrega" readonly>
+        </div>
+
+        <canvas #canvasEntrega class="canvas-firma"></canvas>
+
+        <div class="signature-buttons">
+          <button type="button" (click)="limpiarFirma('entrega')">Limpiar firma entrega</button>
+        </div>
+      </div>
+
+      <!-- QUIEN RECIBE -->
+      <div class="firma-row">
+        <h4>Quien recibe</h4>
+
+        <div class="input-group">
+          <label>Nombre</label>
+          <input class="input-rojo" type="text" [(ngModel)]="quienRecibe" name="quienRecibe" placeholder="Nombre de quien recibe">
+        </div>
+
+        <div class="input-group">
+          <label>Cargo</label>
+          <input class="input-rojo" type="text" [(ngModel)]="cargoRecibe" name="cargoRecibe" placeholder="Cargo de quien recibe">
+        </div>
+
+        <canvas #canvasRecibe class="canvas-firma"></canvas>
+
+        <div class="signature-buttons">
+          <button type="button" (click)="limpiarFirma('recibe')">Limpiar firma recibe</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-actions">
+      <button class="btn-generate" (click)="guardar('entrega')">Guardar CARTA ENTREGA</button>
+      <button class="cancel" (click)="formularioVisible = null">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- =========================
+      FORMULARIO CARTA GARANTÍA
+      ========================= -->
+  <div *ngIf="formularioVisible === 'garantia'" class="report-form">
+    <h2>CARTA GARANTÍA</h2>
+
+    <!-- ✅ CLIENTES (siempre) -->
+    <ng-container *ngTemplateOutlet="clientesBlock"></ng-container>
+
+    <div class="input-group">
+      <label>Pregunta 1:</label>
+      <p class="texto-instruccion">
+        Por medio del presente hacemos constar que se realizó según el presupuesto
+      </p>
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta1" name="respuesta1_g" placeholder="Escribe tu comentario">
+    </div>
+
+    <div class="input-group">
+      <label>Pregunta 2:</label>
+      <p class="texto-instruccion">
+        Tendrán una garantía de 1 año, a partir del término del trabajo así mismo queda de manifiesto que los equipos deben tener su servicio de mantenimiento ya que es de vital importancia para que la garantía sea válida y solo en caso de que sufra impactos ajenos al trabajo realizado queda invalidada la garantía. En partes eléctricas no hay garantía.
+      </p>
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta2" name="respuesta2_g" placeholder="Escribe tu comentario">
+    </div>
+
+    <!-- ✅ FIRMAS (siempre) -->
+    <div class="firma-box">
+      <h3>Firmas</h3>
+
+      <div class="firma-row">
+        <h4>Quien entrega</h4>
+
+        <div class="input-group">
+          <label>Nombre</label>
+          <!-- ✅ Autollenado (readonly) -->
+          <input class="input-rojo" type="text" [(ngModel)]="quienEntrega" name="quienEntrega_g" readonly>
+        </div>
+
+        <div class="input-group">
+          <label>Cargo</label>
+          <!-- ✅ Autollenado (readonly) -->
+          <input class="input-rojo" type="text" [(ngModel)]="cargoEntrega" name="cargoEntrega_g" readonly>
+        </div>
+
+        <canvas #canvasEntrega class="canvas-firma"></canvas>
+
+        <div class="signature-buttons">
+          <button type="button" (click)="limpiarFirma('entrega')">Limpiar firma entrega</button>
+        </div>
+      </div>
+
+      <div class="firma-row">
+        <h4>Quien recibe</h4>
+
+        <div class="input-group">
+          <label>Nombre</label>
+          <input class="input-rojo" type="text" [(ngModel)]="quienRecibe" name="quienRecibe_g" placeholder="Nombre de quien recibe">
+        </div>
+
+        <div class="input-group">
+          <label>Cargo</label>
+          <input class="input-rojo" type="text" [(ngModel)]="cargoRecibe" name="cargoRecibe_g" placeholder="Cargo de quien recibe">
+        </div>
+
+        <canvas #canvasRecibe class="canvas-firma"></canvas>
+
+        <div class="signature-buttons">
+          <button type="button" (click)="limpiarFirma('recibe')">Limpiar firma recibe</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-actions">
+      <button class="btn-generate" (click)="guardar('garantia')">Guardar CARTA GARANTÍA</button>
+      <button class="cancel" (click)="formularioVisible = null">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- =========================
+      FORMULARIO CARTAS CONJUNTO
+      ========================= -->
+  <div *ngIf="formularioVisible === 'conjunto'" class="report-form">
+    <h2>CARTAS EN CONJUNTO</h2>
+
+    <!-- ✅ CLIENTES (siempre) -->
+    <ng-container *ngTemplateOutlet="clientesBlock"></ng-container>
+
+    <h3 style="margin-top: 10px;">CARTA ENTREGA</h3>
+
+    <div class="input-group">
+      <label>Pregunta 1:</label>
+      <p class="texto-instruccion">
+        Por medio del presente se hace la entrega recepción de los trabajos realizados en
+      </p>
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta1" name="respuesta1_c1" placeholder="Escribe tu comentario">
+    </div>
+
+    <div class="input-group">
+      <label>Pregunta 2:</label>
+      <p class="texto-instruccion">
+        Hacemos entrega al Departamento de Mantenimiento y nos reciben en conformidad a las condiciones establecidas por ambas partes.
+      </p>
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta2" name="respuesta2_c1" placeholder="Escribe tu comentario">
+    </div>
+
+    <h3 style="margin-top: 20px;">CARTA GARANTÍA</h3>
+
+    <div class="input-group">
+      <label>Pregunta 1:</label>
+      <p class="texto-instruccion">
+        Por medio del presente hacemos constar que se realizó según el presupuesto
+      </p>
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta3" name="respuesta3_c2" placeholder="Escribe tu comentario">
+    </div>
+
+    <div class="input-group">
+      <label>Pregunta 2:</label>
+      <p class="texto-instruccion">
+        Tendrán una garantía de 1 año, a partir del término del trabajo así mismo queda de manifiesto que los equipos deben tener su servicio de mantenimiento ya que es de vital importancia para que la garantía sea válida y solo en caso de que sufra impactos ajenos al trabajo realizado queda invalidada la garantía. En partes eléctricas no hay garantía.
+      </p>
+      <input class="input-rojo" type="text" [(ngModel)]="respuesta4" name="respuesta4_c2" placeholder="Escribe tu comentario">
+    </div>
+
+    <!-- ✅ FIRMAS (siempre) -->
+    <div class="firma-box">
+      <h3>Firmas</h3>
+
+      <div class="firma-row">
+        <h4>Quien entrega</h4>
+
+        <div class="input-group">
+          <label>Nombre</label>
+          <!-- ✅ Autollenado (readonly) -->
+          <input class="input-rojo" type="text" [(ngModel)]="quienEntrega" name="quienEntrega_c" readonly>
+        </div>
+
+        <div class="input-group">
+          <label>Cargo</label>
+          <!-- ✅ Autollenado (readonly) -->
+          <input class="input-rojo" type="text" [(ngModel)]="cargoEntrega" name="cargoEntrega_c" readonly>
+        </div>
+
+        <canvas #canvasEntrega class="canvas-firma"></canvas>
+
+        <div class="signature-buttons">
+          <button type="button" (click)="limpiarFirma('entrega')">Limpiar firma entrega</button>
+        </div>
+      </div>
+
+      <div class="firma-row">
+        <h4>Quien recibe</h4>
+
+        <div class="input-group">
+          <label>Nombre</label>
+          <input class="input-rojo" type="text" [(ngModel)]="quienRecibe" name="quienRecibe_c" placeholder="Nombre de quien recibe">
+        </div>
+
+        <div class="input-group">
+          <label>Cargo</label>
+          <input class="input-rojo" type="text" [(ngModel)]="cargoRecibe" name="cargoRecibe_c" placeholder="Cargo de quien recibe">
+        </div>
+
+        <canvas #canvasRecibe class="canvas-firma"></canvas>
+
+        <div class="signature-buttons">
+          <button type="button" (click)="limpiarFirma('recibe')">Limpiar firma recibe</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-actions">
+      <button class="btn-generate" (click)="guardar('conjunto')">Guardar CARTAS EN CONJUNTO</button>
+      <button class="cancel" (click)="formularioVisible = null">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- ✅ LAYER ÚLTIMO PDF -->
+  <div class="pdf-link-layer" *ngIf="urlPdf">
+    <p>✅ Último PDF generado:</p>
+    <input type="text" [value]="urlPdf" readonly #pdfLink />
+
+    <div class="pdf-link-actions">
+      <button type="button" (click)="copiarEnlace(pdfLink)">Copiar enlace</button>
+      <a [href]="urlPdf" target="_blank" rel="noopener">Abrir PDF</a>
+    </div>
+  </div>
+
+</div>

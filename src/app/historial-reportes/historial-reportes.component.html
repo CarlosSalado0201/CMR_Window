@@ -1,0 +1,145 @@
+<!-- =====================================================
+historial-reportes.component.html (FRONT COMPLETO)
+- YA NO USA clienteNombre
+- USA clientesNombres (ARRAY) y formatClientes(item)
+===================================================== -->
+
+<div class="historial-wrap">
+
+  <!-- HEADER -->
+  <div class="topbar">
+    <div class="title">
+      <h2>Historial</h2>
+      <div class="subtitle">
+        {{ monthNames[currentMonth] }} {{ currentYear }}
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" (click)="prevYear()">« Año</button>
+      <button type="button" (click)="prevMonth()">‹ Mes</button>
+      <button type="button" (click)="toggleMiniCalendar()">Mes ▾</button>
+      <button type="button" (click)="nextMonth()">Mes ›</button>
+      <button type="button" (click)="nextYear()">Año »</button>
+    </div>
+  </div>
+
+  <!-- MINI CALENDAR (selección rápida mes) -->
+  <div class="mini-calendar" *ngIf="showMiniCalendar">
+    <div class="months">
+      <button
+        type="button"
+        *ngFor="let m of monthNames; let i = index"
+        (click)="selectMonth(i)"
+        [class.active]="i === currentMonth">
+        {{ m }}
+      </button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button type="button" (click)="onTabChange('TODOS')" [class.active]="tab==='TODOS'">Todos</button>
+    <button type="button" (click)="onTabChange('REPORTES')" [class.active]="tab==='REPORTES'">Reportes</button>
+    <button type="button" (click)="onTabChange('CARTAS')" [class.active]="tab==='CARTAS'">Cartas</button>
+  </div>
+
+  <!-- CALENDAR GRID -->
+  <div class="calendar">
+    <div class="weekdays">
+      <div class="wd" *ngFor="let w of weekDays">{{ w }}</div>
+    </div>
+
+    <div class="days">
+      <div
+        class="day"
+        *ngFor="let d of daysInMonth"
+        [class.empty]="d===0"
+        [class.selected]="isSelectedDay(d)"
+        (click)="selectDate(d, true)">
+
+        <div class="daynum" *ngIf="d!==0">{{ d }}</div>
+
+        <!-- Indicadores -->
+        <div class="dots" *ngIf="d!==0">
+          <ng-container *ngFor="let item of getItemsDelDia(d) | slice:0:4">
+            <span class="dot" [class.rep]="item.tipoItem==='REPORTE'" [class.car]="item.tipoItem==='CARTA'"></span>
+          </ng-container>
+          <span class="more" *ngIf="getItemsDelDia(d).length > 4">+{{ getItemsDelDia(d).length - 4 }}</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ERROR / LOADING -->
+  <div class="state" *ngIf="loading">Cargando...</div>
+  <div class="state error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <!-- PANEL DÍA -->
+  <div class="overlay" *ngIf="showDayPanel" (click)="cerrarPanel()"></div>
+
+  <div class="day-panel" *ngIf="showDayPanel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <h3>Documentos del día</h3>
+        <div class="panel-sub">
+          {{ panelFechaLabel }} · Total: {{ panelItems.length }}
+        </div>
+      </div>
+      <button type="button" class="close" (click)="cerrarPanel()">✕</button>
+    </div>
+
+    <div class="panel-body">
+
+      <div class="empty" *ngIf="panelItems.length === 0">
+        No hay documentos este día.
+      </div>
+
+      <div class="list" *ngIf="panelItems.length > 0">
+
+        <div class="item"
+             *ngFor="let item of panelItems; trackBy: trackByKey"
+             [class.rep]="item.tipoItem==='REPORTE'"
+             [class.car]="item.tipoItem==='CARTA'">
+
+          <div class="item-top">
+            <div class="badge">
+              {{ item.tipoItem === 'REPORTE' ? 'REPORTE' : 'CARTA' }}
+            </div>
+
+            <div class="ref">
+              <strong>{{ item.referencia }}</strong>
+
+              <!-- ✅ Reporte: usuario -->
+              <span *ngIf="item.tipoItem==='REPORTE' && item.usuario"> · 👤 {{ item.usuario }}</span>
+
+              <!-- ✅ Carta: tipo -->
+              <span *ngIf="item.tipoItem==='CARTA' && item.tipoCarta"> · 🧾 {{ item.tipoCarta }}</span>
+
+              <!-- ✅ Clientes (varios) -->
+              <span *ngIf="formatClientes(item)"> · 🏨 {{ formatClientes(item) }}</span>
+            </div>
+          </div>
+
+          <div class="item-actions">
+            <button type="button" (click)="abrirPdf(item)">Ver PDF</button>
+            <button type="button" (click)="copiarUrl(item.urlPdf)">Copiar</button>
+          </div>
+
+          <div class="meta" *ngIf="item.fechaCreacion">
+            {{ item.fechaCreacion }}
+          </div>
+
+          <!-- URL (opcional para depurar) -->
+          <div class="urlbox" *ngIf="item.urlPdf">
+            <input type="text" [value]="item.urlPdf" readonly>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
