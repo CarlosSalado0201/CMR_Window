@@ -1,9 +1,9 @@
 import {
   Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, OnInit
 } from '@angular/core';
-import { ServiciosService } from '../Servicios/servicios.service';
-import { CartaPayload } from '../Models/ModalCartaComponent';
-import { Cliente } from '../Models/Cliente';
+import { serviciosService } from '../servicios/servicios.service';
+import { cartaPayload } from '../models/modalCartaComponent';
+import { cliente } from '../models/cliente';
 
 // ✅ Si ya tienes un modelo Usuario, úsalo:
 // import { Usuario } from '../Models/Usuario';
@@ -36,8 +36,8 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
   usuarioActual: Usuario | null = null;
 
   // ✅ clientes
-  clientesDisponibles: Cliente[] = [];
-  clientesSeleccionados: Cliente[] = [];
+  clientesDisponibles: cliente[] = [];
+  clientesSeleccionados: cliente[] = [];
   clientesSeleccionadosIds: number[] = [];
 
   // Modal
@@ -61,7 +61,7 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private unsubs: Array<() => void> = [];
 
-  constructor(private serviciosService: ServiciosService) {}
+  constructor(private serviciosService: serviciosService) {}
 
   ngOnInit(): void {
     // ✅ cargar clientes desde que entra a la pantalla
@@ -160,7 +160,7 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
   // ===============================
   cargarClientes() {
     this.serviciosService.obtenerClientes().subscribe({
-      next: (data: Cliente[]) => this.clientesDisponibles = data ?? [],
+      next: (data: cliente[]) => this.clientesDisponibles = data ?? [],
       error: err => console.error('Error cargarClientes:', err)
     });
   }
@@ -187,7 +187,7 @@ export class CartasComponent implements OnInit, AfterViewInit, OnDestroy {
     return true;
   }
 
-  private aplicarClientes(payload: CartaPayload) {
+  private aplicarClientes(payload: cartaPayload) {
     payload.clientesIds = (this.clientesSeleccionados || []).map(c => c.id);
   }
 
@@ -235,7 +235,7 @@ limpiarFirma(rol: RolFirma) {
     return parts.length === 2 ? parts[1] : null;
   }
 
-  private aplicarFirmas(payload: CartaPayload) {
+  private aplicarFirmas(payload: cartaPayload) {
     payload.quienEntrega = this.quienEntrega?.trim();
     payload.cargoEntrega = this.cargoEntrega?.trim();
     payload.quienRecibe  = this.quienRecibe?.trim();
@@ -378,7 +378,7 @@ const getPos = (ev: MouseEvent | TouchEvent) => {
   // ===============================
   // Generar carta
   // ===============================
-  onGenerarCarta(payload: CartaPayload) {
+  onGenerarCarta(payload: cartaPayload) {
     if (!this.validarClientes()) return;
 
     payload.idCarpeta = 2;
@@ -406,7 +406,7 @@ const getPos = (ev: MouseEvent | TouchEvent) => {
     this.reponeQuienEntregaDesdeUsuario();
 
     const newTab = window.open('', '_blank');
-    const payload: CartaPayload = { tipo, idCarpeta: 2 };
+    const payload: cartaPayload = { tipo, idCarpeta: 2 };
 
     this.aplicarFirmas(payload);
     this.aplicarClientes(payload);

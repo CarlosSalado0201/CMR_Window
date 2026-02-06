@@ -514,3 +514,30 @@
     align-items: stretch;
   }
 }
+
+  .toolbar img {
+    height: 80px;
+    width: auto;
+    user-select: none;
+    margin-right: 20px;
+  }
+
+  .toolbar button {
+    background-color: white;
+    color: #dc3545;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+    white-space: normal;
+    max-width: 120px;
+    line-height: 1.2;
+    margin-right: 10px;
+  }
+
+  .toolbar button:hover {
+    background-color: #f8d7da;
+  }

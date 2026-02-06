@@ -1,19 +1,19 @@
-  import { Modelos } from './../Models/Modelos';
+  import { modelos } from './../models/modelos';
   import { Injectable } from '@angular/core';
   import { HttpClient, HttpResponse } from '@angular/common/http';
   import { catchError, map, Observable, of } from 'rxjs';
-  import { Categoria } from '../Models/Categorias';
-  import { Equipo } from '../Models/Equipos';
-  import { Materiales } from '../Models/Materiales';
-  import { Cliente } from '../Models/Cliente';
-  import { Actividad } from '../Models/Actividad';
-import { CartaPayload } from '../Models/ModalCartaComponent';
+  import { categoria } from '../models/categorias';
+  import { equipo } from '../models/equipos';
+  import { materiales } from '../models/materiales';
+  import { cliente } from '../models/cliente';
+  import { actividad } from '../models/actividad';
+import { cartaPayload } from '../models/modalCartaComponent';
 
   @Injectable({
     providedIn: 'root' // Este servicio estará disponible globalmente en toda la app
   })
 
-  export class ServiciosService {
+  export class serviciosService {
 
   private URLCategoria = 'https://proyecto-cmr.onrender.com/CategoriasWebService';
   private URLEquipo = 'https://proyecto-cmr.onrender.com/EquiposWebService';
@@ -42,8 +42,8 @@ import { CartaPayload } from '../Models/ModalCartaComponent';
 
     // ----------- CATEGORÍAS -----------
 
-    obtenerCategorias(): Observable<Categoria[]> {
-      return this.http.get<Categoria[]>(`${this.URLCategoria}/mostrar` ).pipe(
+    obtenerCategorias(): Observable<categoria[]> {
+      return this.http.get<categoria[]>(`${this.URLCategoria}/mostrar` ).pipe(
         catchError(error => {
           console.error('Error al obtener categorías:', error);
           return of([]);
@@ -74,8 +74,8 @@ import { CartaPayload } from '../Models/ModalCartaComponent';
   }
 
 
-    editarCategoria(categoria: Categoria): Observable<Categoria | null> {
-      return this.http.put<Categoria>(`${this.URLCategoria}/editar`, categoria ).pipe(
+    editarCategoria(categoria: categoria): Observable<categoria | null> {
+      return this.http.put<categoria>(`${this.URLCategoria}/editar`, categoria ).pipe(
         catchError(error => {
           console.error('Error al editar categoría:', error);
           return of(null);
@@ -92,8 +92,8 @@ import { CartaPayload } from '../Models/ModalCartaComponent';
       );
     }
 
-    buscarCategoriaPorNombre(nombre: string): Observable<Categoria | null> {
-      return this.http.get<Categoria>(`${this.URLCategoria}/buscarPorNombre/${nombre}` ).pipe(
+    buscarCategoriaPorNombre(nombre: string): Observable<categoria | null> {
+      return this.http.get<categoria>(`${this.URLCategoria}/buscarPorNombre/${nombre}` ).pipe(
         catchError(error => {
           console.error('Error al buscar categoría por nombre:', error);
           return of(null);
@@ -103,8 +103,8 @@ import { CartaPayload } from '../Models/ModalCartaComponent';
 
     // ----------- EQUIPOS -----------
 
-    obtenerEquipos(): Observable<Equipo[]> {
-      return this.http.get<Equipo[]>(`${this.URLEquipo}/mostrar` ).pipe(
+    obtenerEquipos(): Observable<equipo[]> {
+      return this.http.get<equipo[]>(`${this.URLEquipo}/mostrar` ).pipe(
         catchError(error => {
           console.error('Error al obtener equipos:', error);
           return of([]);
@@ -112,16 +112,16 @@ import { CartaPayload } from '../Models/ModalCartaComponent';
       );
     }
 
-    obtenerEquiposPorCategoria(idCategoria: number): Observable<Equipo[]> {
+    obtenerEquiposPorCategoria(idCategoria: number): Observable<equipo[]> {
       const categoria = { id: idCategoria };
-      return this.http.post<Equipo[]>(`${this.URLEquipo}/buscarPorCategoria`, categoria ).pipe(
+      return this.http.post<equipo[]>(`${this.URLEquipo}/buscarPorCategoria`, categoria ).pipe(
         catchError(error => {
           console.error('Error al obtener equipos por categoría:', error);
           return of([]);
         })
       );
     }
-  guardarEquipo(equipo: any): Observable<Equipo | string | null> {
+  guardarEquipo(equipo: any): Observable<equipo | string | null> {
     return this.http.post(`${this.URLEquipo}/guardar`, equipo, { observe: 'response', responseType: 'text', withCredentials: true }).pipe(
       map(response => {
         if ((response as any).status === 201) {
@@ -141,8 +141,8 @@ import { CartaPayload } from '../Models/ModalCartaComponent';
   }
 
 
-    editarEquipo(equipo: Equipo): Observable<Equipo | null> {
-      return this.http.put<Equipo>(`${this.URLEquipo}/editar`, equipo ).pipe(
+    editarEquipo(equipo: equipo): Observable<equipo | null> {
+      return this.http.put<equipo>(`${this.URLEquipo}/editar`, equipo ).pipe(
         catchError(error => {
           console.error('Error al editar equipo:', error);
           return of(null);
@@ -159,8 +159,8 @@ import { CartaPayload } from '../Models/ModalCartaComponent';
       );
     }
 
-    buscarEquipoPorNombre(nombre: string): Observable<Equipo | null> {
-      return this.http.get<Equipo>(`${this.URLEquipo}/buscarPorNombre/${nombre}` ).pipe(
+    buscarEquipoPorNombre(nombre: string): Observable<equipo | null> {
+      return this.http.get<equipo>(`${this.URLEquipo}/buscarPorNombre/${nombre}` ).pipe(
         catchError(error => {
           console.error('Error al buscar equipo por nombre:', error);
           return of(null);
@@ -169,16 +169,16 @@ import { CartaPayload } from '../Models/ModalCartaComponent';
     }
 
 
-  obtenerMaterialesPorEquipo(material: Materiales): Observable<Materiales[]> {
-    return this.http.post<Materiales[]>(`${this.urlMateriales}/buscarPorEquipoId`, material );
+  obtenerMaterialesPorEquipo(material: materiales): Observable<materiales[]> {
+    return this.http.post<materiales[]>(`${this.urlMateriales}/buscarPorEquipoId`, material );
   }
   // Ejemplo en servicios.service.ts
 
   obtenerMateriales() {
-    return this.http.get<Materiales[]>(`${this.urlMateriales}/mostrar` );
+    return this.http.get<materiales[]>(`${this.urlMateriales}/mostrar` );
   }
-  guardarMaterial(material: any): Observable<Materiales | string | null> {
-    return this.http.post<Materiales>(`${this.urlMateriales}/guardar`, material, { observe: 'response', withCredentials: true }).pipe(
+  guardarMaterial(material: any): Observable<materiales | string | null> {
+    return this.http.post<materiales>(`${this.urlMateriales}/guardar`, material, { observe: 'response', withCredentials: true }).pipe(
       map(response => {
         if (response.status === 201) {
           return response.body ?? 'guardadoConExito';
@@ -205,18 +205,18 @@ import { CartaPayload } from '../Models/ModalCartaComponent';
   }
   ///Modelos//////////////////
   // Ya lo tienes
-  getModelos(): Observable<Modelos[]> {
-    return this.http.get<Modelos[]>(`${this.modelosURL}/mostrar` );
+  getModelos(): Observable<modelos[]> {
+    return this.http.get<modelos[]>(`${this.modelosURL}/mostrar` );
   }
 
   // Agrégalo:
-  agregarModelo(modelo: { nombre: string; categoriaId: number }): Observable<Modelos | string | null> {
+  agregarModelo(modelo: { nombre: string; categoriaId: number }): Observable<modelos | string | null> {
     const modeloParaEnviar = {
       nombre: modelo.nombre,
       categoria: { id: modelo.categoriaId }
     };
 
-    return this.http.post<Modelos>(`${this.modelosURL}/guardar`, modeloParaEnviar, { observe: 'response', withCredentials: true }).pipe(
+    return this.http.post<modelos>(`${this.modelosURL}/guardar`, modeloParaEnviar, { observe: 'response', withCredentials: true }).pipe(
       map(response => {
         if (response.status === 201) {
           return response.body ?? 'guardadoConExito';
@@ -243,8 +243,8 @@ import { CartaPayload } from '../Models/ModalCartaComponent';
       })
     );
   }
-  editarModelo(modelo: Modelos): Observable<Modelos | null> {
-    return this.http.put<Modelos>(`${this.modelosURL}/editar`, modelo ).pipe(
+  editarModelo(modelo: modelos): Observable<modelos | null> {
+    return this.http.put<modelos>(`${this.modelosURL}/editar`, modelo ).pipe(
       catchError(error => {
         console.error('Error al editar modelo:', error);
         return of(null);
@@ -253,20 +253,20 @@ import { CartaPayload } from '../Models/ModalCartaComponent';
   }
 
   // En el servicio Angular
-  obtenerModelosPorCategoria(categoria: Categoria): Observable<Modelos[]> {
-    return this.http.post<Modelos[]>(`${this.modelosURL}/buscarPorCategoria`, categoria );
+  obtenerModelosPorCategoria(categoria: categoria): Observable<modelos[]> {
+    return this.http.post<modelos[]>(`${this.modelosURL}/buscarPorCategoria`, categoria );
   }
-  obtenerMaterialesPorModelo(idModelo: number): Observable<Materiales[]> {
+  obtenerMaterialesPorModelo(idModelo: number): Observable<materiales[]> {
     const modelo = { id: idModelo };
-    return this.http.post<Materiales[]>(`${this.urlMateriales}/buscarPorModelo`, modelo ).pipe(
+    return this.http.post<materiales[]>(`${this.urlMateriales}/buscarPorModelo`, modelo ).pipe(
       catchError(error => {
         console.error('Error al obtener materiales por modelo:', error);
         return of([]);
       })
     );
   }
-  getMaterialesPorModelo(id: number): Observable<Materiales[]> {
-    return this.http.post<Materiales[]>(
+  getMaterialesPorModelo(id: number): Observable<materiales[]> {
+    return this.http.post<materiales[]>(
       'https://proyecto-cmr.onrender.com/MaterialesWebService/buscarPorModelo',
       { modelo: { id } }, // El cuerpo esperado por el backend
       { withCredentials: true }
@@ -510,7 +510,7 @@ obtenerCarpetas(): Observable<any[]> {
 // ---------------- CARTAS -----------------
 private URLCartas = 'https://proyecto-cmr.onrender.com/api/cartas';
 
-generarCarta(payload: CartaPayload): Observable<string | null> {
+generarCarta(payload: cartaPayload): Observable<string | null> {
   return this.http.post<string>(
     `${this.URLCartas}/generar`,
     payload,

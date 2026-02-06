@@ -1,5 +1,5 @@
 // src/app/Models/Usuario.ts
-export interface Usuario {
+export interface usuario {
   id: number;
   nombre: string;
   cargo: string;

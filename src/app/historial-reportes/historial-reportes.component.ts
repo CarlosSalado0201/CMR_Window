@@ -1,3 +1,4 @@
+import { AuthService } from '../servicios/auth.service';
 // ============================================
 // historial-reportes.component.ts (FRONT COMPLETO)
 // - Une historial de REPORTES + CARTAS por día
@@ -8,7 +9,8 @@
 // ============================================
 import { Component, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { ServiciosService } from 'src/app/Servicios/servicios.service';
+import { serviciosService } from '../servicios/servicios.service';
+import { Router } from '@angular/router';
 
 type HistorialItem = {
   tipoItem: 'REPORTE' | 'CARTA';
@@ -74,7 +76,9 @@ export class HistorialReportesComponent implements OnInit {
   // ✅ Mapa idCliente -> nombre (para fallback)
   private clientesMap: Record<number, string> = {};
 
-  constructor(private serviciosService: ServiciosService) {}
+  constructor(private serviciosService: serviciosService,
+  private auth: AuthService,
+  private router: Router) {}
 
   ngOnInit(): void {
     // ✅ Cargar mapa de clientes para resolver nombres si backend no los manda
@@ -271,6 +275,7 @@ export class HistorialReportesComponent implements OnInit {
   private mapReporte(x: any): HistorialItem {
     const ids = Array.isArray(x?.clientesIds) ? x.clientesIds : [];
     const nombresBackend = Array.isArray(x?.clientesNombres) ? x.clientesNombres : [];
+console.log('REPORTE RAW:', x);
 
     // ✅ fallback si backend no manda nombres
     const nombres = nombresBackend.length ? nombresBackend : this.nombresDesdeIds(ids);
@@ -415,4 +420,11 @@ export class HistorialReportesComponent implements OnInit {
     }
     return null;
   }
+   logout() {
+      this.auth.logout().subscribe({
+        next: () => this.router.navigate(['/login']),  // vuelve a login
+        error: () => console.error('Error al cerrar sesión')
+      });
+    }
+    
 }

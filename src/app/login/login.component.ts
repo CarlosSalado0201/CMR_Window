@@ -1,8 +1,8 @@
 import { Component, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../Servicios/auth.service';
-import { ServiciosService } from 'src/app/Servicios/servicios.service';
-import { Usuario } from '../Models/Usuario';
+import { AuthService } from '../servicios/auth.service';
+import { serviciosService } from '../servicios/servicios.service';
+import { usuario } from '../models/usuario';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +17,7 @@ export class LoginComponent {
   constructor(
     private router: Router,
     private auth: AuthService,
-    private serviciosService: ServiciosService,
+    private serviciosService: serviciosService,
     private ngZone: NgZone
   ) {}
 
@@ -28,7 +28,7 @@ export class LoginComponent {
       next: () => {
         // Obtener info del usuario logueado
         this.serviciosService.obtenerUsuarioActual().subscribe({
-          next: (info: Usuario) => {
+          next: (info: usuario) => {
             if (!info || !info.roles || info.roles.length === 0) {
               this.errorMsg = 'No se pudo obtener info del usuario o no tiene roles asignados';
               return;

@@ -1,9 +1,9 @@
-import { Categoria } from "./Categorias";
+import { categoria } from "./categorias";
 
-export interface Modelos {
+export interface modelos {
   id: number;
   nombre: string;
   capacidad: string;
-  categoria: Categoria;
+  categoria: categoria;
 
 }

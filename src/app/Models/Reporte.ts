@@ -1,6 +1,6 @@
-import { Usuario } from './Usuario';
-import { Cliente } from './Cliente';
-import { Actividad } from './Actividad';
+import { usuario } from './usuario';
+import { cliente } from './cliente';
+import { actividad } from './actividad';
 
 export interface Reporte {
   titulo?: string;
@@ -9,11 +9,11 @@ export interface Reporte {
   tipoOperacionId?: number;
   observaciones?: string;
 
-  encargado: Usuario;
-  trabajadores: Usuario[];
-  cliente: Cliente;
+  encargado: usuario;
+  trabajadores: usuario[];
+  cliente: cliente;
 
-  actividades?: Actividad[];
+  actividades?: actividad[];
   imagenesActividades?: File[];
   
   lecturas?: string;

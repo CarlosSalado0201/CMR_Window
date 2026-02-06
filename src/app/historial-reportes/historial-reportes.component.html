@@ -1,12 +1,26 @@
 <!-- =====================================================
-historial-reportes.component.html (FRONT COMPLETO)
+historial-reportes.component.html
 - YA NO USA clienteNombre
 - USA clientesNombres (ARRAY) y formatClientes(item)
 ===================================================== -->
 
 <div class="historial-wrap">
 
-  <!-- HEADER -->
+  <!-- TOOLBAR (fija) -->
+  <div class="toolbar">
+    <img
+      src="assets/CMR.jpg"
+      alt="Logo CMR"
+      style="cursor:pointer"
+      routerLink="/inicio"
+    />
+    <button type="button" routerLink="/calculadora">Abrir calculadora</button>
+    <button type="button" routerLink="/editar">Editar inventario</button>
+    <button type="button" routerLink="/historial">Historial de reportes</button>
+    <button type="button" (click)="logout()">Cerrar sesión</button>
+  </div>
+
+  <!-- HEADER (título + mes/año + navegación) -->
   <div class="topbar">
     <div class="title">
       <h2>Historial</h2>
@@ -31,7 +45,8 @@ historial-reportes.component.html (FRONT COMPLETO)
         type="button"
         *ngFor="let m of monthNames; let i = index"
         (click)="selectMonth(i)"
-        [class.active]="i === currentMonth">
+        [class.active]="i === currentMonth"
+      >
         {{ m }}
       </button>
     </div>
@@ -39,9 +54,29 @@ historial-reportes.component.html (FRONT COMPLETO)
 
   <!-- TABS -->
   <div class="tabs">
-    <button type="button" (click)="onTabChange('TODOS')" [class.active]="tab==='TODOS'">Todos</button>
-    <button type="button" (click)="onTabChange('REPORTES')" [class.active]="tab==='REPORTES'">Reportes</button>
-    <button type="button" (click)="onTabChange('CARTAS')" [class.active]="tab==='CARTAS'">Cartas</button>
+    <button
+      type="button"
+      (click)="onTabChange('TODOS')"
+      [class.active]="tab === 'TODOS'"
+    >
+      Todos
+    </button>
+
+    <button
+      type="button"
+      (click)="onTabChange('REPORTES')"
+      [class.active]="tab === 'REPORTES'"
+    >
+      Reportes
+    </button>
+
+    <button
+      type="button"
+      (click)="onTabChange('CARTAS')"
+      [class.active]="tab === 'CARTAS'"
+    >
+      Cartas
+    </button>
   </div>
 
   <!-- CALENDAR GRID -->
@@ -54,20 +89,26 @@ historial-reportes.component.html (FRONT COMPLETO)
       <div
         class="day"
         *ngFor="let d of daysInMonth"
-        [class.empty]="d===0"
-        [class.selected]="isSelectedDay(d)"
-        (click)="selectDate(d, true)">
-
-        <div class="daynum" *ngIf="d!==0">{{ d }}</div>
+        [class.empty]="d === 0"
+        [class.selected]="d !== 0 && isSelectedDay(d)"
+        (click)="d !== 0 && selectDate(d, true)"
+      >
+        <div class="daynum" *ngIf="d !== 0">{{ d }}</div>
 
         <!-- Indicadores -->
-        <div class="dots" *ngIf="d!==0">
+        <div class="dots" *ngIf="d !== 0">
           <ng-container *ngFor="let item of getItemsDelDia(d) | slice:0:4">
-            <span class="dot" [class.rep]="item.tipoItem==='REPORTE'" [class.car]="item.tipoItem==='CARTA'"></span>
+            <span
+              class="dot"
+              [class.rep]="item.tipoItem === 'REPORTE'"
+              [class.car]="item.tipoItem === 'CARTA'"
+            ></span>
           </ng-container>
-          <span class="more" *ngIf="getItemsDelDia(d).length > 4">+{{ getItemsDelDia(d).length - 4 }}</span>
-        </div>
 
+          <span class="more" *ngIf="getItemsDelDia(d).length > 4">
+            +{{ getItemsDelDia(d).length - 4 }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -87,22 +128,22 @@ historial-reportes.component.html (FRONT COMPLETO)
           {{ panelFechaLabel }} · Total: {{ panelItems.length }}
         </div>
       </div>
+
       <button type="button" class="close" (click)="cerrarPanel()">✕</button>
     </div>
 
     <div class="panel-body">
-
       <div class="empty" *ngIf="panelItems.length === 0">
         No hay documentos este día.
       </div>
 
       <div class="list" *ngIf="panelItems.length > 0">
-
-        <div class="item"
-             *ngFor="let item of panelItems; trackBy: trackByKey"
-             [class.rep]="item.tipoItem==='REPORTE'"
-             [class.car]="item.tipoItem==='CARTA'">
-
+        <div
+          class="item"
+          *ngFor="let item of panelItems; trackBy: trackByKey"
+          [class.rep]="item.tipoItem === 'REPORTE'"
+          [class.car]="item.tipoItem === 'CARTA'"
+        >
           <div class="item-top">
             <div class="badge">
               {{ item.tipoItem === 'REPORTE' ? 'REPORTE' : 'CARTA' }}
@@ -111,14 +152,20 @@ historial-reportes.component.html (FRONT COMPLETO)
             <div class="ref">
               <strong>{{ item.referencia }}</strong>
 
-              <!-- ✅ Reporte: usuario -->
-              <span *ngIf="item.tipoItem==='REPORTE' && item.usuario"> · 👤 {{ item.usuario }}</span>
+              <!-- Reporte: usuario -->
+              <span *ngIf="item.tipoItem === 'REPORTE' && item.usuario">
+                · 👤 {{ item.usuario }}
+              </span>
 
-              <!-- ✅ Carta: tipo -->
-              <span *ngIf="item.tipoItem==='CARTA' && item.tipoCarta"> · 🧾 {{ item.tipoCarta }}</span>
+              <!-- Carta: tipo -->
+              <span *ngIf="item.tipoItem === 'CARTA' && item.tipoCarta">
+                · 🧾 {{ item.tipoCarta }}
+              </span>
 
-              <!-- ✅ Clientes (varios) -->
-              <span *ngIf="formatClientes(item)"> · 🏨 {{ formatClientes(item) }}</span>
+              <!-- Clientes (varios) -->
+              <span *ngIf="formatClientes(item)">
+                · 🏨 {{ formatClientes(item) }}
+              </span>
             </div>
           </div>
 
@@ -133,12 +180,10 @@ historial-reportes.component.html (FRONT COMPLETO)
 
           <!-- URL (opcional para depurar) -->
           <div class="urlbox" *ngIf="item.urlPdf">
-            <input type="text" [value]="item.urlPdf" readonly>
+            <input type="text" [value]="item.urlPdf" readonly />
           </div>
-
         </div>
       </div>
-
     </div>
   </div>
 

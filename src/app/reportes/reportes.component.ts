@@ -1,9 +1,9 @@
 import { Component, ElementRef, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServiciosService } from 'src/app/Servicios/servicios.service';
-import { AuthService } from '../Servicios/auth.service';
-import { Usuario } from 'src/app/Models/Usuario';
-import { Cliente } from 'src/app/Models/Cliente';
+import { serviciosService } from 'src/app/servicios/servicios.service';
+import { AuthService } from '../servicios/auth.service';
+import { usuario } from 'src/app/models/usuario';
+import { cliente } from 'src/app/models/cliente';
 
 @Component({
   selector: 'app-reportes',
@@ -39,13 +39,13 @@ export class ReportesComponent implements AfterViewInit, OnInit {
   nombreSupervisor = '';
   tipoEquipo = '';
 
-  usuarioActual: Usuario | null = null;
-  usuariosDisponibles: Usuario[] = [];
-  trabajadoresSeleccionados: Usuario[] = [];
+  usuarioActual: usuario | null = null;
+  usuariosDisponibles: usuario[] = [];
+  trabajadoresSeleccionados: usuario[] = [];
   trabajadoresSeleccionadosIds: number[] = [];
 
-  clientesDisponibles: Cliente[] = [];
-  clientesSeleccionados: Cliente[] = [];
+  clientesDisponibles: cliente[] = [];
+  clientesSeleccionados: cliente[] = [];
   clientesSeleccionadosIds: number[] = [];
 
   tiposOperacion: any[] = [];
@@ -65,7 +65,7 @@ export class ReportesComponent implements AfterViewInit, OnInit {
   carpetas: any[] = [];
 
   constructor(
-    private serviciosService: ServiciosService,
+    private serviciosService: serviciosService,
     private auth: AuthService,
     private router: Router
   ) {}
@@ -209,7 +209,7 @@ export class ReportesComponent implements AfterViewInit, OnInit {
   // ===================== USUARIOS =====================
   obtenerUsuarioActual() {
     this.serviciosService.obtenerUsuarioActual().subscribe({
-      next: (data: Usuario) => (this.usuarioActual = data),
+      next: (data: usuario) => (this.usuarioActual = data),
       error: err => console.error(err)
     });
   }
@@ -244,7 +244,7 @@ export class ReportesComponent implements AfterViewInit, OnInit {
   // ===================== CLIENTES =====================
   cargarClientes() {
     this.serviciosService.obtenerClientes().subscribe({
-      next: (data: Cliente[]) => (this.clientesDisponibles = data),
+      next: (data: cliente[]) => (this.clientesDisponibles = data),
       error: err => console.error(err)
     });
   }

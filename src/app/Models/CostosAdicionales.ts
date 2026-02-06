@@ -1,4 +1,4 @@
-export interface CostosAdicionales {
+export interface costosAdicionales {
   numeroTrabajadores: number;
   sueldoPorTrabajador: number;
   imssPorTrabajador: number;

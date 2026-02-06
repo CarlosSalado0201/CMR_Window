@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { LoginComponent } from './login/login.component';
-import { CalculadoraComponent } from './Componentes/calculadora/calculadora.component';
-import { EditarInventarioComponent } from './Componentes/editar-inventario/editar-inventario.component';
-import { ProyectoGrandeComponent } from './Componentes/proyecto-grande/proyecto-grande.component';
-import { TrabajoDiarioComponent } from './Componentes/trabajo-diario/trabajo-diario.component';
+import { CalculadoraComponent } from './componentes/calculadora/calculadora.component';
+import { EditarInventarioComponent } from './componentes/editar-inventario/editar-inventario.component';
+import { ProyectoGrandeComponent } from './componentes/proyecto-grande/proyecto-grande.component';
+import { TrabajoDiarioComponent } from './componentes/trabajo-diario/trabajo-diario.component';
 import { PantallaPrincipalComponent } from './pantallaprincipal/pantallaprincipal.component';
 import { PantallaReportesComponent } from './pantalla-reportes/pantalla-reportes.component';
 import { ReportesComponent } from './reportes/reportes.component';

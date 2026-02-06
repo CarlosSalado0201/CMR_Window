@@ -1,12 +1,12 @@
-import { Modelos } from './Modelos';
+import { modelos } from './modelos';
 
-export interface Materiales {
+export interface materiales {
   id?: number;
   nombre: string;
   descripcion?: string;
   unidad?: string;
   cantidad?: number; // puedes usar string si trabajas con BigDecimal como texto
   precioUnitario?: number;
-   modelo:Modelos;
+   modelo:modelos;
    cantidadSeleccionada ?: number;
 }

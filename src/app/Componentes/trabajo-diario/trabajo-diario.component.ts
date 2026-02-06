@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Categoria } from 'src/app/Models/Categorias';
-import { EquipoConCantidad } from 'src/app/Models/EquipoConCantidad';
-import { Equipo } from 'src/app/Models/Equipos';
-import { Materiales } from 'src/app/Models/Materiales';
-import { ServiciosService } from 'src/app/Servicios/servicios.service';
-import { CostosAdicionales } from 'src/app/Models/CostosAdicionales';
-import { Modelos } from 'src/app/Models/Modelos';
+import { categoria } from 'src/app/models/categorias';
+import { equipoConCantidad } from 'src/app/models/equipoConCantidad';
+import { equipo } from 'src/app/models/equipos';
+import { materiales } from 'src/app/models/materiales';
+import { serviciosService } from 'src/app/servicios/servicios.service';
+import { costosAdicionales } from 'src/app/models/costosAdicionales';
+import { modelos } from 'src/app/models/modelos';
 
 @Component({
   selector: 'app-trabajo-diario',
@@ -26,20 +26,20 @@ export class TrabajoDiarioComponent implements OnInit {
   // ==============================================
   // VARIABLES COMPARTIDAS
   // ==============================================
-  categorias: Categoria[] = [];
-  modelos: Modelos[] = [];
+  categorias: categoria[] = [];
+  modelos: modelos[] = [];
 
   // ==============================================
   // VARIABLES PARA EQUIPOS
   // ==============================================
-  equiposFiltrados: EquipoConCantidad[] = [];
-  equiposFiltradosBusqueda: EquipoConCantidad[] = [];
-  listaEquiposSeleccionados: EquipoConCantidad[] = [];
-  equiposSeleccionadosTemporal: EquipoConCantidad[] = [];
+  equiposFiltrados: equipoConCantidad[] = [];
+  equiposFiltradosBusqueda: equipoConCantidad[] = [];
+  listaEquiposSeleccionados: equipoConCantidad[] = [];
+  equiposSeleccionadosTemporal: equipoConCantidad[] = [];
   
-  categoriaSeleccionada: Categoria | null = null;
-  modeloSeleccionado: Modelos | null = null;
-  modelosFiltradosPorCategoria: Modelos[] = [];
+  categoriaSeleccionada: categoria | null = null;
+  modeloSeleccionado: modelos | null = null;
+  modelosFiltradosPorCategoria: modelos[] = [];
   
   mostrarEquipos: boolean = false;
   textoBusqueda: string = '';
@@ -48,15 +48,15 @@ export class TrabajoDiarioComponent implements OnInit {
   // ==============================================
   // VARIABLES PARA MATERIALES
   // ==============================================
-  categoriasMateriales: Categoria[] = []; // Variable separada para materiales
-  categoriaSeleccionadaMateriales: Categoria | null = null;
-  modeloSeleccionadoMateriales: Modelos | null = null;
-  modelosFiltradosMateriales: Modelos[] = [];
+  categoriasMateriales: categoria[] = []; // Variable separada para materiales
+  categoriaSeleccionadaMateriales: categoria | null = null;
+  modeloSeleccionadoMateriales: modelos | null = null;
+  modelosFiltradosMateriales: modelos[] = [];
   materiales: any[] = [];
   materialesFiltrados: any[] = [];
   textoBusquedaMateriales: string = '';
-  materialesSeleccionadosTemporal: Materiales[] = [];
-  listaMaterialesSeleccionados: (Materiales & { cantidad: number; porcentaje: number; precioFinal: number })[] = [];
+  materialesSeleccionadosTemporal: materiales[] = [];
+  listaMaterialesSeleccionados: (materiales & { cantidad: number; porcentaje: number; precioFinal: number })[] = [];
   
   porcentajeGeneralMateriales: number = 0;
   cantidadEquipos: number = 1;
@@ -90,7 +90,7 @@ export class TrabajoDiarioComponent implements OnInit {
   // ==============================================
   // VARIABLES PARA COSTOS ADICIONALES
   // ==============================================
-  costosAdicionales: CostosAdicionales = {
+  costosAdicionales: costosAdicionales = {
     numeroTrabajadores: 1,
     sueldoPorTrabajador: 425.97,
     imssPorTrabajador: 134.5,
@@ -102,7 +102,7 @@ export class TrabajoDiarioComponent implements OnInit {
   };
   resumenCostosAdicionales: any = null;
 
-  constructor(private servicios: ServiciosService) {}
+  constructor(private servicios: serviciosService) {}
 
   ngOnInit(): void {
     this.cargarCategorias();
@@ -172,7 +172,7 @@ export class TrabajoDiarioComponent implements OnInit {
     );
   }
 
-  seleccionarModelo(modelo: Modelos) {
+  seleccionarModelo(modelo: modelos) {
     this.modeloSeleccionado = modelo;
     this.textoBusqueda = '';
     
@@ -194,7 +194,7 @@ export class TrabajoDiarioComponent implements OnInit {
     }
   }
 
-  toggleSeleccionEquipo(equipo: EquipoConCantidad) {
+  toggleSeleccionEquipo(equipo: equipoConCantidad) {
     const index = this.equiposSeleccionadosTemporal.findIndex(e => e.id === equipo.id);
     if (index >= 0) {
       this.equiposSeleccionadosTemporal.splice(index, 1);
@@ -497,7 +497,7 @@ export class TrabajoDiarioComponent implements OnInit {
     this.fechaFin = '';
     this.diasDeTrabajo = 0;
   }
-seleccionarModeloMateriales(modelo: Modelos) {
+seleccionarModeloMateriales(modelo: modelos) {
   this.modeloSeleccionadoMateriales = modelo;
   this.textoBusquedaMateriales = '';
 
@@ -510,7 +510,7 @@ seleccionarModeloMateriales(modelo: Modelos) {
     this.materialesFiltrados = [...this.materiales];
   });
 }
-seleccionarCategoriaMateriales(categoria: Categoria) {
+seleccionarCategoriaMateriales(categoria: categoria) {
   this.categoriaSeleccionadaMateriales = categoria;
   this.servicios.obtenerModelosPorCategoria(categoria).subscribe(modelos => {
     this.modelosFiltradosMateriales = modelos;

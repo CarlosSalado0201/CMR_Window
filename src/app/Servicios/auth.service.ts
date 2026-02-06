@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Usuario } from '../Models/Usuario';
+import {usuario } from '../models/usuario';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
   private apiUrl = 'https://proyecto-cmr.onrender.com/api'; // URL del backend en Render
 
-  public usuarioActual: Usuario | null = null;
+  public usuarioActual:usuario | null = null;
 
   constructor(private http: HttpClient) {}
 
@@ -44,7 +44,7 @@ export class AuthService {
     return this.usuarioActual ? 'ok' : null;
   }
 
-  setUsuarioActual(usuario: Usuario) {
+  setUsuarioActual(usuario: usuario) {
     this.usuarioActual = usuario;
   }
 

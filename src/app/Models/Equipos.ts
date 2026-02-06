@@ -1,6 +1,6 @@
-import { Modelos } from "./Modelos";
+import { modelos } from "./modelos";
 
-export interface Equipo {
+export interface equipo {
   id: number;
   marca: string;
   precio: number;

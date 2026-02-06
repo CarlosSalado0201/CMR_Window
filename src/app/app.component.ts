@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from './Servicios/auth.service'; // Ajusta la ruta
+import { AuthService } from './servicios/auth.service'; // Ajusta la ruta
 import { HttpClient } from '@angular/common/http';
 
 

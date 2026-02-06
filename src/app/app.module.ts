@@ -3,10 +3,10 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CalculadoraComponent } from './Componentes/calculadora/calculadora.component';
-import { TrabajoDiarioComponent } from './Componentes/trabajo-diario/trabajo-diario.component';
-import { ProyectoGrandeComponent } from './Componentes/proyecto-grande/proyecto-grande.component';
-import { EditarInventarioComponent } from './Componentes/editar-inventario/editar-inventario.component';
+import { CalculadoraComponent } from './componentes/calculadora/calculadora.component';
+import { TrabajoDiarioComponent } from './componentes/trabajo-diario/trabajo-diario.component';
+import { ProyectoGrandeComponent } from './componentes/proyecto-grande/proyecto-grande.component';
+import { EditarInventarioComponent } from './componentes/editar-inventario/editar-inventario.component';
 import { LoginComponent } from './login/login.component';
 import { PantallaPrincipalComponent } from './pantallaprincipal/pantallaprincipal.component';
 import { FormsModule } from '@angular/forms';

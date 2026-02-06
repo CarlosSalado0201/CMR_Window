@@ -1,7 +1,7 @@
 // src/app/Models/equipo-con-cantidad.ts
-import { Equipo } from './Equipos';
+import { equipo } from './equipos';
 
-export interface EquipoConCantidad extends Equipo {
+export interface equipoConCantidad extends equipo {
   cantidad: number;
   porcentaje?: number;
   precioFinal?: number;

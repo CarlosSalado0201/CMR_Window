@@ -1,4 +1,4 @@
-export interface CartaPayload {
+export interface cartaPayload {
   tipo: 'entrega' | 'garantia' | 'conjunto';
   idCarpeta: number;
 

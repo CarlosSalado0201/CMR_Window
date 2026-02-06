@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { Categoria } from 'src/app/Models/Categorias';
-import { Equipo } from 'src/app/Models/Equipos';
-import { Materiales } from 'src/app/Models/Materiales';
-import { Modelos } from 'src/app/Models/Modelos';
-import { ServiciosService } from 'src/app/Servicios/servicios.service';
+import { categoria } from 'src/app/models/categorias';
+import { equipo } from 'src/app/models/equipos';
+import { materiales } from 'src/app/models/materiales';
+import { modelos } from 'src/app/models/modelos';
+import { serviciosService } from 'src/app/servicios/servicios.service';
 
 @Component({
   selector: 'app-editar-inventario',
@@ -13,15 +13,15 @@ import { ServiciosService } from 'src/app/Servicios/servicios.service';
 export class EditarInventarioComponent {
 entidadActiva: 'categoria' | 'equipo' | 'materiales' | 'modelo' | '' = '';
 
-  categorias: Categoria[] = [];
-  nuevaCategoria: Categoria = { id: 0, nombre: '' };
-  editandoCategoria: Categoria | null = null;
+  categorias: categoria[] = [];
+  nuevaCategoria: categoria = { id: 0, nombre: '' };
+  editandoCategoria: categoria | null = null;
   filtroCategorias: string = '';
 
-  equipos: Equipo[] = [];
-   materiales: Materiales[] = [];
-nuevoMaterial: Materiales = {id: 0,  nombre: '',  unidad: '',  cantidad: 0,  precioUnitario: 0,  modelo: {    id: 0,     nombre: '',     capacidad: '',     categoria: { id: 0, nombre: '' } }};
- editandoMaterial: Materiales | null = null;
+  equipos: equipo[] = [];
+   materiales: materiales[] = [];
+nuevoMaterial: materiales = {id: 0,  nombre: '',  unidad: '',  cantidad: 0,  precioUnitario: 0,  modelo: {    id: 0,     nombre: '',     capacidad: '',     categoria: { id: 0, nombre: '' } }};
+ editandoMaterial: materiales | null = null;
   filtroMateriales: string = '';
   mostrarPanelAgregarMaterial: boolean = false;
   mostrarErrorNuevoMaterial: boolean = false;
@@ -33,13 +33,13 @@ nuevoMaterial: Materiales = {id: 0,  nombre: '',  unidad: '',  cantidad: 0,  pre
   mostrarErrorEditarCategoria = false;
   mostrarErrorNuevoEquipo = false;
   mostrarErrorEditarEquipo = false;
-  constructor(private servicios: ServiciosService) {}
-modelos: Modelos[] = [];
+  constructor(private servicios: serviciosService) {}
+modelos: modelos[] = [];
 filtroModelos: string = '';
 mostrarPanelAgregarModelo = false;
 mostrarErrorNuevoModelo = false;
 nuevoModelo = { nombre: '', categoriaId: 0 };
-editandoModelo: Modelos | null = null;
+editandoModelo: modelos | null = null;
 mostrarErrorEditarModelo = false;
 
 activarEntidad(entidad: 'categoria' | 'equipo' | 'materiales' | 'modelo') {
@@ -113,7 +113,7 @@ agregarCategoria() {
     this.nuevaCategoria = { id: 0, nombre: '' };
   }
 
-  seleccionarParaEditarCategoria(categoria: Categoria) {
+  seleccionarParaEditarCategoria(categoria: categoria) {
     this.editandoCategoria = { ...categoria };
     this.mostrarErrorEditarCategoria = false;
   }
@@ -152,10 +152,10 @@ agregarCategoria() {
     this.mostrarErrorEditarCategoria = false;
   }
 
-  isEditandoCategoria(categoria: Categoria): boolean {
+  isEditandoCategoria(categoria: categoria): boolean {
     return this.editandoCategoria !== null && this.editandoCategoria.id === categoria.id;
   }
-   get categoriasFiltradas(): Categoria[] {
+   get categoriasFiltradas(): categoria[] {
     if (!this.filtroCategorias.trim()) return this.categorias;
     return this.categorias.filter(c =>
       c.nombre.toLowerCase().includes(this.filtroCategorias.toLowerCase())
@@ -196,13 +196,13 @@ eliminarModelo(id: number) {
   });
 }
 
-get modelosFiltrados(): Modelos[] {
+get modelosFiltrados(): modelos[] {
   if (!this.filtroModelos.trim()) return this.modelos;
   return this.modelos.filter(m =>
     m.nombre.toLowerCase().includes(this.filtroModelos.toLowerCase())
   );
 }
-seleccionarParaEditarModelo(modelo: Modelos) {
+seleccionarParaEditarModelo(modelo: modelos) {
   this.editandoModelo = { ...modelo };
   this.mostrarErrorEditarModelo = false;
 }
@@ -223,7 +223,7 @@ editarModelo() {
     return;
   }
 
-  const payload: Modelos = {
+  const payload: modelos = {
     id: this.editandoModelo.id,
     nombre: this.editandoModelo.nombre,
     capacidad: this.editandoModelo.capacidad,
@@ -246,11 +246,11 @@ cancelarEdicionModelo() {
   this.mostrarErrorEditarModelo = false;
 }
 
-isEditandoModelo(modelo: Modelos): boolean {
+isEditandoModelo(modelo: modelos): boolean {
   return this.editandoModelo !== null && this.editandoModelo.id === modelo.id;
 }
 nuevoEquipo = { marca: '', precio: 0, modeloId: 0 };
-editandoEquipo: Equipo | null = null;
+editandoEquipo: equipo | null = null;
 filtroEquipos: string = '';
 
 // Cargar equipos
@@ -297,7 +297,7 @@ eliminarEquipo(id: number) {
 }
 
 // Filtrar por marca
-get equiposFiltrados(): Equipo[] {
+get equiposFiltrados(): equipo[] {
   if (!this.filtroEquipos.trim()) return this.equipos;
   return this.equipos.filter(e =>
     e.marca.toLowerCase().includes(this.filtroEquipos.toLowerCase())
@@ -305,7 +305,7 @@ get equiposFiltrados(): Equipo[] {
 }
 
 // Seleccionar para editar
-seleccionarParaEditarEquipo(equipo: Equipo) {
+seleccionarParaEditarEquipo(equipo: equipo) {
   this.editandoEquipo = {
     id: equipo.id,
     marca: equipo.marca,
@@ -342,7 +342,7 @@ cancelarEdicionEquipo() {
   this.mostrarErrorEditarEquipo = false;
 }
 
-isEditandoEquipo(equipo: Equipo): boolean {
+isEditandoEquipo(equipo: equipo): boolean {
   return this.editandoEquipo !== null && this.editandoEquipo.id === equipo.id;
 }
 
@@ -406,7 +406,7 @@ eliminarMaterial(id: number) {
 }
 
 // Filtrar por nombre o unidad
-get materialesFiltrados(): Materiales[] {
+get materialesFiltrados(): materiales[] {
   if (!this.filtroMateriales.trim()) return this.materiales;
   const filtro = this.filtroMateriales.toLowerCase();
   return this.materiales.filter(m =>
@@ -416,7 +416,7 @@ get materialesFiltrados(): Materiales[] {
 
 
 // Seleccionar para editar material
-seleccionarParaEditarMaterial(material: Materiales) {
+seleccionarParaEditarMaterial(material:  materiales) {
   this.editandoMaterial = {
     id: material.id,
     nombre: material.nombre,
@@ -476,7 +476,7 @@ cancelarEdicionMaterial() {
 }
 
 // Método para saber si un material está en edición
-isEditandoMaterial(material: Materiales): boolean {
+isEditandoMaterial(material: materiales): boolean {
   return this.editandoMaterial !== null && this.editandoMaterial.id === material.id;
 }
 
