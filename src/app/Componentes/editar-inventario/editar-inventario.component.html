@@ -309,7 +309,7 @@
         </td>
 
         <!-- Mostrar categoría o select para editar -->
-        <td *ngIf="!isEditandoModelo(modelo)">{{ modelo.categoria?.nombre }}</td>
+        <td *ngIf="!isEditandoModelo(modelo)">{{ modelo.categoria.nombre }}</td>
         <td *ngIf="isEditandoModelo(modelo)">
           <select
             [(ngModel)]="editandoModelo!.categoria.id"
@@ -453,7 +453,7 @@
         </td>
 
         <!-- Modelo -->
-        <td *ngIf="!isEditandoEquipo(equipo)">{{ equipo.modelo?.nombre }}</td>
+        <td *ngIf="!isEditandoEquipo(equipo)">{{ equipo.modelo.nombre }}</td>
         <td *ngIf="isEditandoEquipo(equipo)">
           <select
             class="form-select"
@@ -527,9 +527,9 @@
             class="form-control"
             placeholder="Nombre *"
             [(ngModel)]="nuevoMaterial.nombre"
-            [class.is-invalid]="mostrarErrorNuevoMaterial && nuevoMaterial.nombre?.trim() === ''"
+            [class.is-invalid]="mostrarErrorNuevoMaterial && nuevoMaterial.nombre.trim() === ''"
           />
-          <div *ngIf="mostrarErrorNuevoMaterial && nuevoMaterial.nombre?.trim() === ''" class="invalid-feedback">
+          <div *ngIf="mostrarErrorNuevoMaterial && nuevoMaterial.nombre.trim() === ''" class="invalid-feedback">
             El nombre es obligatorio.
           </div>
         </td>
@@ -539,9 +539,9 @@
             class="form-control"
             placeholder="Unidad *"
             [(ngModel)]="nuevoMaterial.unidad"
-            [class.is-invalid]="mostrarErrorNuevoMaterial && nuevoMaterial.unidad?.trim() === ''"
+            [class.is-invalid]="mostrarErrorNuevoMaterial && nuevoMaterial.unidad.trim() === ''"
           />
-          <div *ngIf="mostrarErrorNuevoMaterial && nuevoMaterial.unidad?.trim() === ''" class="invalid-feedback">
+          <div *ngIf="mostrarErrorNuevoMaterial && nuevoMaterial.unidad.trim() === ''" class="invalid-feedback">
             La unidad es obligatoria.
           </div>
         </td>
@@ -614,9 +614,9 @@
             type="text"
             class="form-control"
           [(ngModel)]="editandoMaterial!.unidad"
-[class.is-invalid]="mostrarErrorEditarMaterial && !(editandoMaterial!.unidad?.trim())"
+[class.is-invalid]="mostrarErrorEditarMaterial && !(editandoMaterial!.unidad.trim())"
 />
-<div *ngIf="mostrarErrorEditarMaterial && !(editandoMaterial!.unidad?.trim())" class="invalid-feedback">
+<div *ngIf="mostrarErrorEditarMaterial && !(editandoMaterial!.unidad.trim())" class="invalid-feedback">
   La unidad es obligatoria.
 </div>
 </td>
@@ -650,7 +650,7 @@
         </td>
 
         <!-- Modelo -->
-        <td *ngIf="!isEditandoMaterial(material)">{{ material.modelo?.nombre }}</td>
+        <td *ngIf="!isEditandoMaterial(material)">{{ material.modelo.nombre }}</td>
         <td *ngIf="isEditandoMaterial(material)">
           <select
             class="form-select"
