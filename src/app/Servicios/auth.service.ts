@@ -15,23 +15,28 @@ export class AuthService {
   // ------------------------
   // LOGIN
   // ------------------------
-  login(username: string, password: string): Observable<any> {
+ login(username: string, password: string): Observable<any> {
 
-    const body = new HttpParams()
-      .set('username', username)
-      .set('password', password);
+  console.log('USERNAME ENVIADO:', username);
+  console.log('PASSWORD ENVIADO:', password);
 
-    return this.http.post(
-      `${this.apiUrl}/login`,
-      body.toString(),
-      {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
+  const body = new HttpParams()
+    .set('username', username)
+    .set('password', password);
+
+  console.log('BODY:', body.toString());
+
+  return this.http.post(
+    `${this.apiUrl}/login`,
+    body.toString(),
+    {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
-    );
-  }
+    }
+  );
+}
 
   // ------------------------
   // LOGOUT

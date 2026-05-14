@@ -1,6 +1,6 @@
   import { modelos } from './../models/modelos';
   import { Injectable } from '@angular/core';
-  import { HttpClient, HttpResponse } from '@angular/common/http';
+  import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
   import { catchError, map, Observable, of } from 'rxjs';
   import { categoria } from '../models/categorias';
   import { equipo } from '../models/equipos';
@@ -23,20 +23,27 @@ import { cartaPayload } from '../models/modalCartaComponent';
 
     constructor(private http: HttpClient) {}
     // ---------------- LOGIN -----------------
-    login(username: string, password: string, rememberMe: boolean) {
-  const body = new URLSearchParams();
-  body.set('username', username);
-  body.set('password', password);
-  body.set('rememberMe', rememberMe.toString());
+    login(username: string, password: string): Observable<any> {
 
-  return this.http.post('https://proyecto-cmr.onrender.com/api/login', body.toString(), {
-    headers: { 
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'X-Requested-With': 'XMLHttpRequest'
-    },
-    withCredentials: true,
-    observe: 'response'
-  });
+  console.log('USERNAME ENVIADO:', username);
+  console.log('PASSWORD ENVIADO:', password);
+
+  const body = new HttpParams()
+    .set('username', username)
+    .set('password', password);
+
+  console.log('BODY:', body.toString());
+
+  return this.http.post(
+    `${this.apiUrl}/login`,
+    body.toString(),
+    {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }
+  );
 }
 
 
