@@ -342,13 +342,18 @@ import { cartaPayload } from '../models/modalCartaComponent';
   private URLUsuarios = 'https://proyecto-cmr.onrender.com/api/usuario';
   // Servicio para obtener usuario actual
   obtenerUsuarioActual(): Observable<any> {
-    return this.http.get<any>(`${this.URLUsuarios}/info` ).pipe(
-      catchError(error => {
-        console.error('Error al obtener usuario actual:', error);
-        return of(null);
-      })
-    );
-  }
+  return this.http.get<any>(
+    `${this.URLUsuarios}/info`,
+    {
+      withCredentials: true
+    }
+  ).pipe(
+    catchError(error => {
+      console.error('Error al obtener usuario actual:', error);
+      return of(null);
+    })
+  );
+}
 
 
 
